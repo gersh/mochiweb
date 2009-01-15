@@ -10,7 +10,7 @@ clean:
 	(cd src;$(MAKE) clean)
 
 dist-src:
-	mkdir mochiweb-1/ && cp -rfv Makefile README priv scripts src support
+	mkdir mochiweb-1/ && cp -rfv Makefile README priv scripts src support mochiweb-1/
 	tar zcf mochiweb-1.tgz mochiweb-1
 
 install: all
