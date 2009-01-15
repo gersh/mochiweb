@@ -1,6 +1,7 @@
 LIBDIR=`erl -eval 'io:format("~s~n", [code:lib_dir()])' -s init stop -noshell`
 
 all:
+	mkdir -p ebin
 	(cd src;$(MAKE) all)
 
 edoc:
