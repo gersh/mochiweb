@@ -9,35 +9,10 @@
 -export([delete_any/2, get_primary_value/2]).
 -export([default/3, enter_from_list/2, default_from_list/2]).
 -export([to_list/1, make/1]).
--export([test/0]).
 
 %% @type headers().
 %% @type key() = atom() | binary() | string().
 %% @type value() = atom() | binary() | string() | integer().
-
-%% @spec test() -> ok
-%% @doc Run tests for this module.
-test() ->
-    H = ?MODULE:make([{hdr, foo}, {"Hdr", "bar"}, {'Hdr', 2}]),
-    [{hdr, "foo, bar, 2"}] = ?MODULE:to_list(H), 
-    H1 = ?MODULE:insert(taco, grande, H),
-    [{hdr, "foo, bar, 2"}, {taco, "grande"}] = ?MODULE:to_list(H1),
-    H2 = ?MODULE:make([{"Set-Cookie", "foo"}]),
-    [{"Set-Cookie", "foo"}] = ?MODULE:to_list(H2),
-    H3 = ?MODULE:insert("Set-Cookie", "bar", H2),
-    [{"Set-Cookie", "foo"}, {"Set-Cookie", "bar"}] = ?MODULE:to_list(H3),
-    "foo, bar" = ?MODULE:get_value("set-cookie", H3),
-    {value, {"Set-Cookie", "foo, bar"}} = ?MODULE:lookup("set-cookie", H3),
-    undefined = ?MODULE:get_value("shibby", H3),
-    none = ?MODULE:lookup("shibby", H3),
-    H4 = ?MODULE:insert("content-type",
-                        "application/x-www-form-urlencoded; charset=utf8",
-                        H3),
-    "application/x-www-form-urlencoded" = ?MODULE:get_primary_value(
-                                             "content-type", H4),
-    H4 = ?MODULE:delete_any("nonexistent-header", H4),
-    H3 = ?MODULE:delete_any("content-type", H4),
-    ok.
 
 %% @spec empty() -> headers()
 %% @doc Create an empty headers structure.

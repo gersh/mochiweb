@@ -1,6 +1,6 @@
-Gut the mochiweb application (app, supervisor, etc)
+[DONE] Gut the mochiweb application (app, supervisor, etc)
 Clean up test suite
-Create examples or samples directory
+[DONE] Create examples or samples directory
 Uniformly reference mochijson2 throughout the project
 Clean/Expand the utilities throughout the project
 Move mochiweb_cookies:any_to_list/x to utils. Same with mochiweb_headers.
