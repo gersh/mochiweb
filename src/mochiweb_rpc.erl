@@ -7,7 +7,7 @@
 -author("Abhay Kumar <abhay@opensynapse.net>").
 
 -export([handler/2]).
--export([test/0]).
+-export([is_acceptable_request/1, decode_request_body/1]).
 
 %% @spec handler(Request, {Module, Function}) -> MochiWebResponse
 %% @doc Use this function in order to process RPC calls from the outside.
@@ -15,20 +15,14 @@
 %% RPC objects and pass it into this function as a {Module, Function}
 %% tuple.
 handler(Req, ModFun) ->
-  case acceptable_request(Req) of
+  case is_acceptable_request(Req) of
     ok ->
       handle_request(Req, ModFun);
     {status, StatusCode, Reason} ->
       send(Req, StatusCode, encode_error(Reason, null))
     end.
 
-%% @doc run all the tests for this module
-test() ->
-  test_acceptable_request(),
-  test_decode_request_body(),
-  ok.
-
-acceptable_request(Req) ->
+is_acceptable_request(Req) ->
   case {Req:get(method), Req:get(version)} of
     {'POST', {1, 0}} -> ok;
     {'POST', {1, 1}} -> ok;
@@ -55,17 +49,17 @@ handle_request(Req, {Mod, Fun}) ->
 
 decode_request_body(Body) ->
   try
-    JsonObj = mochijson:decode(Body),
-    {ok, {call, list_to_atom(fetch(JsonObj, method)), fetch(JsonObj, params)}, fetch(JsonObj, id)}
+    JsonObj = mochijson2:decode(Body),
+    {ok, {call, list_to_atom(binary_to_list(fetch(JsonObj, method))), fetch(JsonObj, params), fetch(JsonObj, id)}}
   catch
      _:_ -> {error, "Error decoding request."}
   end.
 
-encode_error(Reason, ID) -> lists:flatten(mochijson:encode({struct, [{id, ID}, {error, Reason}, {result, null}]})).
+encode_error(Reason, ID) -> lists:flatten(mochijson2:encode({struct, [{id, ID}, {error, Reason}, {result, null}]})).
 
 encode_result(Result, ID) ->
   try
-    lists:flatten(mochijson:encode({struct, [{id, ID}, {error, null}, {result, Result}]}))
+    lists:flatten(mochijson2:encode({struct, [{id, ID}, {error, null}, {result, Result}]}))
   catch
     _:_ -> encode_error("Error encoding response.", ID)
   end.
@@ -74,41 +68,9 @@ send(Req, StatusCode, JsonStr) ->
   Req:respond({StatusCode, [{'Content-Type', "application/json"}], JsonStr}).
 
 fetch(JsonObj, Key) when is_atom(Key) ->
-  fetch(JsonObj, atom_to_list(Key));
-fetch({struct, List}, Key) when is_list(List) ->
+  fetch(JsonObj, list_to_binary(atom_to_list(Key)));
+fetch({struct, List}, Key) when is_list(List) and is_binary(Key) ->
   case lists:keysearch(Key, 1, List) of
     {value, {Key, Value}} -> Value;
     _ -> []
   end.
-
-test_acceptable_request() ->
-    test_each_acceptable_request(tuples_for_test_acceptable_request()).
-
-test_each_acceptable_request([]) -> ok;
-test_each_acceptable_request([{ShouldReceive, WillAsk}|Rest]) ->
-  true = ShouldReceive == acceptable_request(mochiweb_http:new_request(WillAsk)),
-  test_each_acceptable_request(Rest).
-
-tuples_for_test_acceptable_request() ->
-  [
-    {ok, {foo, {'POST', {abs_path, "/"}, {1,0}}, [{'Content-Type', "application/json"}]}},
-    {ok, {foo, {'POST', {abs_path, "/"}, {1,1}}, [{'Content-Type', "application/json"}]}},
-    {{status, 505, "HTTP Version {5,0} is not supported."}, {foo, {'POST', {abs_path, "/"}, {5,0}}, [{'Content-Type', "application/json"}]}},
-    {{status, 501, "The 'PUT' method has not been implemented."}, {foo, {'PUT', {abs_path, "/"}, {1, 1}}, [{'Content-Type', "application/json"}]}},
-    {{status, 400, "Bad Request."}, {foo, {'PUT', {abs_path, "/"}, {5,0}}, [{'Content-Type', "application/json"}]}}
-  ].
-
-test_decode_request_body() ->
-  test_decode_request_good(),
-  test_decode_request_bad(),
-  ok.
-
-test_decode_request_good() ->
-  GoodJsonStr = "{\"id\":\"foobarbaz\",\"method\":\"foo\",\"params\":{\"bar\":{\"baz\":[1,2,3]}}}",
-  {ok, {call, foo, {struct, [{"bar", {struct, [{"baz", {array, [1, 2, 3]}}]}}]}}, "foobarbaz"} = decode_request_body(GoodJsonStr),
-  ok.
-
-test_decode_request_bad() ->
-  BadJsonStr = "{\"id\":\"foobarbaz\"params\":{\"bar\":\"baz\"}}",
-  {error, "Error decoding request."} = decode_request_body(BadJsonStr),
-  ok.
