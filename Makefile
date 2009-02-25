@@ -7,7 +7,7 @@ all:
 edoc:
 	(cd src;$(MAKE) edoc)
 
-test:
+test: all
 	prove t/*.t
 
 clean:
