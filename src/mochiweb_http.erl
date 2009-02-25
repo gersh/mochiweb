@@ -38,7 +38,7 @@ stop() ->
 
 stop(Name) ->
     mochiweb:stop(Name).
-    
+
 start() ->
     start([{ip, "127.0.0.1"},
            {loop, {?MODULE, default_body}}]).

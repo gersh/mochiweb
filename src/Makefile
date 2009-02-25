@@ -1,6 +1,6 @@
 include ../support/include.mk
 
-all: $(EBIN_FILES_NO_DOCS)
+all: $(EBIN_FILES)
 
 debug:
 	$(MAKE) DEBUG=-DDEBUG
