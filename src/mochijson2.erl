@@ -102,6 +102,10 @@ json_encode(Array, State) when is_list(Array) ->
     json_encode_array(Array, State);
 json_encode({struct, Props}, State) when is_list(Props) ->
     json_encode_proplist(Props, State);
+json_encode({raw, EncodedString}, _State) when is_list(EncodedString) ->
+    list_to_binary(EncodedString);
+json_encode({raw, EncodedBinary}, _State) when is_binary(EncodedBinary) ->
+    EncodedBinary;
 json_encode(Bad, #encoder{handler=null}) ->
     exit({json_encode, {bad_term, Bad}});
 json_encode(Bad, State=#encoder{handler=Handler}) ->
