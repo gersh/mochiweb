@@ -83,7 +83,7 @@
           </head>
           <body>
             <h3>C0 code coverage information</h3>
-            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            <p>Generated on 2009-02-25 01:24:47 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
             </p>            
         <table class='report'>
           <thead>
@@ -113,9 +113,9 @@
               <td>
                 <table cellspacing='0' cellpadding='0' align='right'>
                   <tr>
-                    <td><tt>0%</tt>&nbsp;</td><td>
+                    <td><tt>55%</tt>&nbsp;</td><td>
                       <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
-                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      <tr><td class='covered' width='55' /><td class='uncovered' width='45' /></tr>
                       </table>
                     </td>
                   </tr>
@@ -132,426 +132,213 @@
 </span><span class="marked"><a name="line7"></a>....7 -author('bob@mochimedia.com').
 </span><span class="marked"><a name="line8"></a>....8 
 </span><span class="marked"><a name="line9"></a>....9 -export([parse_form/1, parse_form/2]).
-</span><span class="marked"><a name="line10"></a>...10 -export([parse_multipart_request/2]).
-</span><span class="marked"><a name="line11"></a>...11 -export([test/0]).
-</span><span class="marked"><a name="line12"></a>...12 
-</span><span class="marked"><a name="line13"></a>...13 -define(CHUNKSIZE, 4096).
-</span><span class="marked"><a name="line14"></a>...14 
-</span><span class="marked"><a name="line15"></a>...15 -record(mp, {state, boundary, length, buffer, callback, req}).
-</span><span class="marked"><a name="line16"></a>...16 
-</span><span class="marked"><a name="line17"></a>...17 %% TODO: DOCUMENT THIS MODULE.
-</span><span class="marked"><a name="line18"></a>...18 
-</span><span class="marked"><a name="line19"></a>...19 parse_form(Req) ->
-</span><span class="uncovered"><a name="line20"></a>...20     parse_form(Req, fun default_file_handler/2).
-</span><span class="marked"><a name="line21"></a>...21 
-</span><span class="marked"><a name="line22"></a>...22 parse_form(Req, FileHandler) ->
-</span><span class="uncovered"><a name="line23"></a>...23     Callback = fun (Next) -> parse_form_outer(Next, FileHandler, []) end,
-</span><span class="uncovered"><a name="line24"></a>...24     {_, _, Res} = parse_multipart_request(Req, Callback),
-</span><span class="uncovered"><a name="line25"></a>...25     Res.
-</span><span class="marked"><a name="line26"></a>...26 
-</span><span class="marked"><a name="line27"></a>...27 parse_form_outer(eof, _, Acc) ->
-</span><span class="uncovered"><a name="line28"></a>...28     lists:reverse(Acc);
-</span><span class="marked"><a name="line29"></a>...29 parse_form_outer({headers, H}, FileHandler, State) ->
-</span><span class="uncovered"><a name="line30"></a>...30     {"form-data", H1} = proplists:get_value("content-disposition", H),
-</span><span class="uncovered"><a name="line31"></a>...31     Name = proplists:get_value("name", H1),
-</span><span class="uncovered"><a name="line32"></a>...32     Filename = proplists:get_value("filename", H1),
-</span><span class="uncovered"><a name="line33"></a>...33     case Filename of
-</span><span class="marked"><a name="line34"></a>...34         undefined ->
-</span><span class="uncovered"><a name="line35"></a>...35             fun (Next) ->
-</span><span class="uncovered"><a name="line36"></a>...36                     parse_form_value(Next, {Name, []}, FileHandler, State)
-</span><span class="marked"><a name="line37"></a>...37             end;
-</span><span class="marked"><a name="line38"></a>...38         _ ->
-</span><span class="uncovered"><a name="line39"></a>...39             ContentType = proplists:get_value("content-type", H),
-</span><span class="uncovered"><a name="line40"></a>...40             Handler = FileHandler(Filename, ContentType),
-</span><span class="uncovered"><a name="line41"></a>...41             fun (Next) ->
-</span><span class="uncovered"><a name="line42"></a>...42                     parse_form_file(Next, {Name, Handler}, FileHandler, State)
-</span><span class="marked"><a name="line43"></a>...43             end
-</span><span class="marked"><a name="line44"></a>...44     end.
-</span><span class="marked"><a name="line45"></a>...45 
-</span><span class="marked"><a name="line46"></a>...46 parse_form_value(body_end, {Name, Acc}, FileHandler, State) ->
-</span><span class="uncovered"><a name="line47"></a>...47     Value = binary_to_list(iolist_to_binary(lists:reverse(Acc))),
-</span><span class="uncovered"><a name="line48"></a>...48     State1 = [{Name, Value} | State],
-</span><span class="uncovered"><a name="line49"></a>...49     fun (Next) -> parse_form_outer(Next, FileHandler, State1) end;
-</span><span class="marked"><a name="line50"></a>...50 parse_form_value({body, Data}, {Name, Acc}, FileHandler, State) ->
-</span><span class="uncovered"><a name="line51"></a>...51     Acc1 = [Data | Acc],
-</span><span class="uncovered"><a name="line52"></a>...52     fun (Next) -> parse_form_value(Next, {Name, Acc1}, FileHandler, State) end.
-</span><span class="marked"><a name="line53"></a>...53 
-</span><span class="marked"><a name="line54"></a>...54 parse_form_file(body_end, {Name, Handler}, FileHandler, State) ->
-</span><span class="uncovered"><a name="line55"></a>...55     Value = Handler(eof),
-</span><span class="uncovered"><a name="line56"></a>...56     State1 = [{Name, Value} | State],
-</span><span class="uncovered"><a name="line57"></a>...57     fun (Next) -> parse_form_outer(Next, FileHandler, State1) end;
-</span><span class="marked"><a name="line58"></a>...58 parse_form_file({body, Data}, {Name, Handler}, FileHandler, State) ->
-</span><span class="uncovered"><a name="line59"></a>...59     H1 = Handler(Data),
-</span><span class="uncovered"><a name="line60"></a>...60     fun (Next) -> parse_form_file(Next, {Name, H1}, FileHandler, State) end.
-</span><span class="marked"><a name="line61"></a>...61 
-</span><span class="marked"><a name="line62"></a>...62 default_file_handler(Filename, ContentType) ->
-</span><span class="uncovered"><a name="line63"></a>...63     default_file_handler_1(Filename, ContentType, []).
-</span><span class="marked"><a name="line64"></a>...64 
-</span><span class="marked"><a name="line65"></a>...65 default_file_handler_1(Filename, ContentType, Acc) ->
-</span><span class="uncovered"><a name="line66"></a>...66     fun(eof) ->
-</span><span class="uncovered"><a name="line67"></a>...67             Value = iolist_to_binary(lists:reverse(Acc)),
-</span><span class="uncovered"><a name="line68"></a>...68             {Filename, ContentType, Value};
-</span><span class="marked"><a name="line69"></a>...69        (Next) ->
-</span><span class="uncovered"><a name="line70"></a>...70             default_file_handler_1(Filename, ContentType, [Next | Acc])
-</span><span class="marked"><a name="line71"></a>...71     end.
-</span><span class="marked"><a name="line72"></a>...72 
-</span><span class="marked"><a name="line73"></a>...73 parse_multipart_request(Req, Callback) ->
-</span><span class="marked"><a name="line74"></a>...74     %% TODO: Support chunked?
-</span><span class="uncovered"><a name="line75"></a>...75     Length = list_to_integer(Req:get_header_value("content-length")),
-</span><span class="uncovered"><a name="line76"></a>...76     Boundary = iolist_to_binary(
-</span><span class="marked"><a name="line77"></a>...77                  get_boundary(Req:get_header_value("content-type"))),
-</span><span class="uncovered"><a name="line78"></a>...78     Prefix = <<"\r\n--", Boundary/binary>>,
-</span><span class="uncovered"><a name="line79"></a>...79     BS = size(Boundary),
-</span><span class="uncovered"><a name="line80"></a>...80     Chunk = read_chunk(Req, Length),
-</span><span class="uncovered"><a name="line81"></a>...81     Length1 = Length - size(Chunk),
-</span><span class="uncovered"><a name="line82"></a>...82     <<"--", Boundary:BS/binary, "\r\n", Rest/binary>> = Chunk,
-</span><span class="uncovered"><a name="line83"></a>...83     feed_mp(headers, #mp{boundary=Prefix,
-</span><span class="marked"><a name="line84"></a>...84                          length=Length1,
-</span><span class="marked"><a name="line85"></a>...85                          buffer=Rest,
-</span><span class="marked"><a name="line86"></a>...86                          callback=Callback,
-</span><span class="marked"><a name="line87"></a>...87                          req=Req}).
-</span><span class="marked"><a name="line88"></a>...88 
-</span><span class="marked"><a name="line89"></a>...89 parse_headers(<<>>) ->
-</span><span class="uncovered"><a name="line90"></a>...90     [];
-</span><span class="marked"><a name="line91"></a>...91 parse_headers(Binary) ->
-</span><span class="uncovered"><a name="line92"></a>...92     parse_headers(Binary, []).
-</span><span class="marked"><a name="line93"></a>...93 
-</span><span class="marked"><a name="line94"></a>...94 parse_headers(Binary, Acc) ->
-</span><span class="uncovered"><a name="line95"></a>...95     case find_in_binary(<<"\r\n">>, Binary) of
-</span><span class="marked"><a name="line96"></a>...96         {exact, N} ->
-</span><span class="uncovered"><a name="line97"></a>...97             <<Line:N/binary, "\r\n", Rest/binary>> = Binary,
-</span><span class="uncovered"><a name="line98"></a>...98             parse_headers(Rest, [split_header(Line) | Acc]);
-</span><span class="marked"><a name="line99"></a>...99         not_found ->
-</span><span class="uncovered"><a name="line100"></a>..100             lists:reverse([split_header(Binary) | Acc])
-</span><span class="marked"><a name="line101"></a>..101     end.
-</span><span class="marked"><a name="line102"></a>..102 
-</span><span class="marked"><a name="line103"></a>..103 split_header(Line) ->
-</span><span class="uncovered"><a name="line104"></a>..104     {Name, [$: | Value]} = lists:splitwith(fun (C) -> C =/= $: end,
-</span><span class="marked"><a name="line105"></a>..105                                            binary_to_list(Line)),
-</span><span class="uncovered"><a name="line106"></a>..106     {string:to_lower(string:strip(Name)),
-</span><span class="marked"><a name="line107"></a>..107      mochiweb_util:parse_header(Value)}.
-</span><span class="marked"><a name="line108"></a>..108 
-</span><span class="marked"><a name="line109"></a>..109 read_chunk(Req, Length) when Length > 0 ->
-</span><span class="uncovered"><a name="line110"></a>..110     case Length of
-</span><span class="marked"><a name="line111"></a>..111         Length when Length < ?CHUNKSIZE ->
-</span><span class="uncovered"><a name="line112"></a>..112             Req:recv(Length);
-</span><span class="marked"><a name="line113"></a>..113         _ ->
-</span><span class="uncovered"><a name="line114"></a>..114             Req:recv(?CHUNKSIZE)
-</span><span class="marked"><a name="line115"></a>..115     end.
-</span><span class="marked"><a name="line116"></a>..116 
-</span><span class="marked"><a name="line117"></a>..117 read_more(State=#mp{length=Length, buffer=Buffer, req=Req}) ->
-</span><span class="uncovered"><a name="line118"></a>..118     Data = read_chunk(Req, Length),
-</span><span class="uncovered"><a name="line119"></a>..119     Buffer1 = <<Buffer/binary, Data/binary>>,
-</span><span class="uncovered"><a name="line120"></a>..120     State#mp{length=Length - size(Data),
-</span><span class="marked"><a name="line121"></a>..121              buffer=Buffer1}.
-</span><span class="marked"><a name="line122"></a>..122 
-</span><span class="marked"><a name="line123"></a>..123 feed_mp(headers, State=#mp{buffer=Buffer, callback=Callback}) ->
-</span><span class="uncovered"><a name="line124"></a>..124     {State1, P} = case find_in_binary(<<"\r\n\r\n">>, Buffer) of
-</span><span class="marked"><a name="line125"></a>..125                       {exact, N} ->
-</span><span class="uncovered"><a name="line126"></a>..126                           {State, N};
-</span><span class="marked"><a name="line127"></a>..127                       _ ->
-</span><span class="uncovered"><a name="line128"></a>..128                           S1 = read_more(State),
-</span><span class="marked"><a name="line129"></a>..129                           %% Assume headers must be less than ?CHUNKSIZE
-</span><span class="uncovered"><a name="line130"></a>..130                           {exact, N} = find_in_binary(<<"\r\n\r\n">>,
-</span><span class="marked"><a name="line131"></a>..131                                                       S1#mp.buffer),
-</span><span class="uncovered"><a name="line132"></a>..132                           {S1, N}
-</span><span class="marked"><a name="line133"></a>..133                   end,
-</span><span class="uncovered"><a name="line134"></a>..134     <<Headers:P/binary, "\r\n\r\n", Rest/binary>> = State1#mp.buffer,
-</span><span class="uncovered"><a name="line135"></a>..135     NextCallback = Callback({headers, parse_headers(Headers)}),
-</span><span class="uncovered"><a name="line136"></a>..136     feed_mp(body, State1#mp{buffer=Rest,
-</span><span class="marked"><a name="line137"></a>..137                             callback=NextCallback});
-</span><span class="marked"><a name="line138"></a>..138 feed_mp(body, State=#mp{boundary=Prefix, buffer=Buffer, callback=Callback}) ->
-</span><span class="uncovered"><a name="line139"></a>..139     case find_boundary(Prefix, Buffer) of
-</span><span class="marked"><a name="line140"></a>..140         {end_boundary, Start, Skip} ->
-</span><span class="uncovered"><a name="line141"></a>..141             <<Data:Start/binary, _:Skip/binary, Rest/binary>> = Buffer,
-</span><span class="uncovered"><a name="line142"></a>..142             C1 = Callback({body, Data}),
-</span><span class="uncovered"><a name="line143"></a>..143             C2 = C1(body_end),
-</span><span class="uncovered"><a name="line144"></a>..144             {State#mp.length, Rest, C2(eof)};
-</span><span class="marked"><a name="line145"></a>..145         {next_boundary, Start, Skip} ->
-</span><span class="uncovered"><a name="line146"></a>..146             <<Data:Start/binary, _:Skip/binary, Rest/binary>> = Buffer,
-</span><span class="uncovered"><a name="line147"></a>..147             C1 = Callback({body, Data}),
-</span><span class="uncovered"><a name="line148"></a>..148             feed_mp(headers, State#mp{callback=C1(body_end),
-</span><span class="marked"><a name="line149"></a>..149                                       buffer=Rest});
-</span><span class="marked"><a name="line150"></a>..150         {maybe, Start} ->
-</span><span class="uncovered"><a name="line151"></a>..151             <<Data:Start/binary, Rest/binary>> = Buffer,
-</span><span class="uncovered"><a name="line152"></a>..152             feed_mp(body, read_more(State#mp{callback=Callback({body, Data}),
-</span><span class="marked"><a name="line153"></a>..153                                              buffer=Rest}));
-</span><span class="marked"><a name="line154"></a>..154         not_found ->
-</span><span class="uncovered"><a name="line155"></a>..155             {Data, Rest} = {Buffer, <<>>},
-</span><span class="uncovered"><a name="line156"></a>..156             feed_mp(body, read_more(State#mp{callback=Callback({body, Data}),
-</span><span class="marked"><a name="line157"></a>..157                                              buffer=Rest}))
-</span><span class="marked"><a name="line158"></a>..158     end.
-</span><span class="marked"><a name="line159"></a>..159 
-</span><span class="marked"><a name="line160"></a>..160 get_boundary(ContentType) ->
-</span><span class="uncovered"><a name="line161"></a>..161     {"multipart/form-data", Opts} = mochiweb_util:parse_header(ContentType),
-</span><span class="uncovered"><a name="line162"></a>..162     case proplists:get_value("boundary", Opts) of
-</span><span class="marked"><a name="line163"></a>..163         S when is_list(S) ->
-</span><span class="uncovered"><a name="line164"></a>..164             S
-</span><span class="marked"><a name="line165"></a>..165     end.
-</span><span class="marked"><a name="line166"></a>..166 
-</span><span class="marked"><a name="line167"></a>..167 find_in_binary(B, Data) when size(B) > 0 ->
-</span><span class="uncovered"><a name="line168"></a>..168     case size(Data) - size(B) of
-</span><span class="marked"><a name="line169"></a>..169         Last when Last < 0 ->
-</span><span class="uncovered"><a name="line170"></a>..170             partial_find(B, Data, 0, size(Data));
-</span><span class="marked"><a name="line171"></a>..171         Last ->
-</span><span class="uncovered"><a name="line172"></a>..172             find_in_binary(B, size(B), Data, 0, Last)
-</span><span class="marked"><a name="line173"></a>..173     end.
-</span><span class="marked"><a name="line174"></a>..174 
-</span><span class="marked"><a name="line175"></a>..175 find_in_binary(B, BS, D, N, Last) when N =< Last->
-</span><span class="uncovered"><a name="line176"></a>..176     case D of
-</span><span class="marked"><a name="line177"></a>..177         <<_:N/binary, B:BS/binary, _/binary>> ->
-</span><span class="uncovered"><a name="line178"></a>..178             {exact, N};
-</span><span class="marked"><a name="line179"></a>..179         _ ->
-</span><span class="uncovered"><a name="line180"></a>..180             find_in_binary(B, BS, D, 1 + N, Last)
-</span><span class="marked"><a name="line181"></a>..181     end;
-</span><span class="marked"><a name="line182"></a>..182 find_in_binary(B, BS, D, N, Last) when N =:= 1 + Last ->
-</span><span class="uncovered"><a name="line183"></a>..183     partial_find(B, D, N, BS - 1).
-</span><span class="marked"><a name="line184"></a>..184 
-</span><span class="marked"><a name="line185"></a>..185 partial_find(_B, _D, _N, 0) ->
-</span><span class="uncovered"><a name="line186"></a>..186     not_found;
-</span><span class="marked"><a name="line187"></a>..187 partial_find(B, D, N, K) ->
-</span><span class="uncovered"><a name="line188"></a>..188     <<B1:K/binary, _/binary>> = B,
-</span><span class="uncovered"><a name="line189"></a>..189     case D of
-</span><span class="marked"><a name="line190"></a>..190         <<_Skip:N/binary, B1:K/binary>> ->
-</span><span class="uncovered"><a name="line191"></a>..191             {partial, N, K};
-</span><span class="marked"><a name="line192"></a>..192         _ ->
-</span><span class="uncovered"><a name="line193"></a>..193             partial_find(B, D, 1 + N, K - 1)
-</span><span class="marked"><a name="line194"></a>..194     end.
-</span><span class="marked"><a name="line195"></a>..195 
-</span><span class="marked"><a name="line196"></a>..196 find_boundary(Prefix, Data) ->
-</span><span class="uncovered"><a name="line197"></a>..197     case find_in_binary(Prefix, Data) of
-</span><span class="marked"><a name="line198"></a>..198         {exact, Skip} ->
-</span><span class="uncovered"><a name="line199"></a>..199             PrefixSkip = Skip + size(Prefix),
-</span><span class="uncovered"><a name="line200"></a>..200             case Data of
-</span><span class="marked"><a name="line201"></a>..201                 <<_:PrefixSkip/binary, "\r\n", _/binary>> ->
-</span><span class="uncovered"><a name="line202"></a>..202                     {next_boundary, Skip, size(Prefix) + 2};
-</span><span class="marked"><a name="line203"></a>..203                 <<_:PrefixSkip/binary, "--\r\n", _/binary>> ->
-</span><span class="uncovered"><a name="line204"></a>..204                     {end_boundary, Skip, size(Prefix) + 4};
-</span><span class="marked"><a name="line205"></a>..205                 _ when size(Data) < PrefixSkip + 4 ->
-</span><span class="marked"><a name="line206"></a>..206                     %% Underflow
-</span><span class="uncovered"><a name="line207"></a>..207                     {maybe, Skip};
-</span><span class="marked"><a name="line208"></a>..208                 _ ->
-</span><span class="marked"><a name="line209"></a>..209                     %% False positive
-</span><span class="uncovered"><a name="line210"></a>..210                     not_found
-</span><span class="marked"><a name="line211"></a>..211             end;
-</span><span class="marked"><a name="line212"></a>..212         {partial, Skip, Length} when (Skip + Length) =:= size(Data) ->
-</span><span class="marked"><a name="line213"></a>..213             %% Underflow
-</span><span class="uncovered"><a name="line214"></a>..214             {maybe, Skip};
-</span><span class="marked"><a name="line215"></a>..215         _ ->
-</span><span class="uncovered"><a name="line216"></a>..216             not_found
-</span><span class="marked"><a name="line217"></a>..217     end.
-</span><span class="marked"><a name="line218"></a>..218 
-</span><span class="marked"><a name="line219"></a>..219 with_socket_server(ServerFun, ClientFun) ->
-</span><span class="uncovered"><a name="line220"></a>..220     {ok, Server} = mochiweb:start([{ip, "127.0.0.1"},
-</span><span class="marked"><a name="line221"></a>..221                                                  {port, 0},
-</span><span class="marked"><a name="line222"></a>..222                                                  {loop, ServerFun}]),
-</span><span class="uncovered"><a name="line223"></a>..223     Port = mochiweb:get(Server, port),
-</span><span class="uncovered"><a name="line224"></a>..224     {ok, Client} = gen_tcp:connect("127.0.0.1", Port,
-</span><span class="marked"><a name="line225"></a>..225                                    [binary, {active, false}]),
-</span><span class="uncovered"><a name="line226"></a>..226     Res = (catch ClientFun(Client)),
-</span><span class="uncovered"><a name="line227"></a>..227     mochiweb:stop(Server),
-</span><span class="uncovered"><a name="line228"></a>..228     Res.
-</span><span class="marked"><a name="line229"></a>..229 
-</span><span class="marked"><a name="line230"></a>..230 fake_request(Socket, ContentType, Length) ->
-</span><span class="uncovered"><a name="line231"></a>..231     mochiweb_request:new(Socket,
-</span><span class="marked"><a name="line232"></a>..232                          'POST',
-</span><span class="marked"><a name="line233"></a>..233                          "/multipart",
-</span><span class="marked"><a name="line234"></a>..234                          {1,1},
-</span><span class="marked"><a name="line235"></a>..235                          mochiweb_headers:make(
-</span><span class="marked"><a name="line236"></a>..236                            [{"content-type", ContentType},
-</span><span class="marked"><a name="line237"></a>..237                             {"content-length", Length}])).
-</span><span class="marked"><a name="line238"></a>..238 
-</span><span class="marked"><a name="line239"></a>..239 test_callback(Expect, [Expect | Rest]) ->
-</span><span class="uncovered"><a name="line240"></a>..240     case Rest of
-</span><span class="marked"><a name="line241"></a>..241         [] ->
-</span><span class="uncovered"><a name="line242"></a>..242             ok;
-</span><span class="marked"><a name="line243"></a>..243         _ ->
-</span><span class="uncovered"><a name="line244"></a>..244             fun (Next) -> test_callback(Next, Rest) end
-</span><span class="marked"><a name="line245"></a>..245     end.
-</span><span class="marked"><a name="line246"></a>..246 
-</span><span class="marked"><a name="line247"></a>..247 test_parse3() ->
-</span><span class="uncovered"><a name="line248"></a>..248     ContentType = "multipart/form-data; boundary=---------------------------7386909285754635891697677882",
-</span><span class="uncovered"><a name="line249"></a>..249     BinContent = <<"-----------------------------7386909285754635891697677882\r\nContent-Disposition: form-data; name=\"hidden\"\r\n\r\nmultipart message\r\n-----------------------------7386909285754635891697677882\r\nContent-Disposition: form-data; name=\"file\"; filename=\"test_file.txt\"\r\nContent-Type: text/plain\r\n\r\nWoo multiline text file\n\nLa la la\r\n-----------------------------7386909285754635891697677882--\r\n">>,
-</span><span class="uncovered"><a name="line250"></a>..250     Expect = [{headers,
-</span><span class="marked"><a name="line251"></a>..251                [{"content-disposition",
-</span><span class="marked"><a name="line252"></a>..252                  {"form-data", [{"name", "hidden"}]}}]},
-</span><span class="marked"><a name="line253"></a>..253               {body, <<"multipart message">>},
-</span><span class="marked"><a name="line254"></a>..254               body_end,
-</span><span class="marked"><a name="line255"></a>..255               {headers,
-</span><span class="marked"><a name="line256"></a>..256                [{"content-disposition",
-</span><span class="marked"><a name="line257"></a>..257                  {"form-data", [{"name", "file"}, {"filename", "test_file.txt"}]}},
-</span><span class="marked"><a name="line258"></a>..258                 {"content-type", {"text/plain", []}}]},
-</span><span class="marked"><a name="line259"></a>..259               {body, <<"Woo multiline text file\n\nLa la la">>},
-</span><span class="marked"><a name="line260"></a>..260               body_end,
-</span><span class="marked"><a name="line261"></a>..261               eof],
-</span><span class="uncovered"><a name="line262"></a>..262     TestCallback = fun (Next) -> test_callback(Next, Expect) end,
-</span><span class="uncovered"><a name="line263"></a>..263     ServerFun = fun (Socket) ->
-</span><span class="uncovered"><a name="line264"></a>..264                         case gen_tcp:send(Socket, BinContent) of
-</span><span class="marked"><a name="line265"></a>..265                             ok ->
-</span><span class="uncovered"><a name="line266"></a>..266                                 exit(normal)
-</span><span class="marked"><a name="line267"></a>..267                         end
-</span><span class="marked"><a name="line268"></a>..268                 end,
-</span><span class="uncovered"><a name="line269"></a>..269     ClientFun = fun (Socket) ->
-</span><span class="uncovered"><a name="line270"></a>..270                         Req = fake_request(Socket, ContentType,
-</span><span class="marked"><a name="line271"></a>..271                                            size(BinContent)),
-</span><span class="uncovered"><a name="line272"></a>..272                         Res = parse_multipart_request(Req, TestCallback),
-</span><span class="uncovered"><a name="line273"></a>..273                         {0, <<>>, ok} = Res,
-</span><span class="uncovered"><a name="line274"></a>..274                         ok
-</span><span class="marked"><a name="line275"></a>..275                 end,
-</span><span class="uncovered"><a name="line276"></a>..276     ok = with_socket_server(ServerFun, ClientFun),
-</span><span class="uncovered"><a name="line277"></a>..277     ok.
-</span><span class="marked"><a name="line278"></a>..278 
-</span><span class="marked"><a name="line279"></a>..279 
-</span><span class="marked"><a name="line280"></a>..280 test_parse2() ->
-</span><span class="uncovered"><a name="line281"></a>..281     ContentType = "multipart/form-data; boundary=---------------------------6072231407570234361599764024",
-</span><span class="uncovered"><a name="line282"></a>..282     BinContent = <<"-----------------------------6072231407570234361599764024\r\nContent-Disposition: form-data; name=\"hidden\"\r\n\r\nmultipart message\r\n-----------------------------6072231407570234361599764024\r\nContent-Disposition: form-data; name=\"file\"; filename=\"\"\r\nContent-Type: application/octet-stream\r\n\r\n\r\n-----------------------------6072231407570234361599764024--\r\n">>,
-</span><span class="uncovered"><a name="line283"></a>..283     Expect = [{headers,
-</span><span class="marked"><a name="line284"></a>..284                [{"content-disposition",
-</span><span class="marked"><a name="line285"></a>..285                  {"form-data", [{"name", "hidden"}]}}]},
-</span><span class="marked"><a name="line286"></a>..286               {body, <<"multipart message">>},
-</span><span class="marked"><a name="line287"></a>..287               body_end,
-</span><span class="marked"><a name="line288"></a>..288               {headers,
-</span><span class="marked"><a name="line289"></a>..289                [{"content-disposition",
-</span><span class="marked"><a name="line290"></a>..290                  {"form-data", [{"name", "file"}, {"filename", ""}]}},
-</span><span class="marked"><a name="line291"></a>..291                 {"content-type", {"application/octet-stream", []}}]},
-</span><span class="marked"><a name="line292"></a>..292               {body, <<>>},
-</span><span class="marked"><a name="line293"></a>..293               body_end,
-</span><span class="marked"><a name="line294"></a>..294               eof],
-</span><span class="uncovered"><a name="line295"></a>..295     TestCallback = fun (Next) -> test_callback(Next, Expect) end,
-</span><span class="uncovered"><a name="line296"></a>..296     ServerFun = fun (Socket) ->
-</span><span class="uncovered"><a name="line297"></a>..297                         case gen_tcp:send(Socket, BinContent) of
-</span><span class="marked"><a name="line298"></a>..298                             ok ->
-</span><span class="uncovered"><a name="line299"></a>..299                                 exit(normal)
-</span><span class="marked"><a name="line300"></a>..300                         end
-</span><span class="marked"><a name="line301"></a>..301                 end,
-</span><span class="uncovered"><a name="line302"></a>..302     ClientFun = fun (Socket) ->
-</span><span class="uncovered"><a name="line303"></a>..303                         Req = fake_request(Socket, ContentType,
-</span><span class="marked"><a name="line304"></a>..304                                            size(BinContent)),
-</span><span class="uncovered"><a name="line305"></a>..305                         Res = parse_multipart_request(Req, TestCallback),
-</span><span class="uncovered"><a name="line306"></a>..306                         {0, <<>>, ok} = Res,
-</span><span class="uncovered"><a name="line307"></a>..307                         ok
-</span><span class="marked"><a name="line308"></a>..308                 end,
-</span><span class="uncovered"><a name="line309"></a>..309     ok = with_socket_server(ServerFun, ClientFun),
-</span><span class="uncovered"><a name="line310"></a>..310     ok.
-</span><span class="marked"><a name="line311"></a>..311 
-</span><span class="marked"><a name="line312"></a>..312 test_parse_form() ->
-</span><span class="uncovered"><a name="line313"></a>..313     ContentType = "multipart/form-data; boundary=AaB03x",
-</span><span class="uncovered"><a name="line314"></a>..314     "AaB03x" = get_boundary(ContentType),
-</span><span class="uncovered"><a name="line315"></a>..315     Content = mochiweb_util:join(
-</span><span class="marked"><a name="line316"></a>..316                 ["--AaB03x",
-</span><span class="marked"><a name="line317"></a>..317                  "Content-Disposition: form-data; name=\"submit-name\"",
-</span><span class="marked"><a name="line318"></a>..318                  "",
-</span><span class="marked"><a name="line319"></a>..319                  "Larry",
-</span><span class="marked"><a name="line320"></a>..320                  "--AaB03x",
-</span><span class="marked"><a name="line321"></a>..321                  "Content-Disposition: form-data; name=\"files\";"
-</span><span class="marked"><a name="line322"></a>..322                  ++ "filename=\"file1.txt\"",
-</span><span class="marked"><a name="line323"></a>..323                  "Content-Type: text/plain",
-</span><span class="marked"><a name="line324"></a>..324                  "",
-</span><span class="marked"><a name="line325"></a>..325                  "... contents of file1.txt ...",
-</span><span class="marked"><a name="line326"></a>..326                  "--AaB03x--",
-</span><span class="marked"><a name="line327"></a>..327                  ""], "\r\n"),
-</span><span class="uncovered"><a name="line328"></a>..328     BinContent = iolist_to_binary(Content),
-</span><span class="uncovered"><a name="line329"></a>..329     ServerFun = fun (Socket) ->
-</span><span class="uncovered"><a name="line330"></a>..330                         case gen_tcp:send(Socket, BinContent) of
-</span><span class="marked"><a name="line331"></a>..331                             ok ->
-</span><span class="uncovered"><a name="line332"></a>..332                                 exit(normal)
-</span><span class="marked"><a name="line333"></a>..333                         end
-</span><span class="marked"><a name="line334"></a>..334                 end,
-</span><span class="uncovered"><a name="line335"></a>..335     ClientFun = fun (Socket) ->
-</span><span class="uncovered"><a name="line336"></a>..336                         Req = fake_request(Socket, ContentType,
-</span><span class="marked"><a name="line337"></a>..337                                            size(BinContent)),
-</span><span class="uncovered"><a name="line338"></a>..338                         Res = parse_form(Req),
-</span><span class="marked"><a name="line339"></a>..339                         [{"submit-name", "Larry"},
-</span><span class="marked"><a name="line340"></a>..340                          {"files", {"file1.txt", {"text/plain",[]},
-</span><span class="marked"><a name="line341"></a>..341                                     <<"... contents of file1.txt ...">>}
-</span><span class="uncovered"><a name="line342"></a>..342                          }] = Res,
-</span><span class="uncovered"><a name="line343"></a>..343                         ok
-</span><span class="marked"><a name="line344"></a>..344                 end,
-</span><span class="uncovered"><a name="line345"></a>..345     ok = with_socket_server(ServerFun, ClientFun),
-</span><span class="uncovered"><a name="line346"></a>..346     ok.
-</span><span class="marked"><a name="line347"></a>..347 
-</span><span class="marked"><a name="line348"></a>..348 test_parse() ->
-</span><span class="uncovered"><a name="line349"></a>..349     ContentType = "multipart/form-data; boundary=AaB03x",
-</span><span class="uncovered"><a name="line350"></a>..350     "AaB03x" = get_boundary(ContentType),
-</span><span class="uncovered"><a name="line351"></a>..351     Content = mochiweb_util:join(
-</span><span class="marked"><a name="line352"></a>..352                 ["--AaB03x",
-</span><span class="marked"><a name="line353"></a>..353                  "Content-Disposition: form-data; name=\"submit-name\"",
-</span><span class="marked"><a name="line354"></a>..354                  "",
-</span><span class="marked"><a name="line355"></a>..355                  "Larry",
-</span><span class="marked"><a name="line356"></a>..356                  "--AaB03x",
-</span><span class="marked"><a name="line357"></a>..357                  "Content-Disposition: form-data; name=\"files\";"
-</span><span class="marked"><a name="line358"></a>..358                  ++ "filename=\"file1.txt\"",
-</span><span class="marked"><a name="line359"></a>..359                  "Content-Type: text/plain",
-</span><span class="marked"><a name="line360"></a>..360                  "",
-</span><span class="marked"><a name="line361"></a>..361                  "... contents of file1.txt ...",
-</span><span class="marked"><a name="line362"></a>..362                  "--AaB03x--",
-</span><span class="marked"><a name="line363"></a>..363                  ""], "\r\n"),
-</span><span class="uncovered"><a name="line364"></a>..364     BinContent = iolist_to_binary(Content),
-</span><span class="uncovered"><a name="line365"></a>..365     Expect = [{headers,
-</span><span class="marked"><a name="line366"></a>..366                [{"content-disposition",
-</span><span class="marked"><a name="line367"></a>..367                  {"form-data", [{"name", "submit-name"}]}}]},
-</span><span class="marked"><a name="line368"></a>..368               {body, <<"Larry">>},
-</span><span class="marked"><a name="line369"></a>..369               body_end,
-</span><span class="marked"><a name="line370"></a>..370               {headers,
-</span><span class="marked"><a name="line371"></a>..371                [{"content-disposition",
-</span><span class="marked"><a name="line372"></a>..372                  {"form-data", [{"name", "files"}, {"filename", "file1.txt"}]}},
-</span><span class="marked"><a name="line373"></a>..373                  {"content-type", {"text/plain", []}}]},
-</span><span class="marked"><a name="line374"></a>..374               {body, <<"... contents of file1.txt ...">>},
-</span><span class="marked"><a name="line375"></a>..375               body_end,
-</span><span class="marked"><a name="line376"></a>..376               eof],
-</span><span class="uncovered"><a name="line377"></a>..377     TestCallback = fun (Next) -> test_callback(Next, Expect) end,
-</span><span class="uncovered"><a name="line378"></a>..378     ServerFun = fun (Socket) ->
-</span><span class="uncovered"><a name="line379"></a>..379                         case gen_tcp:send(Socket, BinContent) of
-</span><span class="marked"><a name="line380"></a>..380                             ok ->
-</span><span class="uncovered"><a name="line381"></a>..381                                 exit(normal)
-</span><span class="marked"><a name="line382"></a>..382                         end
-</span><span class="marked"><a name="line383"></a>..383                 end,
-</span><span class="uncovered"><a name="line384"></a>..384     ClientFun = fun (Socket) ->
-</span><span class="uncovered"><a name="line385"></a>..385                         Req = fake_request(Socket, ContentType,
-</span><span class="marked"><a name="line386"></a>..386                                            size(BinContent)),
-</span><span class="uncovered"><a name="line387"></a>..387                         Res = parse_multipart_request(Req, TestCallback),
-</span><span class="uncovered"><a name="line388"></a>..388                         {0, <<>>, ok} = Res,
-</span><span class="uncovered"><a name="line389"></a>..389                         ok
-</span><span class="marked"><a name="line390"></a>..390                 end,
-</span><span class="uncovered"><a name="line391"></a>..391     ok = with_socket_server(ServerFun, ClientFun),
-</span><span class="uncovered"><a name="line392"></a>..392     ok.
-</span><span class="marked"><a name="line393"></a>..393 
-</span><span class="marked"><a name="line394"></a>..394 test_find_boundary() ->
-</span><span class="uncovered"><a name="line395"></a>..395     B = <<"\r\n--X">>,
-</span><span class="uncovered"><a name="line396"></a>..396     {next_boundary, 0, 7} = find_boundary(B, <<"\r\n--X\r\nRest">>),
-</span><span class="uncovered"><a name="line397"></a>..397     {next_boundary, 1, 7} = find_boundary(B, <<"!\r\n--X\r\nRest">>),
-</span><span class="uncovered"><a name="line398"></a>..398     {end_boundary, 0, 9} = find_boundary(B, <<"\r\n--X--\r\nRest">>),
-</span><span class="uncovered"><a name="line399"></a>..399     {end_boundary, 1, 9} = find_boundary(B, <<"!\r\n--X--\r\nRest">>),
-</span><span class="uncovered"><a name="line400"></a>..400     not_found = find_boundary(B, <<"--X\r\nRest">>),
-</span><span class="uncovered"><a name="line401"></a>..401     {maybe, 0} = find_boundary(B, <<"\r\n--X\r">>),
-</span><span class="uncovered"><a name="line402"></a>..402     {maybe, 1} = find_boundary(B, <<"!\r\n--X\r">>),
-</span><span class="uncovered"><a name="line403"></a>..403     P = <<"\r\n-----------------------------16037454351082272548568224146">>,
-</span><span class="uncovered"><a name="line404"></a>..404     B0 = <<55,212,131,77,206,23,216,198,35,87,252,118,252,8,25,211,132,229,
-</span><span class="marked"><a name="line405"></a>..405           182,42,29,188,62,175,247,243,4,4,0,59, 13,10,45,45,45,45,45,45,45,
-</span><span class="marked"><a name="line406"></a>..406           45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,45,
-</span><span class="marked"><a name="line407"></a>..407           49,54,48,51,55,52,53,52,51,53,49>>,
-</span><span class="uncovered"><a name="line408"></a>..408     {maybe, 30} = find_boundary(P, B0),
-</span><span class="uncovered"><a name="line409"></a>..409     ok.
-</span><span class="marked"><a name="line410"></a>..410 
-</span><span class="marked"><a name="line411"></a>..411 test_find_in_binary() ->
-</span><span class="uncovered"><a name="line412"></a>..412     {exact, 0} = find_in_binary(<<"foo">>, <<"foobarbaz">>),
-</span><span class="uncovered"><a name="line413"></a>..413     {exact, 1} = find_in_binary(<<"oo">>, <<"foobarbaz">>),
-</span><span class="uncovered"><a name="line414"></a>..414     {exact, 8} = find_in_binary(<<"z">>, <<"foobarbaz">>),
-</span><span class="uncovered"><a name="line415"></a>..415     not_found = find_in_binary(<<"q">>, <<"foobarbaz">>),
-</span><span class="uncovered"><a name="line416"></a>..416     {partial, 7, 2} = find_in_binary(<<"azul">>, <<"foobarbaz">>),
-</span><span class="uncovered"><a name="line417"></a>..417     {exact, 0} = find_in_binary(<<"foobarbaz">>, <<"foobarbaz">>),
-</span><span class="uncovered"><a name="line418"></a>..418     {partial, 0, 3} = find_in_binary(<<"foobar">>, <<"foo">>),
-</span><span class="uncovered"><a name="line419"></a>..419     {partial, 1, 3} = find_in_binary(<<"foobar">>, <<"afoo">>),
-</span><span class="uncovered"><a name="line420"></a>..420     ok.
-</span><span class="marked"><a name="line421"></a>..421 
-</span><span class="marked"><a name="line422"></a>..422 test() ->
-</span><span class="uncovered"><a name="line423"></a>..423     test_find_in_binary(),
-</span><span class="uncovered"><a name="line424"></a>..424     test_find_boundary(),
-</span><span class="uncovered"><a name="line425"></a>..425     test_parse(),
-</span><span class="uncovered"><a name="line426"></a>..426     test_parse2(),
-</span><span class="uncovered"><a name="line427"></a>..427     test_parse3(),
-</span><span class="uncovered"><a name="line428"></a>..428     test_parse_form(),
-</span><span class="uncovered"><a name="line429"></a>..429     ok.
+</span><span class="marked"><a name="line10"></a>...10 -export([parse_multipart_request/2, find_in_binary/2, find_boundary/2, get_boundary/1]).
+</span><span class="marked"><a name="line11"></a>...11 
+</span><span class="marked"><a name="line12"></a>...12 -define(CHUNKSIZE, 4096).
+</span><span class="marked"><a name="line13"></a>...13 
+</span><span class="marked"><a name="line14"></a>...14 -record(mp, {state, boundary, length, buffer, callback, req}).
+</span><span class="marked"><a name="line15"></a>...15 
+</span><span class="marked"><a name="line16"></a>...16 %% TODO: DOCUMENT THIS MODULE.
+</span><span class="marked"><a name="line17"></a>...17 
+</span><span class="marked"><a name="line18"></a>...18 parse_form(Req) ->
+</span><span class="uncovered"><a name="line19"></a>...19     parse_form(Req, fun default_file_handler/2).
+</span><span class="marked"><a name="line20"></a>...20 
+</span><span class="marked"><a name="line21"></a>...21 parse_form(Req, FileHandler) ->
+</span><span class="uncovered"><a name="line22"></a>...22     Callback = fun (Next) -> parse_form_outer(Next, FileHandler, []) end,
+</span><span class="uncovered"><a name="line23"></a>...23     {_, _, Res} = parse_multipart_request(Req, Callback),
+</span><span class="uncovered"><a name="line24"></a>...24     Res.
+</span><span class="marked"><a name="line25"></a>...25 
+</span><span class="marked"><a name="line26"></a>...26 parse_form_outer(eof, _, Acc) ->
+</span><span class="uncovered"><a name="line27"></a>...27     lists:reverse(Acc);
+</span><span class="marked"><a name="line28"></a>...28 parse_form_outer({headers, H}, FileHandler, State) ->
+</span><span class="uncovered"><a name="line29"></a>...29     {"form-data", H1} = proplists:get_value("content-disposition", H),
+</span><span class="uncovered"><a name="line30"></a>...30     Name = proplists:get_value("name", H1),
+</span><span class="uncovered"><a name="line31"></a>...31     Filename = proplists:get_value("filename", H1),
+</span><span class="uncovered"><a name="line32"></a>...32     case Filename of
+</span><span class="marked"><a name="line33"></a>...33         undefined ->
+</span><span class="uncovered"><a name="line34"></a>...34             fun (Next) ->
+</span><span class="uncovered"><a name="line35"></a>...35                     parse_form_value(Next, {Name, []}, FileHandler, State)
+</span><span class="marked"><a name="line36"></a>...36             end;
+</span><span class="marked"><a name="line37"></a>...37         _ ->
+</span><span class="uncovered"><a name="line38"></a>...38             ContentType = proplists:get_value("content-type", H),
+</span><span class="uncovered"><a name="line39"></a>...39             Handler = FileHandler(Filename, ContentType),
+</span><span class="uncovered"><a name="line40"></a>...40             fun (Next) ->
+</span><span class="uncovered"><a name="line41"></a>...41                     parse_form_file(Next, {Name, Handler}, FileHandler, State)
+</span><span class="marked"><a name="line42"></a>...42             end
+</span><span class="marked"><a name="line43"></a>...43     end.
+</span><span class="marked"><a name="line44"></a>...44 
+</span><span class="marked"><a name="line45"></a>...45 parse_form_value(body_end, {Name, Acc}, FileHandler, State) ->
+</span><span class="uncovered"><a name="line46"></a>...46     Value = binary_to_list(iolist_to_binary(lists:reverse(Acc))),
+</span><span class="uncovered"><a name="line47"></a>...47     State1 = [{Name, Value} | State],
+</span><span class="uncovered"><a name="line48"></a>...48     fun (Next) -> parse_form_outer(Next, FileHandler, State1) end;
+</span><span class="marked"><a name="line49"></a>...49 parse_form_value({body, Data}, {Name, Acc}, FileHandler, State) ->
+</span><span class="uncovered"><a name="line50"></a>...50     Acc1 = [Data | Acc],
+</span><span class="uncovered"><a name="line51"></a>...51     fun (Next) -> parse_form_value(Next, {Name, Acc1}, FileHandler, State) end.
+</span><span class="marked"><a name="line52"></a>...52 
+</span><span class="marked"><a name="line53"></a>...53 parse_form_file(body_end, {Name, Handler}, FileHandler, State) ->
+</span><span class="uncovered"><a name="line54"></a>...54     Value = Handler(eof),
+</span><span class="uncovered"><a name="line55"></a>...55     State1 = [{Name, Value} | State],
+</span><span class="uncovered"><a name="line56"></a>...56     fun (Next) -> parse_form_outer(Next, FileHandler, State1) end;
+</span><span class="marked"><a name="line57"></a>...57 parse_form_file({body, Data}, {Name, Handler}, FileHandler, State) ->
+</span><span class="uncovered"><a name="line58"></a>...58     H1 = Handler(Data),
+</span><span class="uncovered"><a name="line59"></a>...59     fun (Next) -> parse_form_file(Next, {Name, H1}, FileHandler, State) end.
+</span><span class="marked"><a name="line60"></a>...60 
+</span><span class="marked"><a name="line61"></a>...61 default_file_handler(Filename, ContentType) ->
+</span><span class="uncovered"><a name="line62"></a>...62     default_file_handler_1(Filename, ContentType, []).
+</span><span class="marked"><a name="line63"></a>...63 
+</span><span class="marked"><a name="line64"></a>...64 default_file_handler_1(Filename, ContentType, Acc) ->
+</span><span class="uncovered"><a name="line65"></a>...65     fun(eof) ->
+</span><span class="uncovered"><a name="line66"></a>...66             Value = iolist_to_binary(lists:reverse(Acc)),
+</span><span class="uncovered"><a name="line67"></a>...67             {Filename, ContentType, Value};
+</span><span class="marked"><a name="line68"></a>...68        (Next) ->
+</span><span class="uncovered"><a name="line69"></a>...69             default_file_handler_1(Filename, ContentType, [Next | Acc])
+</span><span class="marked"><a name="line70"></a>...70     end.
+</span><span class="marked"><a name="line71"></a>...71 
+</span><span class="marked"><a name="line72"></a>...72 parse_multipart_request(Req, Callback) ->
+</span><span class="marked"><a name="line73"></a>...73     %% TODO: Support chunked?
+</span><span class="covered"><a name="line74"></a>...74     Length = list_to_integer(Req:get_header_value("content-length")),
+</span><span class="covered"><a name="line75"></a>...75     Boundary = iolist_to_binary(
+</span><span class="marked"><a name="line76"></a>...76                  get_boundary(Req:get_header_value("content-type"))),
+</span><span class="covered"><a name="line77"></a>...77     Prefix = <<"\r\n--", Boundary/binary>>,
+</span><span class="covered"><a name="line78"></a>...78     BS = size(Boundary),
+</span><span class="covered"><a name="line79"></a>...79     Chunk = read_chunk(Req, Length),
+</span><span class="covered"><a name="line80"></a>...80     Length1 = Length - size(Chunk),
+</span><span class="covered"><a name="line81"></a>...81     <<"--", Boundary:BS/binary, "\r\n", Rest/binary>> = Chunk,
+</span><span class="covered"><a name="line82"></a>...82     feed_mp(headers, #mp{boundary=Prefix,
+</span><span class="marked"><a name="line83"></a>...83                          length=Length1,
+</span><span class="marked"><a name="line84"></a>...84                          buffer=Rest,
+</span><span class="marked"><a name="line85"></a>...85                          callback=Callback,
+</span><span class="marked"><a name="line86"></a>...86                          req=Req}).
+</span><span class="marked"><a name="line87"></a>...87 
+</span><span class="marked"><a name="line88"></a>...88 parse_headers(<<>>) ->
+</span><span class="uncovered"><a name="line89"></a>...89     [];
+</span><span class="marked"><a name="line90"></a>...90 parse_headers(Binary) ->
+</span><span class="covered"><a name="line91"></a>...91     parse_headers(Binary, []).
+</span><span class="marked"><a name="line92"></a>...92 
+</span><span class="marked"><a name="line93"></a>...93 parse_headers(Binary, Acc) ->
+</span><span class="covered"><a name="line94"></a>...94     case find_in_binary(<<"\r\n">>, Binary) of
+</span><span class="marked"><a name="line95"></a>...95         {exact, N} ->
+</span><span class="covered"><a name="line96"></a>...96             <<Line:N/binary, "\r\n", Rest/binary>> = Binary,
+</span><span class="covered"><a name="line97"></a>...97             parse_headers(Rest, [split_header(Line) | Acc]);
+</span><span class="marked"><a name="line98"></a>...98         not_found ->
+</span><span class="covered"><a name="line99"></a>...99             lists:reverse([split_header(Binary) | Acc])
+</span><span class="marked"><a name="line100"></a>..100     end.
+</span><span class="marked"><a name="line101"></a>..101 
+</span><span class="marked"><a name="line102"></a>..102 split_header(Line) ->
+</span><span class="covered"><a name="line103"></a>..103     {Name, [$: | Value]} = lists:splitwith(fun (C) -> C =/= $: end,
+</span><span class="marked"><a name="line104"></a>..104                                            binary_to_list(Line)),
+</span><span class="covered"><a name="line105"></a>..105     {string:to_lower(string:strip(Name)),
+</span><span class="marked"><a name="line106"></a>..106      mochiweb_util:parse_header(Value)}.
+</span><span class="marked"><a name="line107"></a>..107 
+</span><span class="marked"><a name="line108"></a>..108 read_chunk(Req, Length) when Length > 0 ->
+</span><span class="covered"><a name="line109"></a>..109     case Length of
+</span><span class="marked"><a name="line110"></a>..110         Length when Length < ?CHUNKSIZE ->
+</span><span class="covered"><a name="line111"></a>..111             Req:recv(Length);
+</span><span class="marked"><a name="line112"></a>..112         _ ->
+</span><span class="uncovered"><a name="line113"></a>..113             Req:recv(?CHUNKSIZE)
+</span><span class="marked"><a name="line114"></a>..114     end.
+</span><span class="marked"><a name="line115"></a>..115 
+</span><span class="marked"><a name="line116"></a>..116 read_more(State=#mp{length=Length, buffer=Buffer, req=Req}) ->
+</span><span class="uncovered"><a name="line117"></a>..117     Data = read_chunk(Req, Length),
+</span><span class="uncovered"><a name="line118"></a>..118     Buffer1 = <<Buffer/binary, Data/binary>>,
+</span><span class="uncovered"><a name="line119"></a>..119     State#mp{length=Length - size(Data),
+</span><span class="marked"><a name="line120"></a>..120              buffer=Buffer1}.
+</span><span class="marked"><a name="line121"></a>..121 
+</span><span class="marked"><a name="line122"></a>..122 feed_mp(headers, State=#mp{buffer=Buffer, callback=Callback}) ->
+</span><span class="covered"><a name="line123"></a>..123     {State1, P} = case find_in_binary(<<"\r\n\r\n">>, Buffer) of
+</span><span class="marked"><a name="line124"></a>..124                       {exact, N} ->
+</span><span class="covered"><a name="line125"></a>..125                           {State, N};
+</span><span class="marked"><a name="line126"></a>..126                       _ ->
+</span><span class="uncovered"><a name="line127"></a>..127                           S1 = read_more(State),
+</span><span class="marked"><a name="line128"></a>..128                           %% Assume headers must be less than ?CHUNKSIZE
+</span><span class="uncovered"><a name="line129"></a>..129                           {exact, N} = find_in_binary(<<"\r\n\r\n">>,
+</span><span class="marked"><a name="line130"></a>..130                                                       S1#mp.buffer),
+</span><span class="uncovered"><a name="line131"></a>..131                           {S1, N}
+</span><span class="marked"><a name="line132"></a>..132                   end,
+</span><span class="covered"><a name="line133"></a>..133     <<Headers:P/binary, "\r\n\r\n", Rest/binary>> = State1#mp.buffer,
+</span><span class="covered"><a name="line134"></a>..134     NextCallback = Callback({headers, parse_headers(Headers)}),
+</span><span class="covered"><a name="line135"></a>..135     feed_mp(body, State1#mp{buffer=Rest,
+</span><span class="marked"><a name="line136"></a>..136                             callback=NextCallback});
+</span><span class="marked"><a name="line137"></a>..137 feed_mp(body, State=#mp{boundary=Prefix, buffer=Buffer, callback=Callback}) ->
+</span><span class="covered"><a name="line138"></a>..138     case find_boundary(Prefix, Buffer) of
+</span><span class="marked"><a name="line139"></a>..139         {end_boundary, Start, Skip} ->
+</span><span class="covered"><a name="line140"></a>..140             <<Data:Start/binary, _:Skip/binary, Rest/binary>> = Buffer,
+</span><span class="covered"><a name="line141"></a>..141             C1 = Callback({body, Data}),
+</span><span class="covered"><a name="line142"></a>..142             C2 = C1(body_end),
+</span><span class="covered"><a name="line143"></a>..143             {State#mp.length, Rest, C2(eof)};
+</span><span class="marked"><a name="line144"></a>..144         {next_boundary, Start, Skip} ->
+</span><span class="covered"><a name="line145"></a>..145             <<Data:Start/binary, _:Skip/binary, Rest/binary>> = Buffer,
+</span><span class="covered"><a name="line146"></a>..146             C1 = Callback({body, Data}),
+</span><span class="covered"><a name="line147"></a>..147             feed_mp(headers, State#mp{callback=C1(body_end),
+</span><span class="marked"><a name="line148"></a>..148                                       buffer=Rest});
+</span><span class="marked"><a name="line149"></a>..149         {maybe, Start} ->
+</span><span class="uncovered"><a name="line150"></a>..150             <<Data:Start/binary, Rest/binary>> = Buffer,
+</span><span class="uncovered"><a name="line151"></a>..151             feed_mp(body, read_more(State#mp{callback=Callback({body, Data}),
+</span><span class="marked"><a name="line152"></a>..152                                              buffer=Rest}));
+</span><span class="marked"><a name="line153"></a>..153         not_found ->
+</span><span class="uncovered"><a name="line154"></a>..154             {Data, Rest} = {Buffer, <<>>},
+</span><span class="uncovered"><a name="line155"></a>..155             feed_mp(body, read_more(State#mp{callback=Callback({body, Data}),
+</span><span class="marked"><a name="line156"></a>..156                                              buffer=Rest}))
+</span><span class="marked"><a name="line157"></a>..157     end.
+</span><span class="marked"><a name="line158"></a>..158 
+</span><span class="marked"><a name="line159"></a>..159 get_boundary(ContentType) ->
+</span><span class="covered"><a name="line160"></a>..160     {"multipart/form-data", Opts} = mochiweb_util:parse_header(ContentType),
+</span><span class="covered"><a name="line161"></a>..161     case proplists:get_value("boundary", Opts) of
+</span><span class="marked"><a name="line162"></a>..162         S when is_list(S) ->
+</span><span class="covered"><a name="line163"></a>..163             S
+</span><span class="marked"><a name="line164"></a>..164     end.
+</span><span class="marked"><a name="line165"></a>..165 
+</span><span class="marked"><a name="line166"></a>..166 find_in_binary(B, Data) when size(B) > 0 ->
+</span><span class="covered"><a name="line167"></a>..167     case size(Data) - size(B) of
+</span><span class="marked"><a name="line168"></a>..168         Last when Last < 0 ->
+</span><span class="covered"><a name="line169"></a>..169             partial_find(B, Data, 0, size(Data));
+</span><span class="marked"><a name="line170"></a>..170         Last ->
+</span><span class="covered"><a name="line171"></a>..171             find_in_binary(B, size(B), Data, 0, Last)
+</span><span class="marked"><a name="line172"></a>..172     end.
+</span><span class="marked"><a name="line173"></a>..173 
+</span><span class="marked"><a name="line174"></a>..174 find_in_binary(B, BS, D, N, Last) when N =< Last->
+</span><span class="covered"><a name="line175"></a>..175     case D of
+</span><span class="marked"><a name="line176"></a>..176         <<_:N/binary, B:BS/binary, _/binary>> ->
+</span><span class="covered"><a name="line177"></a>..177             {exact, N};
+</span><span class="marked"><a name="line178"></a>..178         _ ->
+</span><span class="covered"><a name="line179"></a>..179             find_in_binary(B, BS, D, 1 + N, Last)
+</span><span class="marked"><a name="line180"></a>..180     end;
+</span><span class="marked"><a name="line181"></a>..181 find_in_binary(B, BS, D, N, Last) when N =:= 1 + Last ->
+</span><span class="covered"><a name="line182"></a>..182     partial_find(B, D, N, BS - 1).
+</span><span class="marked"><a name="line183"></a>..183 
+</span><span class="marked"><a name="line184"></a>..184 partial_find(_B, _D, _N, 0) ->
+</span><span class="covered"><a name="line185"></a>..185     not_found;
+</span><span class="marked"><a name="line186"></a>..186 partial_find(B, D, N, K) ->
+</span><span class="covered"><a name="line187"></a>..187     <<B1:K/binary, _/binary>> = B,
+</span><span class="covered"><a name="line188"></a>..188     case D of
+</span><span class="marked"><a name="line189"></a>..189         <<_Skip:N/binary, B1:K/binary>> ->
+</span><span class="covered"><a name="line190"></a>..190             {partial, N, K};
+</span><span class="marked"><a name="line191"></a>..191         _ ->
+</span><span class="covered"><a name="line192"></a>..192             partial_find(B, D, 1 + N, K - 1)
+</span><span class="marked"><a name="line193"></a>..193     end.
+</span><span class="marked"><a name="line194"></a>..194 
+</span><span class="marked"><a name="line195"></a>..195 find_boundary(Prefix, Data) ->
+</span><span class="covered"><a name="line196"></a>..196     case find_in_binary(Prefix, Data) of
+</span><span class="marked"><a name="line197"></a>..197         {exact, Skip} ->
+</span><span class="covered"><a name="line198"></a>..198             PrefixSkip = Skip + size(Prefix),
+</span><span class="covered"><a name="line199"></a>..199             case Data of
+</span><span class="marked"><a name="line200"></a>..200                 <<_:PrefixSkip/binary, "\r\n", _/binary>> ->
+</span><span class="covered"><a name="line201"></a>..201                     {next_boundary, Skip, size(Prefix) + 2};
+</span><span class="marked"><a name="line202"></a>..202                 <<_:PrefixSkip/binary, "--\r\n", _/binary>> ->
+</span><span class="covered"><a name="line203"></a>..203                     {end_boundary, Skip, size(Prefix) + 4};
+</span><span class="marked"><a name="line204"></a>..204                 _ when size(Data) < PrefixSkip + 4 ->
+</span><span class="marked"><a name="line205"></a>..205                     %% Underflow
+</span><span class="covered"><a name="line206"></a>..206                     {maybe, Skip};
+</span><span class="marked"><a name="line207"></a>..207                 _ ->
+</span><span class="marked"><a name="line208"></a>..208                     %% False positive
+</span><span class="uncovered"><a name="line209"></a>..209                     not_found
+</span><span class="marked"><a name="line210"></a>..210             end;
+</span><span class="marked"><a name="line211"></a>..211         {partial, Skip, Length} when (Skip + Length) =:= size(Data) ->
+</span><span class="marked"><a name="line212"></a>..212             %% Underflow
+</span><span class="covered"><a name="line213"></a>..213             {maybe, Skip};
+</span><span class="marked"><a name="line214"></a>..214         _ ->
+</span><span class="covered"><a name="line215"></a>..215             not_found
+</span><span class="marked"><a name="line216"></a>..216     end.
 </span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
           </body>
         </html>

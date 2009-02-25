@@ -83,7 +83,7 @@
           </head>
           <body>
             <h3>C0 code coverage information</h3>
-            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            <p>Generated on 2009-02-25 01:24:47 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
             </p>            
         <table class='report'>
           <thead>
@@ -113,9 +113,9 @@
               <td>
                 <table cellspacing='0' cellpadding='0' align='right'>
                   <tr>
-                    <td><tt>0%</tt>&nbsp;</td><td>
+                    <td><tt>2%</tt>&nbsp;</td><td>
                       <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
-                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      <tr><td class='covered' width='2' /><td class='uncovered' width='98' /></tr>
                       </table>
                     </td>
                   </tr>
@@ -146,7 +146,7 @@
 </span><span class="marked"><a name="line21"></a>...21 -export([should_close/0, cleanup/0]).
 </span><span class="marked"><a name="line22"></a>...22 -export([parse_cookie/0, get_cookie_value/1]).
 </span><span class="marked"><a name="line23"></a>...23 -export([serve_file/2, serve_file/3]).
-</span><span class="marked"><a name="line24"></a>...24 -export([test/0]).
+</span><span class="marked"><a name="line24"></a>...24 -export([parse_range_request/1]).
 </span><span class="marked"><a name="line25"></a>...25 
 </span><span class="marked"><a name="line26"></a>...26 -define(SAVE_QS, mochiweb_request_qs).
 </span><span class="marked"><a name="line27"></a>...27 -define(SAVE_PATH, mochiweb_request_path).
@@ -174,7 +174,7 @@
 </span><span class="marked"><a name="line49"></a>...49 %% @spec get_header_value(K) -> undefined | Value
 </span><span class="marked"><a name="line50"></a>...50 %% @doc Get the value of a given request header.
 </span><span class="marked"><a name="line51"></a>...51 get_header_value(K) ->
-</span><span class="uncovered"><a name="line52"></a>...52     mochiweb_headers:get_value(K, Headers).
+</span><span class="covered"><a name="line52"></a>...52     mochiweb_headers:get_value(K, Headers).
 </span><span class="marked"><a name="line53"></a>...53 
 </span><span class="marked"><a name="line54"></a>...54 get_primary_header_value(K) ->
 </span><span class="uncovered"><a name="line55"></a>...55     mochiweb_headers:get_primary_value(K, Headers).
@@ -255,16 +255,16 @@
 </span><span class="marked"><a name="line130"></a>..130 %% @doc Receive Length bytes from the client as a binary, with the default
 </span><span class="marked"><a name="line131"></a>..131 %%      idle timeout.
 </span><span class="marked"><a name="line132"></a>..132 recv(Length) ->
-</span><span class="uncovered"><a name="line133"></a>..133     recv(Length, ?IDLE_TIMEOUT).
+</span><span class="covered"><a name="line133"></a>..133     recv(Length, ?IDLE_TIMEOUT).
 </span><span class="marked"><a name="line134"></a>..134 
 </span><span class="marked"><a name="line135"></a>..135 %% @spec recv(integer(), integer()) -> binary()
 </span><span class="marked"><a name="line136"></a>..136 %% @doc Receive Length bytes from the client as a binary, with the given
 </span><span class="marked"><a name="line137"></a>..137 %%      Timeout in msec.
 </span><span class="marked"><a name="line138"></a>..138 recv(Length, Timeout) ->
-</span><span class="uncovered"><a name="line139"></a>..139     case gen_tcp:recv(Socket, Length, Timeout) of
+</span><span class="covered"><a name="line139"></a>..139     case gen_tcp:recv(Socket, Length, Timeout) of
 </span><span class="marked"><a name="line140"></a>..140         {ok, Data} ->
-</span><span class="uncovered"><a name="line141"></a>..141             put(?SAVE_RECV, true),
-</span><span class="uncovered"><a name="line142"></a>..142             Data;
+</span><span class="covered"><a name="line141"></a>..141             put(?SAVE_RECV, true),
+</span><span class="covered"><a name="line142"></a>..142             Data;
 </span><span class="marked"><a name="line143"></a>..143         _ ->
 </span><span class="uncovered"><a name="line144"></a>..144             exit(normal)
 </span><span class="marked"><a name="line145"></a>..145     end.
@@ -841,102 +841,6 @@
 </span><span class="marked"><a name="line716"></a>..716         _:_ ->
 </span><span class="uncovered"><a name="line717"></a>..717             fail
 </span><span class="marked"><a name="line718"></a>..718     end.
-</span><span class="marked"><a name="line719"></a>..719 
-</span><span class="marked"><a name="line720"></a>..720 
-</span><span class="marked"><a name="line721"></a>..721 test() ->
-</span><span class="uncovered"><a name="line722"></a>..722     ok = test_range(),
-</span><span class="uncovered"><a name="line723"></a>..723     ok.
-</span><span class="marked"><a name="line724"></a>..724 
-</span><span class="marked"><a name="line725"></a>..725 test_range() ->
-</span><span class="marked"><a name="line726"></a>..726     %% valid, single ranges
-</span><span class="uncovered"><a name="line727"></a>..727     io:format("Testing parse_range_request with valid single ranges~n"),
-</span><span class="uncovered"><a name="line728"></a>..728     io:format("1"),
-</span><span class="uncovered"><a name="line729"></a>..729     [{20, 30}] = parse_range_request("bytes=20-30"),
-</span><span class="uncovered"><a name="line730"></a>..730     io:format("2"),
-</span><span class="uncovered"><a name="line731"></a>..731     [{20, none}] = parse_range_request("bytes=20-"),
-</span><span class="uncovered"><a name="line732"></a>..732     io:format("3"),
-</span><span class="uncovered"><a name="line733"></a>..733     [{none, 20}] = parse_range_request("bytes=-20"),
-</span><span class="uncovered"><a name="line734"></a>..734     io:format(".. ok ~n"),
-</span><span class="marked"><a name="line735"></a>..735 
-</span><span class="marked"><a name="line736"></a>..736 
-</span><span class="marked"><a name="line737"></a>..737     %% invalid, single ranges
-</span><span class="uncovered"><a name="line738"></a>..738     io:format("Testing parse_range_request with invalid ranges~n"),
-</span><span class="uncovered"><a name="line739"></a>..739     io:format("1"),
-</span><span class="uncovered"><a name="line740"></a>..740     fail = parse_range_request(""),
-</span><span class="uncovered"><a name="line741"></a>..741     io:format("2"),
-</span><span class="uncovered"><a name="line742"></a>..742     fail = parse_range_request("garbage"),
-</span><span class="uncovered"><a name="line743"></a>..743     io:format("3"),
-</span><span class="uncovered"><a name="line744"></a>..744     fail = parse_range_request("bytes=-20-30"),
-</span><span class="uncovered"><a name="line745"></a>..745     io:format(".. ok ~n"),
-</span><span class="marked"><a name="line746"></a>..746 
-</span><span class="marked"><a name="line747"></a>..747     %% valid, multiple range
-</span><span class="uncovered"><a name="line748"></a>..748     io:format("Testing parse_range_request with valid multiple ranges~n"),
-</span><span class="uncovered"><a name="line749"></a>..749     io:format("1"),
-</span><span class="uncovered"><a name="line750"></a>..750     [{20, 30}, {50, 100}, {110, 200}] = 
-</span><span class="marked"><a name="line751"></a>..751         parse_range_request("bytes=20-30,50-100,110-200"),
-</span><span class="uncovered"><a name="line752"></a>..752     io:format("2"),
-</span><span class="uncovered"><a name="line753"></a>..753     [{20, none}, {50, 100}, {none, 200}] = 
-</span><span class="marked"><a name="line754"></a>..754         parse_range_request("bytes=20-,50-100,-200"),
-</span><span class="uncovered"><a name="line755"></a>..755     io:format(".. ok~n"),
-</span><span class="marked"><a name="line756"></a>..756     
-</span><span class="marked"><a name="line757"></a>..757     %% no ranges
-</span><span class="uncovered"><a name="line758"></a>..758     io:format("Testing out parse_range_request with no ranges~n"),
-</span><span class="uncovered"><a name="line759"></a>..759     io:format("1"),
-</span><span class="uncovered"><a name="line760"></a>..760     [] = parse_range_request("bytes="),
-</span><span class="uncovered"><a name="line761"></a>..761     io:format(".. ok~n"),
-</span><span class="marked"><a name="line762"></a>..762     
-</span><span class="uncovered"><a name="line763"></a>..763     Body = <<"012345678901234567890123456789012345678901234567890123456789">>,
-</span><span class="uncovered"><a name="line764"></a>..764     BodySize = size(Body), %% 60
-</span><span class="uncovered"><a name="line765"></a>..765     BodySize = 60,
-</span><span class="marked"><a name="line766"></a>..766 
-</span><span class="marked"><a name="line767"></a>..767     %% these values assume BodySize =:= 60
-</span><span class="uncovered"><a name="line768"></a>..768     io:format("Testing out range_skip_length on valid ranges~n"),
-</span><span class="uncovered"><a name="line769"></a>..769     io:format("1"),
-</span><span class="uncovered"><a name="line770"></a>..770     {1,9} = range_skip_length({1,9}, BodySize), %% 1-9
-</span><span class="uncovered"><a name="line771"></a>..771     io:format("2"),
-</span><span class="uncovered"><a name="line772"></a>..772     {10,10} = range_skip_length({10,19}, BodySize), %% 10-19
-</span><span class="uncovered"><a name="line773"></a>..773     io:format("3"),
-</span><span class="uncovered"><a name="line774"></a>..774     {40, 20} = range_skip_length({none, 20}, BodySize), %% -20
-</span><span class="uncovered"><a name="line775"></a>..775     io:format("4"),
-</span><span class="uncovered"><a name="line776"></a>..776     {30, 30} = range_skip_length({30, none}, BodySize), %% 30-
-</span><span class="uncovered"><a name="line777"></a>..777     io:format(".. ok ~n"),
-</span><span class="marked"><a name="line778"></a>..778     
-</span><span class="marked"><a name="line779"></a>..779     %% valid edge cases for range_skip_length
-</span><span class="uncovered"><a name="line780"></a>..780     io:format("Testing out range_skip_length on valid edge case ranges~n"),
-</span><span class="uncovered"><a name="line781"></a>..781     io:format("1"),
-</span><span class="uncovered"><a name="line782"></a>..782     {BodySize, 0} = range_skip_length({none, 0}, BodySize),
-</span><span class="uncovered"><a name="line783"></a>..783     io:format("2"),
-</span><span class="uncovered"><a name="line784"></a>..784     {0, BodySize} = range_skip_length({none, BodySize}, BodySize),
-</span><span class="uncovered"><a name="line785"></a>..785     io:format("3"),
-</span><span class="uncovered"><a name="line786"></a>..786     {0, BodySize} = range_skip_length({0, none}, BodySize),
-</span><span class="uncovered"><a name="line787"></a>..787     BodySizeLess1 = BodySize - 1,
-</span><span class="uncovered"><a name="line788"></a>..788     io:format("4"),
-</span><span class="uncovered"><a name="line789"></a>..789     {BodySizeLess1, 1} = range_skip_length({BodySize - 1, none}, BodySize),
-</span><span class="marked"><a name="line790"></a>..790 
-</span><span class="marked"><a name="line791"></a>..791     %% out of range, return whole thing
-</span><span class="uncovered"><a name="line792"></a>..792     io:format("5"),
-</span><span class="uncovered"><a name="line793"></a>..793     {0, BodySize} = range_skip_length({none, BodySize + 1}, BodySize),
-</span><span class="uncovered"><a name="line794"></a>..794     io:format("6"),
-</span><span class="uncovered"><a name="line795"></a>..795     {0, BodySize} = range_skip_length({none, -1}, BodySize),
-</span><span class="uncovered"><a name="line796"></a>..796     io:format(".. ok ~n"),
-</span><span class="marked"><a name="line797"></a>..797 
-</span><span class="marked"><a name="line798"></a>..798     %% invalid ranges
-</span><span class="uncovered"><a name="line799"></a>..799     io:format("Testing out range_skip_length on invalid ranges~n"),
-</span><span class="uncovered"><a name="line800"></a>..800     io:format("1"),
-</span><span class="uncovered"><a name="line801"></a>..801     invalid_range = range_skip_length({-1, 30}, BodySize),
-</span><span class="uncovered"><a name="line802"></a>..802     io:format("2"),
-</span><span class="uncovered"><a name="line803"></a>..803     invalid_range = range_skip_length({0, BodySize + 1}, BodySize),
-</span><span class="uncovered"><a name="line804"></a>..804     io:format("3"),
-</span><span class="uncovered"><a name="line805"></a>..805     invalid_range = range_skip_length({-1, BodySize + 1}, BodySize),
-</span><span class="uncovered"><a name="line806"></a>..806     io:format("4"),
-</span><span class="uncovered"><a name="line807"></a>..807     invalid_range = range_skip_length({BodySize, 40}, BodySize),
-</span><span class="uncovered"><a name="line808"></a>..808     io:format("5"),
-</span><span class="uncovered"><a name="line809"></a>..809     invalid_range = range_skip_length({-1, none}, BodySize),
-</span><span class="uncovered"><a name="line810"></a>..810     io:format("6"),
-</span><span class="uncovered"><a name="line811"></a>..811     invalid_range = range_skip_length({BodySize, none}, BodySize),
-</span><span class="uncovered"><a name="line812"></a>..812     io:format(".. ok ~n"),
-</span><span class="uncovered"><a name="line813"></a>..813     ok.
-</span><span class="marked"><a name="line814"></a>..814     
 </span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
           </body>
         </html>

@@ -83,7 +83,7 @@
           </head>
           <body>
             <h3>C0 code coverage information</h3>
-            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            <p>Generated on 2009-02-25 01:24:47 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
             </p>            
         <table class='report'>
           <thead>
@@ -113,9 +113,9 @@
               <td>
                 <table cellspacing='0' cellpadding='0' align='right'>
                   <tr>
-                    <td><tt>0%</tt>&nbsp;</td><td>
+                    <td><tt>46%</tt>&nbsp;</td><td>
                       <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
-                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      <tr><td class='covered' width='46' /><td class='uncovered' width='54' /></tr>
                       </table>
                     </td>
                   </tr>
@@ -139,14 +139,14 @@
 </span><span class="marked"><a name="line14"></a>...14 -record(mochiweb_socket_server, {port, loop, name = undefined, max = 2048, ip = any, listen = null, acceptor = null, backlog = 30}).
 </span><span class="marked"><a name="line15"></a>...15 
 </span><span class="marked"><a name="line16"></a>...16 start(State = #mochiweb_socket_server{}) ->
-</span><span class="uncovered"><a name="line17"></a>...17     start_server(State);
+</span><span class="covered"><a name="line17"></a>...17     start_server(State);
 </span><span class="marked"><a name="line18"></a>...18 start(Options) ->
-</span><span class="uncovered"><a name="line19"></a>...19     start(parse_options(Options)).
+</span><span class="covered"><a name="line19"></a>...19     start(parse_options(Options)).
 </span><span class="marked"><a name="line20"></a>...20 
 </span><span class="marked"><a name="line21"></a>...21 stop(Name) when is_atom(Name) ->
 </span><span class="uncovered"><a name="line22"></a>...22     gen_server:cast(Name, stop);
 </span><span class="marked"><a name="line23"></a>...23 stop(Pid) when is_pid(Pid) ->
-</span><span class="uncovered"><a name="line24"></a>...24     gen_server:cast(Pid, stop);
+</span><span class="covered"><a name="line24"></a>...24     gen_server:cast(Pid, stop);
 </span><span class="marked"><a name="line25"></a>...25 stop({local, Name}) ->
 </span><span class="uncovered"><a name="line26"></a>...26     stop(Name);
 </span><span class="marked"><a name="line27"></a>...27 stop({global, Name}) ->
@@ -156,15 +156,15 @@
 </span><span class="uncovered"><a name="line31"></a>...31     stop(State#mochiweb_socket_server.name).
 </span><span class="marked"><a name="line32"></a>...32 
 </span><span class="marked"><a name="line33"></a>...33 get(Name, Property) ->
-</span><span class="uncovered"><a name="line34"></a>...34     gen_server:call(Name, {get, Property}).
+</span><span class="covered"><a name="line34"></a>...34     gen_server:call(Name, {get, Property}).
 </span><span class="marked"><a name="line35"></a>...35 
 </span><span class="marked"><a name="line36"></a>...36 %% Internal API
 </span><span class="marked"><a name="line37"></a>...37 
 </span><span class="marked"><a name="line38"></a>...38 parse_options(Options) ->
-</span><span class="uncovered"><a name="line39"></a>...39     parse_options(Options, #mochiweb_socket_server{}).
+</span><span class="covered"><a name="line39"></a>...39     parse_options(Options, #mochiweb_socket_server{}).
 </span><span class="marked"><a name="line40"></a>...40 
 </span><span class="marked"><a name="line41"></a>...41 parse_options([], State) ->
-</span><span class="uncovered"><a name="line42"></a>...42     State;
+</span><span class="covered"><a name="line42"></a>...42     State;
 </span><span class="marked"><a name="line43"></a>...43 parse_options([{name, L} | Rest], State) when is_list(L) ->
 </span><span class="uncovered"><a name="line44"></a>...44     parse_options(Rest, State#mochiweb_socket_server{name = {local, list_to_atom(L)}});
 </span><span class="marked"><a name="line45"></a>...45 parse_options([{name, A} | Rest], State) when is_atom(A) ->
@@ -174,16 +174,16 @@
 </span><span class="marked"><a name="line49"></a>...49 parse_options([{port, L} | Rest], State) when is_list(L) ->
 </span><span class="uncovered"><a name="line50"></a>...50     parse_options(Rest, State#mochiweb_socket_server{port = list_to_integer(L)});
 </span><span class="marked"><a name="line51"></a>...51 parse_options([{port, Port} | Rest], State) ->
-</span><span class="uncovered"><a name="line52"></a>...52     parse_options(Rest, State#mochiweb_socket_server{port = Port});
+</span><span class="covered"><a name="line52"></a>...52     parse_options(Rest, State#mochiweb_socket_server{port = Port});
 </span><span class="marked"><a name="line53"></a>...53 parse_options([{ip, any} | Rest], State) ->
 </span><span class="uncovered"><a name="line54"></a>...54     parse_options(Rest, State#mochiweb_socket_server{ip = any});
 </span><span class="marked"><a name="line55"></a>...55 parse_options([{ip, Ip} | Rest], State) when is_tuple(Ip) ->
 </span><span class="uncovered"><a name="line56"></a>...56     parse_options(Rest, State#mochiweb_socket_server{ip = Ip});
 </span><span class="marked"><a name="line57"></a>...57 parse_options([{ip, Ip} | Rest], State) when is_list(Ip) ->
-</span><span class="uncovered"><a name="line58"></a>...58     {ok, IpTuple} = inet_parse:address(Ip),
-</span><span class="uncovered"><a name="line59"></a>...59     parse_options(Rest, State#mochiweb_socket_server{ip = IpTuple});
+</span><span class="covered"><a name="line58"></a>...58     {ok, IpTuple} = inet_parse:address(Ip),
+</span><span class="covered"><a name="line59"></a>...59     parse_options(Rest, State#mochiweb_socket_server{ip = IpTuple});
 </span><span class="marked"><a name="line60"></a>...60 parse_options([{loop, Loop} | Rest], State) ->
-</span><span class="uncovered"><a name="line61"></a>...61     parse_options(Rest, State#mochiweb_socket_server{loop = Loop});
+</span><span class="covered"><a name="line61"></a>...61     parse_options(Rest, State#mochiweb_socket_server{loop = Loop});
 </span><span class="marked"><a name="line62"></a>...62 parse_options([{backlog, Backlog} | Rest], State) ->
 </span><span class="uncovered"><a name="line63"></a>...63     parse_options(Rest, State#mochiweb_socket_server{backlog = Backlog});
 </span><span class="marked"><a name="line64"></a>...64 parse_options([{max, Max} | Rest], State) when is_integer(Max) ->
@@ -192,7 +192,7 @@
 </span><span class="uncovered"><a name="line67"></a>...67     parse_options(Rest, State#mochiweb_socket_server{max = list_to_integer(Max)}).
 </span><span class="marked"><a name="line68"></a>...68 
 </span><span class="marked"><a name="line69"></a>...69 start_server(State = #mochiweb_socket_server{name = undefined}) ->
-</span><span class="uncovered"><a name="line70"></a>...70     gen_server:start_link(?MODULE, State, []);
+</span><span class="covered"><a name="line70"></a>...70     gen_server:start_link(?MODULE, State, []);
 </span><span class="marked"><a name="line71"></a>...71 start_server(State = #mochiweb_socket_server{name = Name}) ->
 </span><span class="uncovered"><a name="line72"></a>...72     gen_server:start_link(Name, ?MODULE, State, []).
 </span><span class="marked"><a name="line73"></a>...73 
@@ -205,8 +205,8 @@
 </span><span class="marked"><a name="line80"></a>...80     end.
 </span><span class="marked"><a name="line81"></a>...81 
 </span><span class="marked"><a name="line82"></a>...82 init(State = #mochiweb_socket_server{ip = Ip, port = Port, backlog = Backlog}) ->
-</span><span class="uncovered"><a name="line83"></a>...83     process_flag(trap_exit, true),
-</span><span class="uncovered"><a name="line84"></a>...84     BaseOpts = [
+</span><span class="covered"><a name="line83"></a>...83     process_flag(trap_exit, true),
+</span><span class="covered"><a name="line84"></a>...84     BaseOpts = [
 </span><span class="marked"><a name="line85"></a>...85         binary, 
 </span><span class="marked"><a name="line86"></a>...86         {reuseaddr, true},
 </span><span class="marked"><a name="line87"></a>...87         {packet, 0},
@@ -215,18 +215,18 @@
 </span><span class="marked"><a name="line90"></a>...90         {active, false},
 </span><span class="marked"><a name="line91"></a>...91         {nodelay, true}
 </span><span class="marked"><a name="line92"></a>...92     ],
-</span><span class="uncovered"><a name="line93"></a>...93     Opts = case Ip of
+</span><span class="covered"><a name="line93"></a>...93     Opts = case Ip of
 </span><span class="marked"><a name="line94"></a>...94         any ->
 </span><span class="uncovered"><a name="line95"></a>...95             case ipv6_supported() of % IPv4, and IPv6 if supported
 </span><span class="uncovered"><a name="line96"></a>...96                 true -> [inet, inet6 | BaseOpts];
 </span><span class="uncovered"><a name="line97"></a>...97                 _ -> BaseOpts
 </span><span class="marked"><a name="line98"></a>...98             end;
 </span><span class="marked"><a name="line99"></a>...99         {_, _, _, _} -> % IPv4
-</span><span class="uncovered"><a name="line100"></a>..100             [inet, {ip, Ip} | BaseOpts];
+</span><span class="covered"><a name="line100"></a>..100             [inet, {ip, Ip} | BaseOpts];
 </span><span class="marked"><a name="line101"></a>..101         {_, _, _, _, _, _, _, _} -> % IPv6
 </span><span class="uncovered"><a name="line102"></a>..102             [inet6, {ip, Ip} | BaseOpts]
 </span><span class="marked"><a name="line103"></a>..103     end,
-</span><span class="uncovered"><a name="line104"></a>..104     case gen_tcp_listen(Port, Opts, State) of
+</span><span class="covered"><a name="line104"></a>..104     case gen_tcp_listen(Port, Opts, State) of
 </span><span class="marked"><a name="line105"></a>..105         {stop, eacces} ->
 </span><span class="uncovered"><a name="line106"></a>..106             case Port < 1024 of 
 </span><span class="marked"><a name="line107"></a>..107                 true ->
@@ -245,14 +245,14 @@
 </span><span class="uncovered"><a name="line120"></a>..120                     {stop, eacces}
 </span><span class="marked"><a name="line121"></a>..121             end;
 </span><span class="marked"><a name="line122"></a>..122         Other ->
-</span><span class="uncovered"><a name="line123"></a>..123             Other
+</span><span class="covered"><a name="line123"></a>..123             Other
 </span><span class="marked"><a name="line124"></a>..124     end.
 </span><span class="marked"><a name="line125"></a>..125 
 </span><span class="marked"><a name="line126"></a>..126 gen_tcp_listen(Port, Opts, State) ->
-</span><span class="uncovered"><a name="line127"></a>..127     case gen_tcp:listen(Port, Opts) of
+</span><span class="covered"><a name="line127"></a>..127     case gen_tcp:listen(Port, Opts) of
 </span><span class="marked"><a name="line128"></a>..128         {ok, Listen} ->
-</span><span class="uncovered"><a name="line129"></a>..129             {ok, ListenPort} = inet:port(Listen),
-</span><span class="uncovered"><a name="line130"></a>..130             {ok, new_acceptor(State#mochiweb_socket_server{listen = Listen, port = ListenPort})};
+</span><span class="covered"><a name="line129"></a>..129             {ok, ListenPort} = inet:port(Listen),
+</span><span class="covered"><a name="line130"></a>..130             {ok, new_acceptor(State#mochiweb_socket_server{listen = Listen, port = ListenPort})};
 </span><span class="marked"><a name="line131"></a>..131         {error, Reason} ->
 </span><span class="uncovered"><a name="line132"></a>..132             {stop, Reason}
 </span><span class="marked"><a name="line133"></a>..133     end.
@@ -265,21 +265,21 @@
 </span><span class="marked"><a name="line140"></a>..140     ]),
 </span><span class="uncovered"><a name="line141"></a>..141     State#mochiweb_socket_server{acceptor=null};
 </span><span class="marked"><a name="line142"></a>..142 new_acceptor(State = #mochiweb_socket_server{listen = Listen, loop = Loop}) ->
-</span><span class="uncovered"><a name="line143"></a>..143     Pid = proc_lib:spawn_link(?MODULE, acceptor_loop, [{self(), Listen, Loop}]),
-</span><span class="uncovered"><a name="line144"></a>..144     State#mochiweb_socket_server{acceptor=Pid}.
+</span><span class="covered"><a name="line143"></a>..143     Pid = proc_lib:spawn_link(?MODULE, acceptor_loop, [{self(), Listen, Loop}]),
+</span><span class="covered"><a name="line144"></a>..144     State#mochiweb_socket_server{acceptor=Pid}.
 </span><span class="marked"><a name="line145"></a>..145 
 </span><span class="marked"><a name="line146"></a>..146 call_loop({M, F}, Socket) ->
 </span><span class="uncovered"><a name="line147"></a>..147     M:F(Socket);
 </span><span class="marked"><a name="line148"></a>..148 call_loop(Loop, Socket) ->
-</span><span class="uncovered"><a name="line149"></a>..149     Loop(Socket).
+</span><span class="covered"><a name="line149"></a>..149     Loop(Socket).
 </span><span class="marked"><a name="line150"></a>..150 
 </span><span class="marked"><a name="line151"></a>..151 acceptor_loop({Server, Listen, Loop}) ->
-</span><span class="uncovered"><a name="line152"></a>..152     case catch gen_tcp:accept(Listen) of
+</span><span class="covered"><a name="line152"></a>..152     case catch gen_tcp:accept(Listen) of
 </span><span class="marked"><a name="line153"></a>..153         {ok, Socket} ->
-</span><span class="uncovered"><a name="line154"></a>..154             gen_server:cast(Server, {accepted, self()}),
-</span><span class="uncovered"><a name="line155"></a>..155             call_loop(Loop, Socket);
+</span><span class="covered"><a name="line154"></a>..154             gen_server:cast(Server, {accepted, self()}),
+</span><span class="covered"><a name="line155"></a>..155             call_loop(Loop, Socket);
 </span><span class="marked"><a name="line156"></a>..156         {error, closed} ->
-</span><span class="uncovered"><a name="line157"></a>..157             exit({error, closed});
+</span><span class="covered"><a name="line157"></a>..157             exit({error, closed});
 </span><span class="marked"><a name="line158"></a>..158         Other ->
 </span><span class="uncovered"><a name="line159"></a>..159             error_logger:error_report([
 </span><span class="marked"><a name="line160"></a>..160                 {application, mochiweb},
@@ -291,30 +291,30 @@
 </span><span class="marked"><a name="line166"></a>..166             
 </span><span class="marked"><a name="line167"></a>..167 
 </span><span class="marked"><a name="line168"></a>..168 do_get(port, #mochiweb_socket_server{port=Port}) ->
-</span><span class="uncovered"><a name="line169"></a>..169     Port.
+</span><span class="covered"><a name="line169"></a>..169     Port.
 </span><span class="marked"><a name="line170"></a>..170     
 </span><span class="marked"><a name="line171"></a>..171 handle_call({get, Property}, _From, State) ->
-</span><span class="uncovered"><a name="line172"></a>..172     Res = do_get(Property, State),
-</span><span class="uncovered"><a name="line173"></a>..173     {reply, Res, State};
+</span><span class="covered"><a name="line172"></a>..172     Res = do_get(Property, State),
+</span><span class="covered"><a name="line173"></a>..173     {reply, Res, State};
 </span><span class="marked"><a name="line174"></a>..174 handle_call(_Message, _From, State) ->
 </span><span class="uncovered"><a name="line175"></a>..175     Res = error,
 </span><span class="uncovered"><a name="line176"></a>..176     {reply, Res, State}.
 </span><span class="marked"><a name="line177"></a>..177 
 </span><span class="marked"><a name="line178"></a>..178 handle_cast({accepted, Pid}, State = #mochiweb_socket_server{acceptor = Pid, max = Max}) ->
-</span><span class="uncovered"><a name="line179"></a>..179     NewState = State#mochiweb_socket_server{max = Max - 1},
-</span><span class="uncovered"><a name="line180"></a>..180     {noreply, new_acceptor(NewState)};
+</span><span class="covered"><a name="line179"></a>..179     NewState = State#mochiweb_socket_server{max = Max - 1},
+</span><span class="covered"><a name="line180"></a>..180     {noreply, new_acceptor(NewState)};
 </span><span class="marked"><a name="line181"></a>..181 handle_cast(stop, State) ->
-</span><span class="uncovered"><a name="line182"></a>..182     {stop, normal, State}.
+</span><span class="covered"><a name="line182"></a>..182     {stop, normal, State}.
 </span><span class="marked"><a name="line183"></a>..183 
 </span><span class="highlight"><a name="line184"></a>..184 %% @todo Clean up the catch fdsrv:stop/0 call.
 </span><span class="marked"><a name="line185"></a>..185 terminate(_Reason, #mochiweb_socket_server{listen = Listen, port = Port}) ->
-</span><span class="uncovered"><a name="line186"></a>..186     gen_tcp:close(Listen),
-</span><span class="uncovered"><a name="line187"></a>..187     case Port < 1024 of 
+</span><span class="covered"><a name="line186"></a>..186     gen_tcp:close(Listen),
+</span><span class="covered"><a name="line187"></a>..187     case Port < 1024 of 
 </span><span class="marked"><a name="line188"></a>..188         true ->
 </span><span class="uncovered"><a name="line189"></a>..189             catch fdsrv:stop(),
 </span><span class="uncovered"><a name="line190"></a>..190             ok;
 </span><span class="marked"><a name="line191"></a>..191         false ->
-</span><span class="uncovered"><a name="line192"></a>..192             ok
+</span><span class="covered"><a name="line192"></a>..192             ok
 </span><span class="marked"><a name="line193"></a>..193     end.
 </span><span class="marked"><a name="line194"></a>..194 
 </span><span class="marked"><a name="line195"></a>..195 code_change(_OldVsn, State, _Extra) ->
@@ -327,15 +327,15 @@
 </span><span class="uncovered"><a name="line202"></a>..202     timer:sleep(100),
 </span><span class="uncovered"><a name="line203"></a>..203     {noreply, new_acceptor(State)};
 </span><span class="marked"><a name="line204"></a>..204 handle_info({'EXIT', _LoopPid, Reason}, State=#mochiweb_socket_server{acceptor = Pid, max = Max}) ->
-</span><span class="uncovered"><a name="line205"></a>..205     case Reason of
-</span><span class="uncovered"><a name="line206"></a>..206         normal -> ok;
+</span><span class="covered"><a name="line205"></a>..205     case Reason of
+</span><span class="covered"><a name="line206"></a>..206         normal -> ok;
 </span><span class="uncovered"><a name="line207"></a>..207         _ -> error_logger:error_report({?MODULE, ?LINE, {child_error, Reason}})
 </span><span class="marked"><a name="line208"></a>..208     end,
-</span><span class="uncovered"><a name="line209"></a>..209     NewState = case Pid of
+</span><span class="covered"><a name="line209"></a>..209     NewState = case Pid of
 </span><span class="uncovered"><a name="line210"></a>..210         null -> new_acceptor(State#mochiweb_socket_server{max = Max + 1});
-</span><span class="uncovered"><a name="line211"></a>..211         _ -> State#mochiweb_socket_server{max = Max + 1}
+</span><span class="covered"><a name="line211"></a>..211         _ -> State#mochiweb_socket_server{max = Max + 1}
 </span><span class="marked"><a name="line212"></a>..212     end,
-</span><span class="uncovered"><a name="line213"></a>..213     {noreply, NewState};
+</span><span class="covered"><a name="line213"></a>..213     {noreply, NewState};
 </span><span class="marked"><a name="line214"></a>..214 handle_info(Info, State) ->
 </span><span class="uncovered"><a name="line215"></a>..215     error_logger:info_report([{'INFO', Info}, {'State', State}]),
 </span><span class="uncovered"><a name="line216"></a>..216     {noreply, State}.
