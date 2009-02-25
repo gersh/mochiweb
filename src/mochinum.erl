@@ -11,7 +11,7 @@
 
 -module(mochinum).
 -author("Bob Ippolito <bob@mochimedia.com>").
--export([digits/1, frexp/1, int_pow/2, int_ceil/1, test/0]).
+-export([digits/1, frexp/1, int_pow/2, int_ceil/1]).
 
 %% IEEE 754 Float exponent bias
 -define(FLOAT_BIAS, 1022).
@@ -226,64 +226,3 @@ log2floor(0, N) ->
     N;
 log2floor(Int, N) ->
     log2floor(Int bsr 1, 1 + N).
-
-
-test() ->
-    ok = test_frexp(),
-    ok = test_int_ceil(),
-    ok = test_int_pow(),
-    ok = test_digits(),
-    ok.
-
-test_int_ceil() ->
-    1 = int_ceil(0.0001),
-    0 = int_ceil(0.0),
-    1 = int_ceil(0.99),
-    1 = int_ceil(1.0),
-    -1 = int_ceil(-1.5),
-    -2 = int_ceil(-2.0),
-    ok.
-    
-test_int_pow() ->
-    1 = int_pow(1, 1),
-    1 = int_pow(1, 0),
-    1 = int_pow(10, 0),
-    10 = int_pow(10, 1),
-    100 = int_pow(10, 2),
-    1000 = int_pow(10, 3),
-    ok.
-    
-test_digits() ->
-    "0" = digits(0),
-    "0.0" = digits(0.0),
-    "1.0" = digits(1.0),
-    "-1.0" = digits(-1.0),
-    "0.1" = digits(0.1),
-    "0.01" = digits(0.01),
-    "0.001" = digits(0.001),
-    ok.
-
-test_frexp() ->
-    %% zero
-    {0.0, 0} = frexp(0.0),
-    %% one
-    {0.5, 1} = frexp(1.0),
-    %% negative one
-    {-0.5, 1} = frexp(-1.0),
-    %% small denormalized number
-    %% 4.94065645841246544177e-324
-    <<SmallDenorm/float>> = <<0,0,0,0,0,0,0,1>>,
-    {0.5, -1073} = frexp(SmallDenorm),
-    %% large denormalized number
-    %% 2.22507385850720088902e-308
-    <<BigDenorm/float>> = <<0,15,255,255,255,255,255,255>>,
-    {0.99999999999999978, -1022} = frexp(BigDenorm),
-    %% small normalized number
-    %% 2.22507385850720138309e-308
-    <<SmallNorm/float>> = <<0,16,0,0,0,0,0,0>>,
-    {0.5, -1021} = frexp(SmallNorm),
-    %% large normalized number
-    %% 1.79769313486231570815e+308
-    <<LargeNorm/float>> = <<127,239,255,255,255,255,255,255>>,
-    {0.99999999999999989, 1024} = frexp(LargeNorm),
-    ok.

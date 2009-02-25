@@ -33,17 +33,17 @@ parse_options(Options) ->
     set_defaults(?DEFAULTS, Options1).
 
 stop() ->
-    mochiweb_socket_server:stop(?MODULE).
+    mochiweb:stop(?MODULE).
 
 stop(Name) ->
-    mochiweb_socket_server:stop(Name).
+    mochiweb:stop(Name).
     
 start() ->
     start([{ip, "127.0.0.1"},
            {loop, {?MODULE, default_body}}]).
 
 start(Options) ->
-    mochiweb_socket_server:start(parse_options(Options)).
+    mochiweb:start(parse_options(Options)).
 
 frm(Body) ->
     ["<html><head></head><body>"

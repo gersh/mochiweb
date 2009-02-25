@@ -217,14 +217,14 @@ find_boundary(Prefix, Data) ->
     end.
 
 with_socket_server(ServerFun, ClientFun) ->
-    {ok, Server} = mochiweb_socket_server:start([{ip, "127.0.0.1"},
+    {ok, Server} = mochiweb:start([{ip, "127.0.0.1"},
                                                  {port, 0},
                                                  {loop, ServerFun}]),
-    Port = mochiweb_socket_server:get(Server, port),
+    Port = mochiweb:get(Server, port),
     {ok, Client} = gen_tcp:connect("127.0.0.1", Port,
                                    [binary, {active, false}]),
     Res = (catch ClientFun(Client)),
-    mochiweb_socket_server:stop(Server),
+    mochiweb:stop(Server),
     Res.
 
 fake_request(Socket, ContentType, Length) ->
