@@ -1,9 +1,6 @@
 include ../support/include.mk
 
-APPLICATION=mochiweb
-DOC_OPTS={dir,\"../doc\"}
-
-all: $(EBIN_FILES)
+all: $(EBIN_FILES_NO_DOCS)
 
 debug:
 	$(MAKE) DEBUG=-DDEBUG
