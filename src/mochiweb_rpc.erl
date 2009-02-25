@@ -86,7 +86,7 @@ test_acceptable_request() ->
 
 test_each_acceptable_request([]) -> ok;
 test_each_acceptable_request([{ShouldReceive, WillAsk}|Rest]) ->
-  true = ShouldReceive == acceptable_request(mochiweb:new_request(WillAsk)),
+  true = ShouldReceive == acceptable_request(mochiweb_http:new_request(WillAsk)),
   test_each_acceptable_request(Rest).
 
 tuples_for_test_acceptable_request() ->

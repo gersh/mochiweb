@@ -6,7 +6,7 @@
 -module(mochiweb_http).
 -author('bob@mochimedia.com').
 -export([start/0, start/1, stop/0, stop/1]).
--export([loop/2, default_body/1]).
+-export([loop/2, default_body/1, new_request/1, new_response/1]).
 
 -define(IDLE_TIMEOUT, 30000).
 
@@ -113,7 +113,7 @@ request(Socket, Body) ->
 headers(Socket, Request, Headers, _Body, ?MAX_HEADERS) ->
     %% Too many headers sent, bad request.
     inet:setopts(Socket, [{packet, raw}]),
-    Req = mochiweb:new_request({Socket, Request,
+    Req = mochiweb_http:new_request({Socket, Request,
                                 lists:reverse(Headers)}),
     Req:respond({400, [], []}),
     gen_tcp:close(Socket),
@@ -122,7 +122,7 @@ headers(Socket, Request, Headers, Body, HeaderCount) ->
     case gen_tcp:recv(Socket, 0, ?IDLE_TIMEOUT) of
         {ok, http_eoh} ->
             inet:setopts(Socket, [{packet, raw}]),
-            Req = mochiweb:new_request({Socket, Request,
+            Req = mochiweb_http:new_request({Socket, Request,
                                         lists:reverse(Headers)}),
             Body(Req),
             case Req:should_close() of
@@ -140,3 +140,35 @@ headers(Socket, Request, Headers, Body, HeaderCount) ->
             gen_tcp:close(Socket),
             exit(normal)
     end.
+
+%% @spec new_request({Socket, Request, Headers}) -> MochiWebRequest
+%% @doc Return a mochiweb_request data structure.
+new_request({Socket, {Method, {abs_path, Uri}, Version}, Headers}) ->
+    mochiweb_request:new(Socket,
+                         Method,
+                         Uri,
+                         Version,
+                         mochiweb_headers:make(Headers));
+% this case probably doesn't "exist".
+new_request({Socket, {Method, {absoluteURI, _Protocol, _Host, _Port, Uri},
+                      Version}, Headers}) ->
+    mochiweb_request:new(Socket,
+                         Method,
+                         Uri,
+                         Version,
+                         mochiweb_headers:make(Headers));
+%% Request-URI is "*"
+%% From http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html#sec5.1.2
+new_request({Socket, {Method, '*'=Uri, Version}, Headers}) ->
+    mochiweb_request:new(Socket,
+                         Method,
+                         Uri,
+                         Version,
+                         mochiweb_headers:make(Headers)).
+ 
+%% @spec new_response({Request, integer(), Headers}) -> MochiWebResponse
+%% @doc Return a mochiweb_response data structure.
+new_response({Request, Code, Headers}) ->
+    mochiweb_response:new(Request,
+                          Code,
+                          mochiweb_headers:make(Headers)).
