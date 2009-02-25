@@ -1,6 +1,6 @@
 include ../support/include.mk
 
-all: $(EBIN_FILES_NO_DOCS)
+all: $(EBIN_FILES)
 
 debug:
 	$(MAKE) DEBUG=-DDEBUG
@@ -8,5 +8,10 @@ debug:
 clean:
 	rm -rf $(EBIN_FILES)
 
+edoc:
+	$(ERL) -noshell -pa ../ebin \
+		-eval "edoc:application($(APPLICATION), \".\", [$(DOC_OPTS)])" \
+		-s init stop
+
 test: all
-	$(ERL) -noshell -pa ../ebin -s mochiweb test -s init stop
+	$(ERL) -noshell -pa ../ebin -s $(APPLICATION) test -s init stop

@@ -1,2 +1,6 @@
 *.beam
+<<<<<<< HEAD:ebin/.gitignore
 *.app
+=======
+*.app
+>>>>>>> 77762dd48c34e469ac3974582ee8a8478043163a:ebin/.gitignore
