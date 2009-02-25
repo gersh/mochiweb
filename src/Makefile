@@ -12,6 +12,3 @@ edoc:
 	$(ERL) -noshell -pa ../ebin \
 		-eval "edoc:application($(APPLICATION), \".\", [$(DOC_OPTS)])" \
 		-s init stop
-
-test: all
-	$(ERL) -noshell -pa ../ebin -s $(APPLICATION) test -s init stop

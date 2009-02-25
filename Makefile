@@ -8,15 +8,15 @@ edoc:
 	(cd src;$(MAKE) edoc)
 
 test:
-	(cd src;$(MAKE) test)
+	prove t/*.t
 
 clean:
 	(cd src;$(MAKE) clean)
 
 dist-src:
-	mkdir mochiweb-1/ && cp -rfv Makefile README priv scripts src support mochiweb-1/
-	tar zcf mochiweb-1.tgz mochiweb-1
+	mkdir mochiweb-0.2/ && cp -rfv Makefile README priv scripts src support mochiweb-0.2/
+	tar zcf mochiweb-0.2.tgz mochiweb-0.2
 
 install: all
 	mkdir -p ${LIBDIR}/mochiweb-1/{ebin,include}
-	for i in ebin/*.beam; do install $$i $(LIBDIR)/mochiweb-1/$$i ; done
+	for i in ebin/*.beam; do install $$i $(LIBDIR)/mochiweb-0.2/$$i ; done

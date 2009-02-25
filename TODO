@@ -1,8 +1,8 @@
 [DONE] Gut the mochiweb application (app, supervisor, etc)
-Clean up test suite
+[DONE] Clean up test suite
 [DONE] Create examples or samples directory
-Uniformly reference mochijson2 throughout the project
+[DONE] Uniformly reference mochijson2 throughout the project
 Clean/Expand the utilities throughout the project
 Move mochiweb_cookies:any_to_list/x to utils. Same with mochiweb_headers.
-drop json.erl, convert mochiweb_rpc to use mochijson2 - abhay
+[DONE] drop json.erl, convert mochiweb_rpc to use mochijson2 - abhay
 add enhancements to mochijson2 - abhay
