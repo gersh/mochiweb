@@ -4,7 +4,7 @@
 %% @doc HTTP Cookie parsing and generating (RFC 2109, RFC 2965).
 
 -module(mochiweb_cookies).
--export([parse_cookie/1, cookie/3, cookie/2, test/0]).
+-export([parse_cookie/1, cookie/3, cookie/2]).
 
 -define(QUOTE, $\").
 
@@ -123,13 +123,6 @@ parse_cookie("") ->
 parse_cookie(Cookie) -> 
     parse_cookie(Cookie, []).
 
-%% @spec test() -> ok
-%% @doc Run tests for mochiweb_cookies.
-test() ->
-    parse_cookie_test(),
-    cookie_test(),
-    ok.
-
 %% Internal API
 
 parse_cookie([], Acc) ->
@@ -191,23 +184,6 @@ skip_past_separator([$, | Rest]) ->
 skip_past_separator([_ | Rest]) ->
     skip_past_separator(Rest).
 
-parse_cookie_test() ->
-    %% RFC example
-    C1 = "$Version=\"1\"; Customer=\"WILE_E_COYOTE\"; $Path=\"/acme\"; 
-    Part_Number=\"Rocket_Launcher_0001\"; $Path=\"/acme\";
-    Shipping=\"FedEx\"; $Path=\"/acme\"",
-    [
-     {"Customer","WILE_E_COYOTE"},
-     {"Part_Number","Rocket_Launcher_0001"},
-     {"Shipping","FedEx"}
-    ] = parse_cookie(C1),
-    %% Potential edge cases
-    [{"foo", "x"}] = parse_cookie("foo=\"\\x\""),
-    [] = parse_cookie("="),
-    [{"foo", ""}, {"bar", ""}] = parse_cookie("  foo ; bar  "),
-    [{"foo", ""}, {"bar", ""}] = parse_cookie("foo=;bar="),
-    [{"foo", "\";"}, {"bar", ""}] = parse_cookie("foo = \"\\\";\";bar "),
-    [{"foo", "\";bar"}] = parse_cookie("foo=\"\\\";bar").
 
 any_to_list(V) when is_list(V) ->
     V;
@@ -217,34 +193,3 @@ any_to_list(V) when is_binary(V) ->
     binary_to_list(V);
 any_to_list(V) when is_integer(V) ->
     integer_to_list(V).
-
-
-cookie_test() ->
-    C1 = {"Set-Cookie",
-          "Customer=WILE_E_COYOTE; "
-          "Version=1; "
-          "Path=/acme"},
-    C1 = cookie("Customer", "WILE_E_COYOTE", [{path, "/acme"}]),
-    C1 = cookie("Customer", "WILE_E_COYOTE",
-                [{path, "/acme"}, {badoption, "negatory"}]),
-    C1 = cookie('Customer', 'WILE_E_COYOTE', [{path, '/acme'}]),
-    C1 = cookie(<<"Customer">>, <<"WILE_E_COYOTE">>, [{path, <<"/acme">>}]),
-
-    {"Set-Cookie","=NoKey; Version=1"} = cookie("", "NoKey", []),
-        
-        LocalTime = calendar:universal_time_to_local_time({{2007, 5, 15}, {13, 45, 33}}), 
-    C2 = {"Set-Cookie",
-          "Customer=WILE_E_COYOTE; "
-          "Version=1; "
-          "Expires=Tue, 15 May 2007 13:45:33 GMT; "
-          "Max-Age=0"},
-    C2 = cookie("Customer", "WILE_E_COYOTE",
-                [{max_age, -111}, {local_time, LocalTime}]),
-    C3 = {"Set-Cookie",
-          "Customer=WILE_E_COYOTE; "
-          "Version=1; "
-          "Expires=Wed, 16 May 2007 13:45:50 GMT; "
-          "Max-Age=86417"},
-    C3 = cookie("Customer", "WILE_E_COYOTE",
-                [{max_age, 86417}, {local_time, LocalTime}]),
-    ok.

@@ -1,20 +1,16 @@
 %% @author Bob Ippolito <bob@mochimedia.com>
 %% @copyright 2006 Mochi Media, Inc.
-
+%% @type iolist() = [char() | binary() | iolist()]
+%% @type iodata() = iolist() | binary()
 %% @doc Utilities for working with hexadecimal strings.
-
 -module(mochihex).
 -author('bob@mochimedia.com').
 
--export([test/0, to_hex/1, to_bin/1, to_int/1, dehex/1, hexdigit/1]).
-
-%% @type iolist() = [char() | binary() | iolist()]
-%% @type iodata() = iolist() | binary()
+-export([to_hex/1, to_bin/1, to_int/1, dehex/1, hexdigit/1]).
 
 %% @spec to_hex(integer | iolist()) -> string()
 %% @doc Convert an iolist to a hexadecimal string.
-to_hex(0) ->
-    "0";
+to_hex(0) -> "0";
 to_hex(I) when is_integer(I), I > 0 ->
     to_hex_int(I, []);
 to_hex(Bin) when is_binary(Bin) ->
@@ -48,30 +44,20 @@ hexdigit(C) when C >= 0, C =< 9 ->
 hexdigit(C) when C =< 15 ->
     C + $a - 10.
 
-%% @spec test() -> ok
-%% @doc Test this module.
-test() ->
-    "ff000ff1" = to_hex([255, 0, 15, 241]),
-    <<255, 0, 15, 241>> = to_bin("ff000ff1"),
-    16#ff000ff1 = to_int("ff000ff1"),
-    "ff000ff1" = to_hex(16#ff000ff1),
-    ok.
-
-
-%% Internal API
-
+%% @private
 to_hex(<<>>, Acc) ->
     lists:reverse(Acc);
 to_hex(<<C1:4, C2:4, Rest/binary>>, Acc) ->
     to_hex(Rest, [hexdigit(C2), hexdigit(C1) | Acc]).
 
+%% @private
 to_hex_int(0, Acc) ->
     Acc;
 to_hex_int(I, Acc) ->
     to_hex_int(I bsr 4, [hexdigit(I band 15) | Acc]).
 
+%% @private
 to_bin([], Acc) ->
     iolist_to_binary(lists:reverse(Acc));
 to_bin([C1, C2 | Rest], Acc) ->
     to_bin(Rest, [(dehex(C1) bsl 4) bor dehex(C2) | Acc]).
-
