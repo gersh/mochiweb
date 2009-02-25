@@ -251,7 +251,7 @@ start_raw_response({Code, ResponseHeaders}) ->
     End = lists:foldl(F, [<<"\r\n">>],
                       mochiweb_headers:to_list(ResponseHeaders)),
     send([make_version(Version), make_code(Code), <<"\r\n">> | End]),
-    mochiweb:new_response({THIS, Code, ResponseHeaders}).
+    mochiweb_http:new_response({THIS, Code, ResponseHeaders}).
 
 
 %% @spec start_response_length({integer(), ioheaders(), integer()}) -> response()
