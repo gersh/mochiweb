@@ -1,6 +1,6 @@
 #!/usr/bin/env escript
 %% -*- erlang -*-
-%%! -pa ./ebin-sasl errlog_type error -boot start_sasl
+%%! -pa ./ebin errlog_type error -boot start_sasl
 
 main(_) ->
     etap:plan(14),
