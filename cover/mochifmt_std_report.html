@@ -1,0 +1,152 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochifmt_std - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochifmt_std_report.html'>mochifmt_std</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>0%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Bob Ippolito <bob@mochimedia.com>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2008 Mochi Media, Inc.
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc Template module for a mochifmt formatter.
+</span><span class="marked"><a name="line5"></a>....5 
+</span><span class="marked"><a name="line6"></a>....6 -module(mochifmt_std, []).
+</span><span class="marked"><a name="line7"></a>....7 -author('bob@mochimedia.com').
+</span><span class="marked"><a name="line8"></a>....8 -export([format/2, get_value/2, format_field/2, get_field/2, convert_field/2]).
+</span><span class="marked"><a name="line9"></a>....9 
+</span><span class="marked"><a name="line10"></a>...10 format(Format, Args) ->
+</span><span class="uncovered"><a name="line11"></a>...11     mochifmt:format(Format, Args, THIS).
+</span><span class="marked"><a name="line12"></a>...12 
+</span><span class="marked"><a name="line13"></a>...13 get_field(Key, Args) ->
+</span><span class="uncovered"><a name="line14"></a>...14     mochifmt:get_field(Key, Args, THIS).
+</span><span class="marked"><a name="line15"></a>...15 
+</span><span class="marked"><a name="line16"></a>...16 convert_field(Key, Args) ->
+</span><span class="uncovered"><a name="line17"></a>...17     mochifmt:convert_field(Key, Args).
+</span><span class="marked"><a name="line18"></a>...18 
+</span><span class="marked"><a name="line19"></a>...19 get_value(Key, Args) ->
+</span><span class="uncovered"><a name="line20"></a>...20     mochifmt:get_value(Key, Args).
+</span><span class="marked"><a name="line21"></a>...21 
+</span><span class="marked"><a name="line22"></a>...22 format_field(Arg, Format) ->
+</span><span class="uncovered"><a name="line23"></a>...23     mochifmt:format_field(Arg, Format, THIS).
+</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

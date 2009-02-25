@@ -1,0 +1,159 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochifmt_records - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochifmt_records_report.html'>mochifmt_records</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>0%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Bob Ippolito <bob@mochimedia.com>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2008 Mochi Media, Inc.
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc Formatter that understands records.
+</span><span class="marked"><a name="line5"></a>....5 %%
+</span><span class="marked"><a name="line6"></a>....6 %% Usage:
+</span><span class="marked"><a name="line7"></a>....7 %%
+</span><span class="marked"><a name="line8"></a>....8 %%    1> M = mochifmt_records:new([{rec, record_info(fields, rec)}]),
+</span><span class="marked"><a name="line9"></a>....9 %%    M:format("{0.bar}", [#rec{bar=foo}]).
+</span><span class="marked"><a name="line10"></a>...10 %%    foo
+</span><span class="marked"><a name="line11"></a>...11 
+</span><span class="marked"><a name="line12"></a>...12 -module(mochifmt_records, [Recs]).
+</span><span class="marked"><a name="line13"></a>...13 -author('bob@mochimedia.com').
+</span><span class="marked"><a name="line14"></a>...14 -export([get_value/2]).
+</span><span class="marked"><a name="line15"></a>...15 
+</span><span class="marked"><a name="line16"></a>...16 get_value(Key, Rec) when is_tuple(Rec) and is_atom(element(1, Rec)) ->
+</span><span class="uncovered"><a name="line17"></a>...17     try begin
+</span><span class="uncovered"><a name="line18"></a>...18             Atom = list_to_existing_atom(Key),
+</span><span class="uncovered"><a name="line19"></a>...19             {_, Fields} = proplists:lookup(element(1, Rec), Recs),
+</span><span class="uncovered"><a name="line20"></a>...20             element(get_rec_index(Atom, Fields, 2), Rec)
+</span><span class="marked"><a name="line21"></a>...21         end
+</span><span class="uncovered"><a name="line22"></a>...22     catch error:_ -> mochifmt:get_value(Key, Rec)
+</span><span class="marked"><a name="line23"></a>...23     end;
+</span><span class="marked"><a name="line24"></a>...24 get_value(Key, Args) ->
+</span><span class="uncovered"><a name="line25"></a>...25     mochifmt:get_value(Key, Args).
+</span><span class="marked"><a name="line26"></a>...26 
+</span><span class="marked"><a name="line27"></a>...27 get_rec_index(Atom, [Atom | _], Index) ->
+</span><span class="uncovered"><a name="line28"></a>...28     Index;
+</span><span class="marked"><a name="line29"></a>...29 get_rec_index(Atom, [_ | Rest], Index) ->
+</span><span class="uncovered"><a name="line30"></a>...30     get_rec_index(Atom, Rest, 1 + Index).
+</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

@@ -1,0 +1,414 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochiweb_charref - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochiweb_charref_report.html'>mochiweb_charref</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>2%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='2' /><td class='uncovered' width='98' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Bob Ippolito <bob@mochimedia.com>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2007 Mochi Media, Inc.
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc Converts HTML 4 charrefs and entities to codepoints.
+</span><span class="marked"><a name="line5"></a>....5 -module(mochiweb_charref).
+</span><span class="marked"><a name="line6"></a>....6 -export([charref/1]).
+</span><span class="marked"><a name="line7"></a>....7 
+</span><span class="marked"><a name="line8"></a>....8 %% External API.
+</span><span class="marked"><a name="line9"></a>....9 
+</span><span class="marked"><a name="line10"></a>...10 %% @spec charref(S) -> integer() | undefined
+</span><span class="marked"><a name="line11"></a>...11 %% @doc Convert a decimal charref, hex charref, or html entity to a unicode
+</span><span class="marked"><a name="line12"></a>...12 %%      codepoint, or return undefined on failure.
+</span><span class="marked"><a name="line13"></a>...13 %%      The input should not include an ampersand or semicolon.
+</span><span class="marked"><a name="line14"></a>...14 %%      charref("#38") = 38, charref("#x26") = 38, charref("amp") = 38.
+</span><span class="marked"><a name="line15"></a>...15 charref(B) when is_binary(B) ->
+</span><span class="uncovered"><a name="line16"></a>...16     charref(binary_to_list(B));
+</span><span class="marked"><a name="line17"></a>...17 charref([$#, C | L]) when C =:= $x orelse C =:= $X ->
+</span><span class="covered"><a name="line18"></a>...18     try erlang:list_to_integer(L, 16)
+</span><span class="marked"><a name="line19"></a>...19     catch
+</span><span class="uncovered"><a name="line20"></a>...20         error:badarg -> undefined
+</span><span class="marked"><a name="line21"></a>...21     end;
+</span><span class="marked"><a name="line22"></a>...22 charref([$# | L]) ->
+</span><span class="covered"><a name="line23"></a>...23     try list_to_integer(L)
+</span><span class="marked"><a name="line24"></a>...24     catch
+</span><span class="uncovered"><a name="line25"></a>...25         error:badarg -> undefined
+</span><span class="marked"><a name="line26"></a>...26     end;
+</span><span class="marked"><a name="line27"></a>...27 charref(L) ->
+</span><span class="covered"><a name="line28"></a>...28     entity(L).
+</span><span class="marked"><a name="line29"></a>...29 
+</span><span class="marked"><a name="line30"></a>...30 %% Internal API.
+</span><span class="marked"><a name="line31"></a>...31 
+</span><span class="uncovered"><a name="line32"></a>...32 entity("nbsp") -> 160;
+</span><span class="uncovered"><a name="line33"></a>...33 entity("iexcl") -> 161;
+</span><span class="uncovered"><a name="line34"></a>...34 entity("cent") -> 162;
+</span><span class="uncovered"><a name="line35"></a>...35 entity("pound") -> 163;
+</span><span class="uncovered"><a name="line36"></a>...36 entity("curren") -> 164;
+</span><span class="uncovered"><a name="line37"></a>...37 entity("yen") -> 165;
+</span><span class="uncovered"><a name="line38"></a>...38 entity("brvbar") -> 166;
+</span><span class="uncovered"><a name="line39"></a>...39 entity("sect") -> 167;
+</span><span class="uncovered"><a name="line40"></a>...40 entity("uml") -> 168;
+</span><span class="uncovered"><a name="line41"></a>...41 entity("copy") -> 169;
+</span><span class="uncovered"><a name="line42"></a>...42 entity("ordf") -> 170;
+</span><span class="uncovered"><a name="line43"></a>...43 entity("laquo") -> 171;
+</span><span class="uncovered"><a name="line44"></a>...44 entity("not") -> 172;
+</span><span class="uncovered"><a name="line45"></a>...45 entity("shy") -> 173;
+</span><span class="uncovered"><a name="line46"></a>...46 entity("reg") -> 174;
+</span><span class="uncovered"><a name="line47"></a>...47 entity("macr") -> 175;
+</span><span class="uncovered"><a name="line48"></a>...48 entity("deg") -> 176;
+</span><span class="uncovered"><a name="line49"></a>...49 entity("plusmn") -> 177;
+</span><span class="uncovered"><a name="line50"></a>...50 entity("sup2") -> 178;
+</span><span class="uncovered"><a name="line51"></a>...51 entity("sup3") -> 179;
+</span><span class="uncovered"><a name="line52"></a>...52 entity("acute") -> 180;
+</span><span class="uncovered"><a name="line53"></a>...53 entity("micro") -> 181;
+</span><span class="uncovered"><a name="line54"></a>...54 entity("para") -> 182;
+</span><span class="uncovered"><a name="line55"></a>...55 entity("middot") -> 183;
+</span><span class="uncovered"><a name="line56"></a>...56 entity("cedil") -> 184;
+</span><span class="uncovered"><a name="line57"></a>...57 entity("sup1") -> 185;
+</span><span class="uncovered"><a name="line58"></a>...58 entity("ordm") -> 186;
+</span><span class="uncovered"><a name="line59"></a>...59 entity("raquo") -> 187;
+</span><span class="uncovered"><a name="line60"></a>...60 entity("frac14") -> 188;
+</span><span class="uncovered"><a name="line61"></a>...61 entity("frac12") -> 189;
+</span><span class="uncovered"><a name="line62"></a>...62 entity("frac34") -> 190;
+</span><span class="uncovered"><a name="line63"></a>...63 entity("iquest") -> 191;
+</span><span class="uncovered"><a name="line64"></a>...64 entity("Agrave") -> 192;
+</span><span class="uncovered"><a name="line65"></a>...65 entity("Aacute") -> 193;
+</span><span class="uncovered"><a name="line66"></a>...66 entity("Acirc") -> 194;
+</span><span class="uncovered"><a name="line67"></a>...67 entity("Atilde") -> 195;
+</span><span class="uncovered"><a name="line68"></a>...68 entity("Auml") -> 196;
+</span><span class="uncovered"><a name="line69"></a>...69 entity("Aring") -> 197;
+</span><span class="uncovered"><a name="line70"></a>...70 entity("AElig") -> 198;
+</span><span class="uncovered"><a name="line71"></a>...71 entity("Ccedil") -> 199;
+</span><span class="uncovered"><a name="line72"></a>...72 entity("Egrave") -> 200;
+</span><span class="uncovered"><a name="line73"></a>...73 entity("Eacute") -> 201;
+</span><span class="uncovered"><a name="line74"></a>...74 entity("Ecirc") -> 202;
+</span><span class="uncovered"><a name="line75"></a>...75 entity("Euml") -> 203;
+</span><span class="uncovered"><a name="line76"></a>...76 entity("Igrave") -> 204;
+</span><span class="uncovered"><a name="line77"></a>...77 entity("Iacute") -> 205;
+</span><span class="uncovered"><a name="line78"></a>...78 entity("Icirc") -> 206;
+</span><span class="uncovered"><a name="line79"></a>...79 entity("Iuml") -> 207;
+</span><span class="uncovered"><a name="line80"></a>...80 entity("ETH") -> 208;
+</span><span class="uncovered"><a name="line81"></a>...81 entity("Ntilde") -> 209;
+</span><span class="uncovered"><a name="line82"></a>...82 entity("Ograve") -> 210;
+</span><span class="uncovered"><a name="line83"></a>...83 entity("Oacute") -> 211;
+</span><span class="uncovered"><a name="line84"></a>...84 entity("Ocirc") -> 212;
+</span><span class="uncovered"><a name="line85"></a>...85 entity("Otilde") -> 213;
+</span><span class="uncovered"><a name="line86"></a>...86 entity("Ouml") -> 214;
+</span><span class="uncovered"><a name="line87"></a>...87 entity("times") -> 215;
+</span><span class="uncovered"><a name="line88"></a>...88 entity("Oslash") -> 216;
+</span><span class="uncovered"><a name="line89"></a>...89 entity("Ugrave") -> 217;
+</span><span class="uncovered"><a name="line90"></a>...90 entity("Uacute") -> 218;
+</span><span class="uncovered"><a name="line91"></a>...91 entity("Ucirc") -> 219;
+</span><span class="uncovered"><a name="line92"></a>...92 entity("Uuml") -> 220;
+</span><span class="uncovered"><a name="line93"></a>...93 entity("Yacute") -> 221;
+</span><span class="uncovered"><a name="line94"></a>...94 entity("THORN") -> 222;
+</span><span class="uncovered"><a name="line95"></a>...95 entity("szlig") -> 223;
+</span><span class="uncovered"><a name="line96"></a>...96 entity("agrave") -> 224;
+</span><span class="uncovered"><a name="line97"></a>...97 entity("aacute") -> 225;
+</span><span class="uncovered"><a name="line98"></a>...98 entity("acirc") -> 226;
+</span><span class="uncovered"><a name="line99"></a>...99 entity("atilde") -> 227;
+</span><span class="uncovered"><a name="line100"></a>..100 entity("auml") -> 228;
+</span><span class="uncovered"><a name="line101"></a>..101 entity("aring") -> 229;
+</span><span class="uncovered"><a name="line102"></a>..102 entity("aelig") -> 230;
+</span><span class="uncovered"><a name="line103"></a>..103 entity("ccedil") -> 231;
+</span><span class="uncovered"><a name="line104"></a>..104 entity("egrave") -> 232;
+</span><span class="uncovered"><a name="line105"></a>..105 entity("eacute") -> 233;
+</span><span class="uncovered"><a name="line106"></a>..106 entity("ecirc") -> 234;
+</span><span class="uncovered"><a name="line107"></a>..107 entity("euml") -> 235;
+</span><span class="uncovered"><a name="line108"></a>..108 entity("igrave") -> 236;
+</span><span class="uncovered"><a name="line109"></a>..109 entity("iacute") -> 237;
+</span><span class="uncovered"><a name="line110"></a>..110 entity("icirc") -> 238;
+</span><span class="uncovered"><a name="line111"></a>..111 entity("iuml") -> 239;
+</span><span class="uncovered"><a name="line112"></a>..112 entity("eth") -> 240;
+</span><span class="uncovered"><a name="line113"></a>..113 entity("ntilde") -> 241;
+</span><span class="uncovered"><a name="line114"></a>..114 entity("ograve") -> 242;
+</span><span class="uncovered"><a name="line115"></a>..115 entity("oacute") -> 243;
+</span><span class="uncovered"><a name="line116"></a>..116 entity("ocirc") -> 244;
+</span><span class="uncovered"><a name="line117"></a>..117 entity("otilde") -> 245;
+</span><span class="uncovered"><a name="line118"></a>..118 entity("ouml") -> 246;
+</span><span class="uncovered"><a name="line119"></a>..119 entity("divide") -> 247;
+</span><span class="uncovered"><a name="line120"></a>..120 entity("oslash") -> 248;
+</span><span class="uncovered"><a name="line121"></a>..121 entity("ugrave") -> 249;
+</span><span class="uncovered"><a name="line122"></a>..122 entity("uacute") -> 250;
+</span><span class="uncovered"><a name="line123"></a>..123 entity("ucirc") -> 251;
+</span><span class="uncovered"><a name="line124"></a>..124 entity("uuml") -> 252;
+</span><span class="uncovered"><a name="line125"></a>..125 entity("yacute") -> 253;
+</span><span class="uncovered"><a name="line126"></a>..126 entity("thorn") -> 254;
+</span><span class="uncovered"><a name="line127"></a>..127 entity("yuml") -> 255;
+</span><span class="uncovered"><a name="line128"></a>..128 entity("fnof") -> 402;
+</span><span class="uncovered"><a name="line129"></a>..129 entity("Alpha") -> 913;
+</span><span class="uncovered"><a name="line130"></a>..130 entity("Beta") -> 914;
+</span><span class="uncovered"><a name="line131"></a>..131 entity("Gamma") -> 915;
+</span><span class="uncovered"><a name="line132"></a>..132 entity("Delta") -> 916;
+</span><span class="uncovered"><a name="line133"></a>..133 entity("Epsilon") -> 917;
+</span><span class="uncovered"><a name="line134"></a>..134 entity("Zeta") -> 918;
+</span><span class="uncovered"><a name="line135"></a>..135 entity("Eta") -> 919;
+</span><span class="uncovered"><a name="line136"></a>..136 entity("Theta") -> 920;
+</span><span class="uncovered"><a name="line137"></a>..137 entity("Iota") -> 921;
+</span><span class="uncovered"><a name="line138"></a>..138 entity("Kappa") -> 922;
+</span><span class="uncovered"><a name="line139"></a>..139 entity("Lambda") -> 923;
+</span><span class="uncovered"><a name="line140"></a>..140 entity("Mu") -> 924;
+</span><span class="uncovered"><a name="line141"></a>..141 entity("Nu") -> 925;
+</span><span class="uncovered"><a name="line142"></a>..142 entity("Xi") -> 926;
+</span><span class="uncovered"><a name="line143"></a>..143 entity("Omicron") -> 927;
+</span><span class="uncovered"><a name="line144"></a>..144 entity("Pi") -> 928;
+</span><span class="uncovered"><a name="line145"></a>..145 entity("Rho") -> 929;
+</span><span class="uncovered"><a name="line146"></a>..146 entity("Sigma") -> 931;
+</span><span class="uncovered"><a name="line147"></a>..147 entity("Tau") -> 932;
+</span><span class="uncovered"><a name="line148"></a>..148 entity("Upsilon") -> 933;
+</span><span class="uncovered"><a name="line149"></a>..149 entity("Phi") -> 934;
+</span><span class="uncovered"><a name="line150"></a>..150 entity("Chi") -> 935;
+</span><span class="uncovered"><a name="line151"></a>..151 entity("Psi") -> 936;
+</span><span class="uncovered"><a name="line152"></a>..152 entity("Omega") -> 937;
+</span><span class="uncovered"><a name="line153"></a>..153 entity("alpha") -> 945;
+</span><span class="uncovered"><a name="line154"></a>..154 entity("beta") -> 946;
+</span><span class="uncovered"><a name="line155"></a>..155 entity("gamma") -> 947;
+</span><span class="uncovered"><a name="line156"></a>..156 entity("delta") -> 948;
+</span><span class="uncovered"><a name="line157"></a>..157 entity("epsilon") -> 949;
+</span><span class="uncovered"><a name="line158"></a>..158 entity("zeta") -> 950;
+</span><span class="uncovered"><a name="line159"></a>..159 entity("eta") -> 951;
+</span><span class="uncovered"><a name="line160"></a>..160 entity("theta") -> 952;
+</span><span class="uncovered"><a name="line161"></a>..161 entity("iota") -> 953;
+</span><span class="uncovered"><a name="line162"></a>..162 entity("kappa") -> 954;
+</span><span class="uncovered"><a name="line163"></a>..163 entity("lambda") -> 955;
+</span><span class="uncovered"><a name="line164"></a>..164 entity("mu") -> 956;
+</span><span class="uncovered"><a name="line165"></a>..165 entity("nu") -> 957;
+</span><span class="uncovered"><a name="line166"></a>..166 entity("xi") -> 958;
+</span><span class="uncovered"><a name="line167"></a>..167 entity("omicron") -> 959;
+</span><span class="uncovered"><a name="line168"></a>..168 entity("pi") -> 960;
+</span><span class="uncovered"><a name="line169"></a>..169 entity("rho") -> 961;
+</span><span class="uncovered"><a name="line170"></a>..170 entity("sigmaf") -> 962;
+</span><span class="uncovered"><a name="line171"></a>..171 entity("sigma") -> 963;
+</span><span class="uncovered"><a name="line172"></a>..172 entity("tau") -> 964;
+</span><span class="uncovered"><a name="line173"></a>..173 entity("upsilon") -> 965;
+</span><span class="uncovered"><a name="line174"></a>..174 entity("phi") -> 966;
+</span><span class="uncovered"><a name="line175"></a>..175 entity("chi") -> 967;
+</span><span class="uncovered"><a name="line176"></a>..176 entity("psi") -> 968;
+</span><span class="uncovered"><a name="line177"></a>..177 entity("omega") -> 969;
+</span><span class="uncovered"><a name="line178"></a>..178 entity("thetasym") -> 977;
+</span><span class="uncovered"><a name="line179"></a>..179 entity("upsih") -> 978;
+</span><span class="uncovered"><a name="line180"></a>..180 entity("piv") -> 982;
+</span><span class="uncovered"><a name="line181"></a>..181 entity("bull") -> 8226;
+</span><span class="uncovered"><a name="line182"></a>..182 entity("hellip") -> 8230;
+</span><span class="uncovered"><a name="line183"></a>..183 entity("prime") -> 8242;
+</span><span class="uncovered"><a name="line184"></a>..184 entity("Prime") -> 8243;
+</span><span class="uncovered"><a name="line185"></a>..185 entity("oline") -> 8254;
+</span><span class="uncovered"><a name="line186"></a>..186 entity("frasl") -> 8260;
+</span><span class="uncovered"><a name="line187"></a>..187 entity("weierp") -> 8472;
+</span><span class="uncovered"><a name="line188"></a>..188 entity("image") -> 8465;
+</span><span class="uncovered"><a name="line189"></a>..189 entity("real") -> 8476;
+</span><span class="uncovered"><a name="line190"></a>..190 entity("trade") -> 8482;
+</span><span class="uncovered"><a name="line191"></a>..191 entity("alefsym") -> 8501;
+</span><span class="uncovered"><a name="line192"></a>..192 entity("larr") -> 8592;
+</span><span class="uncovered"><a name="line193"></a>..193 entity("uarr") -> 8593;
+</span><span class="uncovered"><a name="line194"></a>..194 entity("rarr") -> 8594;
+</span><span class="uncovered"><a name="line195"></a>..195 entity("darr") -> 8595;
+</span><span class="uncovered"><a name="line196"></a>..196 entity("harr") -> 8596;
+</span><span class="uncovered"><a name="line197"></a>..197 entity("crarr") -> 8629;
+</span><span class="uncovered"><a name="line198"></a>..198 entity("lArr") -> 8656;
+</span><span class="uncovered"><a name="line199"></a>..199 entity("uArr") -> 8657;
+</span><span class="uncovered"><a name="line200"></a>..200 entity("rArr") -> 8658;
+</span><span class="uncovered"><a name="line201"></a>..201 entity("dArr") -> 8659;
+</span><span class="uncovered"><a name="line202"></a>..202 entity("hArr") -> 8660;
+</span><span class="uncovered"><a name="line203"></a>..203 entity("forall") -> 8704;
+</span><span class="uncovered"><a name="line204"></a>..204 entity("part") -> 8706;
+</span><span class="uncovered"><a name="line205"></a>..205 entity("exist") -> 8707;
+</span><span class="uncovered"><a name="line206"></a>..206 entity("empty") -> 8709;
+</span><span class="uncovered"><a name="line207"></a>..207 entity("nabla") -> 8711;
+</span><span class="uncovered"><a name="line208"></a>..208 entity("isin") -> 8712;
+</span><span class="uncovered"><a name="line209"></a>..209 entity("notin") -> 8713;
+</span><span class="uncovered"><a name="line210"></a>..210 entity("ni") -> 8715;
+</span><span class="uncovered"><a name="line211"></a>..211 entity("prod") -> 8719;
+</span><span class="uncovered"><a name="line212"></a>..212 entity("sum") -> 8721;
+</span><span class="uncovered"><a name="line213"></a>..213 entity("minus") -> 8722;
+</span><span class="uncovered"><a name="line214"></a>..214 entity("lowast") -> 8727;
+</span><span class="uncovered"><a name="line215"></a>..215 entity("radic") -> 8730;
+</span><span class="uncovered"><a name="line216"></a>..216 entity("prop") -> 8733;
+</span><span class="uncovered"><a name="line217"></a>..217 entity("infin") -> 8734;
+</span><span class="uncovered"><a name="line218"></a>..218 entity("ang") -> 8736;
+</span><span class="uncovered"><a name="line219"></a>..219 entity("and") -> 8743;
+</span><span class="uncovered"><a name="line220"></a>..220 entity("or") -> 8744;
+</span><span class="uncovered"><a name="line221"></a>..221 entity("cap") -> 8745;
+</span><span class="uncovered"><a name="line222"></a>..222 entity("cup") -> 8746;
+</span><span class="uncovered"><a name="line223"></a>..223 entity("int") -> 8747;
+</span><span class="uncovered"><a name="line224"></a>..224 entity("there4") -> 8756;
+</span><span class="uncovered"><a name="line225"></a>..225 entity("sim") -> 8764;
+</span><span class="uncovered"><a name="line226"></a>..226 entity("cong") -> 8773;
+</span><span class="uncovered"><a name="line227"></a>..227 entity("asymp") -> 8776;
+</span><span class="uncovered"><a name="line228"></a>..228 entity("ne") -> 8800;
+</span><span class="uncovered"><a name="line229"></a>..229 entity("equiv") -> 8801;
+</span><span class="uncovered"><a name="line230"></a>..230 entity("le") -> 8804;
+</span><span class="uncovered"><a name="line231"></a>..231 entity("ge") -> 8805;
+</span><span class="uncovered"><a name="line232"></a>..232 entity("sub") -> 8834;
+</span><span class="uncovered"><a name="line233"></a>..233 entity("sup") -> 8835;
+</span><span class="uncovered"><a name="line234"></a>..234 entity("nsub") -> 8836;
+</span><span class="uncovered"><a name="line235"></a>..235 entity("sube") -> 8838;
+</span><span class="uncovered"><a name="line236"></a>..236 entity("supe") -> 8839;
+</span><span class="uncovered"><a name="line237"></a>..237 entity("oplus") -> 8853;
+</span><span class="uncovered"><a name="line238"></a>..238 entity("otimes") -> 8855;
+</span><span class="uncovered"><a name="line239"></a>..239 entity("perp") -> 8869;
+</span><span class="uncovered"><a name="line240"></a>..240 entity("sdot") -> 8901;
+</span><span class="uncovered"><a name="line241"></a>..241 entity("lceil") -> 8968;
+</span><span class="uncovered"><a name="line242"></a>..242 entity("rceil") -> 8969;
+</span><span class="uncovered"><a name="line243"></a>..243 entity("lfloor") -> 8970;
+</span><span class="uncovered"><a name="line244"></a>..244 entity("rfloor") -> 8971;
+</span><span class="uncovered"><a name="line245"></a>..245 entity("lang") -> 9001;
+</span><span class="uncovered"><a name="line246"></a>..246 entity("rang") -> 9002;
+</span><span class="uncovered"><a name="line247"></a>..247 entity("loz") -> 9674;
+</span><span class="uncovered"><a name="line248"></a>..248 entity("spades") -> 9824;
+</span><span class="uncovered"><a name="line249"></a>..249 entity("clubs") -> 9827;
+</span><span class="uncovered"><a name="line250"></a>..250 entity("hearts") -> 9829;
+</span><span class="uncovered"><a name="line251"></a>..251 entity("diams") -> 9830;
+</span><span class="uncovered"><a name="line252"></a>..252 entity("quot") -> 34;
+</span><span class="covered"><a name="line253"></a>..253 entity("amp") -> 38;
+</span><span class="uncovered"><a name="line254"></a>..254 entity("lt") -> 60;
+</span><span class="uncovered"><a name="line255"></a>..255 entity("gt") -> 62;
+</span><span class="uncovered"><a name="line256"></a>..256 entity("OElig") -> 338;
+</span><span class="uncovered"><a name="line257"></a>..257 entity("oelig") -> 339;
+</span><span class="uncovered"><a name="line258"></a>..258 entity("Scaron") -> 352;
+</span><span class="uncovered"><a name="line259"></a>..259 entity("scaron") -> 353;
+</span><span class="uncovered"><a name="line260"></a>..260 entity("Yuml") -> 376;
+</span><span class="uncovered"><a name="line261"></a>..261 entity("circ") -> 710;
+</span><span class="uncovered"><a name="line262"></a>..262 entity("tilde") -> 732;
+</span><span class="uncovered"><a name="line263"></a>..263 entity("ensp") -> 8194;
+</span><span class="uncovered"><a name="line264"></a>..264 entity("emsp") -> 8195;
+</span><span class="uncovered"><a name="line265"></a>..265 entity("thinsp") -> 8201;
+</span><span class="uncovered"><a name="line266"></a>..266 entity("zwnj") -> 8204;
+</span><span class="uncovered"><a name="line267"></a>..267 entity("zwj") -> 8205;
+</span><span class="uncovered"><a name="line268"></a>..268 entity("lrm") -> 8206;
+</span><span class="uncovered"><a name="line269"></a>..269 entity("rlm") -> 8207;
+</span><span class="uncovered"><a name="line270"></a>..270 entity("ndash") -> 8211;
+</span><span class="uncovered"><a name="line271"></a>..271 entity("mdash") -> 8212;
+</span><span class="uncovered"><a name="line272"></a>..272 entity("lsquo") -> 8216;
+</span><span class="uncovered"><a name="line273"></a>..273 entity("rsquo") -> 8217;
+</span><span class="uncovered"><a name="line274"></a>..274 entity("sbquo") -> 8218;
+</span><span class="uncovered"><a name="line275"></a>..275 entity("ldquo") -> 8220;
+</span><span class="uncovered"><a name="line276"></a>..276 entity("rdquo") -> 8221;
+</span><span class="uncovered"><a name="line277"></a>..277 entity("bdquo") -> 8222;
+</span><span class="uncovered"><a name="line278"></a>..278 entity("dagger") -> 8224;
+</span><span class="uncovered"><a name="line279"></a>..279 entity("Dagger") -> 8225;
+</span><span class="uncovered"><a name="line280"></a>..280 entity("permil") -> 8240;
+</span><span class="uncovered"><a name="line281"></a>..281 entity("lsaquo") -> 8249;
+</span><span class="uncovered"><a name="line282"></a>..282 entity("rsaquo") -> 8250;
+</span><span class="uncovered"><a name="line283"></a>..283 entity("euro") -> 8364;
+</span><span class="covered"><a name="line284"></a>..284 entity(_) -> undefined.
+</span><span class="marked"><a name="line285"></a>..285 
+</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

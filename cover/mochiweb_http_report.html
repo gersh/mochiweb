@@ -1,0 +1,302 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochiweb_http - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochiweb_http_report.html'>mochiweb_http</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>0%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Bob Ippolito <bob@mochimedia.com>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2007 Mochi Media, Inc.
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc HTTP server.
+</span><span class="marked"><a name="line5"></a>....5 
+</span><span class="marked"><a name="line6"></a>....6 -module(mochiweb_http).
+</span><span class="marked"><a name="line7"></a>....7 -author('bob@mochimedia.com').
+</span><span class="marked"><a name="line8"></a>....8 -export([start/0, start/1, stop/0, stop/1]).
+</span><span class="marked"><a name="line9"></a>....9 -export([loop/2, default_body/1, new_request/1, new_response/1]).
+</span><span class="marked"><a name="line10"></a>...10 
+</span><span class="marked"><a name="line11"></a>...11 -define(IDLE_TIMEOUT, 30000).
+</span><span class="marked"><a name="line12"></a>...12 
+</span><span class="marked"><a name="line13"></a>...13 -define(MAX_HEADERS, 1000).
+</span><span class="marked"><a name="line14"></a>...14 -define(DEFAULTS, [{name, ?MODULE},
+</span><span class="marked"><a name="line15"></a>...15                    {port, 8888}]).
+</span><span class="marked"><a name="line16"></a>...16 
+</span><span class="marked"><a name="line17"></a>...17 set_default({Prop, Value}, PropList) ->
+</span><span class="uncovered"><a name="line18"></a>...18     case proplists:is_defined(Prop, PropList) of
+</span><span class="marked"><a name="line19"></a>...19         true ->
+</span><span class="uncovered"><a name="line20"></a>...20             PropList;
+</span><span class="marked"><a name="line21"></a>...21         false ->
+</span><span class="uncovered"><a name="line22"></a>...22             [{Prop, Value} | PropList]
+</span><span class="marked"><a name="line23"></a>...23     end.
+</span><span class="marked"><a name="line24"></a>...24 
+</span><span class="marked"><a name="line25"></a>...25 set_defaults(Defaults, PropList) ->
+</span><span class="uncovered"><a name="line26"></a>...26     lists:foldl(fun set_default/2, PropList, Defaults).
+</span><span class="marked"><a name="line27"></a>...27 
+</span><span class="marked"><a name="line28"></a>...28 parse_options(Options) ->
+</span><span class="uncovered"><a name="line29"></a>...29     {loop, HttpLoop} = proplists:lookup(loop, Options),
+</span><span class="uncovered"><a name="line30"></a>...30     Loop = fun (S) ->
+</span><span class="uncovered"><a name="line31"></a>...31                    ?MODULE:loop(S, HttpLoop)
+</span><span class="marked"><a name="line32"></a>...32            end,
+</span><span class="uncovered"><a name="line33"></a>...33     Options1 = [{loop, Loop} | proplists:delete(loop, Options)],
+</span><span class="uncovered"><a name="line34"></a>...34     set_defaults(?DEFAULTS, Options1).
+</span><span class="marked"><a name="line35"></a>...35 
+</span><span class="marked"><a name="line36"></a>...36 stop() ->
+</span><span class="uncovered"><a name="line37"></a>...37     mochiweb:stop(?MODULE).
+</span><span class="marked"><a name="line38"></a>...38 
+</span><span class="marked"><a name="line39"></a>...39 stop(Name) ->
+</span><span class="uncovered"><a name="line40"></a>...40     mochiweb:stop(Name).
+</span><span class="marked"><a name="line41"></a>...41 
+</span><span class="marked"><a name="line42"></a>...42 start() ->
+</span><span class="uncovered"><a name="line43"></a>...43     start([{ip, "127.0.0.1"},
+</span><span class="marked"><a name="line44"></a>...44            {loop, {?MODULE, default_body}}]).
+</span><span class="marked"><a name="line45"></a>...45 
+</span><span class="marked"><a name="line46"></a>...46 start(Options) ->
+</span><span class="uncovered"><a name="line47"></a>...47     mochiweb:start(parse_options(Options)).
+</span><span class="marked"><a name="line48"></a>...48 
+</span><span class="marked"><a name="line49"></a>...49 frm(Body) ->
+</span><span class="uncovered"><a name="line50"></a>...50     ["<html><head></head><body>"
+</span><span class="marked"><a name="line51"></a>...51      "<form method=\"POST\">"
+</span><span class="marked"><a name="line52"></a>...52      "<input type=\"hidden\" value=\"message\" name=\"hidden\"/>"
+</span><span class="marked"><a name="line53"></a>...53      "<input type=\"submit\" value=\"regular POST\">"
+</span><span class="marked"><a name="line54"></a>...54      "</form>"
+</span><span class="marked"><a name="line55"></a>...55      "<br />"
+</span><span class="marked"><a name="line56"></a>...56      "<form method=\"POST\" enctype=\"multipart/form-data\""
+</span><span class="marked"><a name="line57"></a>...57      " action=\"/multipart\">"
+</span><span class="marked"><a name="line58"></a>...58      "<input type=\"hidden\" value=\"multipart message\" name=\"hidden\"/>"
+</span><span class="marked"><a name="line59"></a>...59      "<input type=\"file\" name=\"file\"/>"
+</span><span class="marked"><a name="line60"></a>...60      "<input type=\"submit\" value=\"multipart POST\" />"
+</span><span class="marked"><a name="line61"></a>...61      "</form>"
+</span><span class="marked"><a name="line62"></a>...62      "<pre>", Body, "</pre>"
+</span><span class="marked"><a name="line63"></a>...63      "</body></html>"].
+</span><span class="marked"><a name="line64"></a>...64 
+</span><span class="marked"><a name="line65"></a>...65 default_body(Req, M, "/chunked") when M =:= 'GET'; M =:= 'HEAD' ->
+</span><span class="uncovered"><a name="line66"></a>...66     Res = Req:ok({"text/plain", [], chunked}),
+</span><span class="uncovered"><a name="line67"></a>...67     Res:write_chunk("First chunk\r\n"),
+</span><span class="uncovered"><a name="line68"></a>...68     timer:sleep(5000),
+</span><span class="uncovered"><a name="line69"></a>...69     Res:write_chunk("Last chunk\r\n"),
+</span><span class="uncovered"><a name="line70"></a>...70     Res:write_chunk("");
+</span><span class="marked"><a name="line71"></a>...71 default_body(Req, M, _Path) when M =:= 'GET'; M =:= 'HEAD' ->
+</span><span class="uncovered"><a name="line72"></a>...72     Body = io_lib:format("~p~n", [[{parse_qs, Req:parse_qs()},
+</span><span class="marked"><a name="line73"></a>...73                                    {parse_cookie, Req:parse_cookie()},
+</span><span class="marked"><a name="line74"></a>...74                                    Req:dump()]]),
+</span><span class="uncovered"><a name="line75"></a>...75     Req:ok({"text/html",
+</span><span class="marked"><a name="line76"></a>...76             [mochiweb_cookies:cookie("mochiweb_http", "test_cookie")],
+</span><span class="marked"><a name="line77"></a>...77             frm(Body)});
+</span><span class="marked"><a name="line78"></a>...78 default_body(Req, 'POST', "/multipart") ->
+</span><span class="uncovered"><a name="line79"></a>...79     Body = io_lib:format("~p~n", [[{parse_qs, Req:parse_qs()},
+</span><span class="marked"><a name="line80"></a>...80                                    {parse_cookie, Req:parse_cookie()},
+</span><span class="marked"><a name="line81"></a>...81                                    {body, Req:recv_body()},
+</span><span class="marked"><a name="line82"></a>...82                                    Req:dump()]]),
+</span><span class="uncovered"><a name="line83"></a>...83     Req:ok({"text/html", [], frm(Body)});
+</span><span class="marked"><a name="line84"></a>...84 default_body(Req, 'POST', _Path) ->
+</span><span class="uncovered"><a name="line85"></a>...85     Body = io_lib:format("~p~n", [[{parse_qs, Req:parse_qs()},
+</span><span class="marked"><a name="line86"></a>...86                                    {parse_cookie, Req:parse_cookie()},
+</span><span class="marked"><a name="line87"></a>...87                                    {parse_post, Req:parse_post()},
+</span><span class="marked"><a name="line88"></a>...88                                    Req:dump()]]),
+</span><span class="uncovered"><a name="line89"></a>...89     Req:ok({"text/html", [], frm(Body)});
+</span><span class="marked"><a name="line90"></a>...90 default_body(Req, _Method, _Path) ->
+</span><span class="uncovered"><a name="line91"></a>...91     Req:respond({501, [], []}).
+</span><span class="marked"><a name="line92"></a>...92 
+</span><span class="marked"><a name="line93"></a>...93 default_body(Req) ->
+</span><span class="uncovered"><a name="line94"></a>...94     default_body(Req, Req:get(method), Req:get(path)).
+</span><span class="marked"><a name="line95"></a>...95 
+</span><span class="marked"><a name="line96"></a>...96 loop(Socket, Body) ->
+</span><span class="uncovered"><a name="line97"></a>...97     inet:setopts(Socket, [{packet, http}]),
+</span><span class="uncovered"><a name="line98"></a>...98     request(Socket, Body).
+</span><span class="marked"><a name="line99"></a>...99 
+</span><span class="marked"><a name="line100"></a>..100 request(Socket, Body) ->
+</span><span class="uncovered"><a name="line101"></a>..101     case gen_tcp:recv(Socket, 0, ?IDLE_TIMEOUT) of
+</span><span class="marked"><a name="line102"></a>..102         {ok, {http_request, Method, Path, Version}} ->
+</span><span class="uncovered"><a name="line103"></a>..103             headers(Socket, {Method, Path, Version}, [], Body, 0);
+</span><span class="marked"><a name="line104"></a>..104         {error, {http_error, "\r\n"}} ->
+</span><span class="uncovered"><a name="line105"></a>..105             request(Socket, Body);
+</span><span class="marked"><a name="line106"></a>..106         {error, {http_error, "\n"}} ->
+</span><span class="uncovered"><a name="line107"></a>..107             request(Socket, Body);
+</span><span class="marked"><a name="line108"></a>..108         _Other ->
+</span><span class="uncovered"><a name="line109"></a>..109             gen_tcp:close(Socket),
+</span><span class="uncovered"><a name="line110"></a>..110             exit(normal)
+</span><span class="marked"><a name="line111"></a>..111     end.
+</span><span class="marked"><a name="line112"></a>..112 
+</span><span class="marked"><a name="line113"></a>..113 headers(Socket, Request, Headers, _Body, ?MAX_HEADERS) ->
+</span><span class="marked"><a name="line114"></a>..114     %% Too many headers sent, bad request.
+</span><span class="uncovered"><a name="line115"></a>..115     inet:setopts(Socket, [{packet, raw}]),
+</span><span class="uncovered"><a name="line116"></a>..116     Req = mochiweb_http:new_request({Socket, Request,
+</span><span class="marked"><a name="line117"></a>..117                                 lists:reverse(Headers)}),
+</span><span class="uncovered"><a name="line118"></a>..118     Req:respond({400, [], []}),
+</span><span class="uncovered"><a name="line119"></a>..119     gen_tcp:close(Socket),
+</span><span class="uncovered"><a name="line120"></a>..120     exit(normal);
+</span><span class="marked"><a name="line121"></a>..121 headers(Socket, Request, Headers, Body, HeaderCount) ->
+</span><span class="uncovered"><a name="line122"></a>..122     case gen_tcp:recv(Socket, 0, ?IDLE_TIMEOUT) of
+</span><span class="marked"><a name="line123"></a>..123         {ok, http_eoh} ->
+</span><span class="uncovered"><a name="line124"></a>..124             inet:setopts(Socket, [{packet, raw}]),
+</span><span class="uncovered"><a name="line125"></a>..125             Req = mochiweb_http:new_request({Socket, Request,
+</span><span class="marked"><a name="line126"></a>..126                                         lists:reverse(Headers)}),
+</span><span class="uncovered"><a name="line127"></a>..127             Body(Req),
+</span><span class="uncovered"><a name="line128"></a>..128             case Req:should_close() of
+</span><span class="marked"><a name="line129"></a>..129                 true ->
+</span><span class="uncovered"><a name="line130"></a>..130                     gen_tcp:close(Socket),
+</span><span class="uncovered"><a name="line131"></a>..131                     exit(normal);
+</span><span class="marked"><a name="line132"></a>..132                 false ->
+</span><span class="uncovered"><a name="line133"></a>..133                     Req:cleanup(),
+</span><span class="uncovered"><a name="line134"></a>..134                     ?MODULE:loop(Socket, Body)
+</span><span class="marked"><a name="line135"></a>..135             end;
+</span><span class="marked"><a name="line136"></a>..136         {ok, {http_header, _, Name, _, Value}} ->
+</span><span class="uncovered"><a name="line137"></a>..137             headers(Socket, Request, [{Name, Value} | Headers], Body,
+</span><span class="marked"><a name="line138"></a>..138                     1 + HeaderCount);
+</span><span class="marked"><a name="line139"></a>..139         _Other ->
+</span><span class="uncovered"><a name="line140"></a>..140             gen_tcp:close(Socket),
+</span><span class="uncovered"><a name="line141"></a>..141             exit(normal)
+</span><span class="marked"><a name="line142"></a>..142     end.
+</span><span class="marked"><a name="line143"></a>..143 
+</span><span class="marked"><a name="line144"></a>..144 %% @spec new_request({Socket, Request, Headers}) -> MochiWebRequest
+</span><span class="marked"><a name="line145"></a>..145 %% @doc Return a mochiweb_request data structure.
+</span><span class="marked"><a name="line146"></a>..146 new_request({Socket, {Method, {abs_path, Uri}, Version}, Headers}) ->
+</span><span class="uncovered"><a name="line147"></a>..147     mochiweb_request:new(Socket,
+</span><span class="marked"><a name="line148"></a>..148                          Method,
+</span><span class="marked"><a name="line149"></a>..149                          Uri,
+</span><span class="marked"><a name="line150"></a>..150                          Version,
+</span><span class="marked"><a name="line151"></a>..151                          mochiweb_headers:make(Headers));
+</span><span class="marked"><a name="line152"></a>..152 % this case probably doesn't "exist".
+</span><span class="marked"><a name="line153"></a>..153 new_request({Socket, {Method, {absoluteURI, _Protocol, _Host, _Port, Uri},
+</span><span class="marked"><a name="line154"></a>..154                       Version}, Headers}) ->
+</span><span class="uncovered"><a name="line155"></a>..155     mochiweb_request:new(Socket,
+</span><span class="marked"><a name="line156"></a>..156                          Method,
+</span><span class="marked"><a name="line157"></a>..157                          Uri,
+</span><span class="marked"><a name="line158"></a>..158                          Version,
+</span><span class="marked"><a name="line159"></a>..159                          mochiweb_headers:make(Headers));
+</span><span class="marked"><a name="line160"></a>..160 %% Request-URI is "*"
+</span><span class="marked"><a name="line161"></a>..161 %% From http://www.w3.org/Protocols/rfc2616/rfc2616-sec5.html#sec5.1.2
+</span><span class="marked"><a name="line162"></a>..162 new_request({Socket, {Method, '*'=Uri, Version}, Headers}) ->
+</span><span class="uncovered"><a name="line163"></a>..163     mochiweb_request:new(Socket,
+</span><span class="marked"><a name="line164"></a>..164                          Method,
+</span><span class="marked"><a name="line165"></a>..165                          Uri,
+</span><span class="marked"><a name="line166"></a>..166                          Version,
+</span><span class="marked"><a name="line167"></a>..167                          mochiweb_headers:make(Headers)).
+</span><span class="marked"><a name="line168"></a>..168  
+</span><span class="marked"><a name="line169"></a>..169 %% @spec new_response({Request, integer(), Headers}) -> MochiWebResponse
+</span><span class="marked"><a name="line170"></a>..170 %% @doc Return a mochiweb_response data structure.
+</span><span class="marked"><a name="line171"></a>..171 new_response({Request, Code, Headers}) ->
+</span><span class="uncovered"><a name="line172"></a>..172     mochiweb_response:new(Request,
+</span><span class="marked"><a name="line173"></a>..173                           Code,
+</span><span class="marked"><a name="line174"></a>..174                           mochiweb_headers:make(Headers)).</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

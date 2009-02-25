@@ -1,0 +1,290 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochiweb_headers - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochiweb_headers_report.html'>mochiweb_headers</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>70%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='70' /><td class='uncovered' width='30' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Bob Ippolito <bob@mochimedia.com>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2007 Mochi Media, Inc.
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc Case preserving (but case insensitive) HTTP Header dictionary.
+</span><span class="marked"><a name="line5"></a>....5 
+</span><span class="marked"><a name="line6"></a>....6 -module(mochiweb_headers).
+</span><span class="marked"><a name="line7"></a>....7 -author('bob@mochimedia.com').
+</span><span class="marked"><a name="line8"></a>....8 -export([empty/0, from_list/1, insert/3, enter/3, get_value/2, lookup/2]).
+</span><span class="marked"><a name="line9"></a>....9 -export([delete_any/2, get_primary_value/2]).
+</span><span class="marked"><a name="line10"></a>...10 -export([default/3, enter_from_list/2, default_from_list/2]).
+</span><span class="marked"><a name="line11"></a>...11 -export([to_list/1, make/1]).
+</span><span class="marked"><a name="line12"></a>...12 
+</span><span class="marked"><a name="line13"></a>...13 %% @type headers().
+</span><span class="marked"><a name="line14"></a>...14 %% @type key() = atom() | binary() | string().
+</span><span class="marked"><a name="line15"></a>...15 %% @type value() = atom() | binary() | string() | integer().
+</span><span class="marked"><a name="line16"></a>...16 
+</span><span class="marked"><a name="line17"></a>...17 %% @spec empty() -> headers()
+</span><span class="marked"><a name="line18"></a>...18 %% @doc Create an empty headers structure.
+</span><span class="marked"><a name="line19"></a>...19 empty() ->
+</span><span class="covered"><a name="line20"></a>...20     gb_trees:empty().
+</span><span class="marked"><a name="line21"></a>...21 
+</span><span class="marked"><a name="line22"></a>...22 %% @spec make(headers() | [{key(), value()}]) -> headers()
+</span><span class="marked"><a name="line23"></a>...23 %% @doc Construct a headers() from the given list.
+</span><span class="marked"><a name="line24"></a>...24 make(L) when is_list(L) ->
+</span><span class="covered"><a name="line25"></a>...25     from_list(L);
+</span><span class="marked"><a name="line26"></a>...26 %% assume a tuple is already mochiweb_headers.
+</span><span class="marked"><a name="line27"></a>...27 make(T) when is_tuple(T) ->
+</span><span class="uncovered"><a name="line28"></a>...28     T.
+</span><span class="marked"><a name="line29"></a>...29 
+</span><span class="marked"><a name="line30"></a>...30 %% @spec from_list([{key(), value()}]) -> headers()
+</span><span class="marked"><a name="line31"></a>...31 %% @doc Construct a headers() from the given list.
+</span><span class="marked"><a name="line32"></a>...32 from_list(List) ->
+</span><span class="covered"><a name="line33"></a>...33     lists:foldl(fun ({K, V}, T) -> insert(K, V, T) end, empty(), List).
+</span><span class="marked"><a name="line34"></a>...34 
+</span><span class="marked"><a name="line35"></a>...35 %% @spec enter_from_list([{key(), value()}], headers()) -> headers()
+</span><span class="marked"><a name="line36"></a>...36 %% @doc Insert pairs into the headers, replace any values for existing keys.
+</span><span class="marked"><a name="line37"></a>...37 enter_from_list(List, T) ->
+</span><span class="uncovered"><a name="line38"></a>...38     lists:foldl(fun ({K, V}, T1) -> enter(K, V, T1) end, T, List).
+</span><span class="marked"><a name="line39"></a>...39 
+</span><span class="marked"><a name="line40"></a>...40 %% @spec default_from_list([{key(), value()}], headers()) -> headers()
+</span><span class="marked"><a name="line41"></a>...41 %% @doc Insert pairs into the headers for keys that do not already exist.
+</span><span class="marked"><a name="line42"></a>...42 default_from_list(List, T) ->
+</span><span class="uncovered"><a name="line43"></a>...43     lists:foldl(fun ({K, V}, T1) -> default(K, V, T1) end, T, List).
+</span><span class="marked"><a name="line44"></a>...44 
+</span><span class="marked"><a name="line45"></a>...45 %% @spec to_list(headers()) -> [{key(), string()}]
+</span><span class="marked"><a name="line46"></a>...46 %% @doc Return the contents of the headers. The keys will be the exact key
+</span><span class="marked"><a name="line47"></a>...47 %%      that was first inserted (e.g. may be an atom or binary, case is 
+</span><span class="marked"><a name="line48"></a>...48 %%      preserved).
+</span><span class="marked"><a name="line49"></a>...49 to_list(T) ->
+</span><span class="covered"><a name="line50"></a>...50     F = fun ({K, {array, L}}, Acc) ->
+</span><span class="covered"><a name="line51"></a>...51                 L1 = lists:reverse(L),
+</span><span class="covered"><a name="line52"></a>...52                 lists:foldl(fun (V, Acc1) -> [{K, V} | Acc1] end, Acc, L1);
+</span><span class="marked"><a name="line53"></a>...53             (Pair, Acc) ->
+</span><span class="covered"><a name="line54"></a>...54                 [Pair | Acc]
+</span><span class="marked"><a name="line55"></a>...55         end,
+</span><span class="covered"><a name="line56"></a>...56     lists:reverse(lists:foldl(F, [], gb_trees:values(T))).
+</span><span class="marked"><a name="line57"></a>...57 
+</span><span class="marked"><a name="line58"></a>...58 %% @spec get_value(key(), headers()) -> string() | undefined
+</span><span class="marked"><a name="line59"></a>...59 %% @doc Return the value of the given header using a case insensitive search.
+</span><span class="marked"><a name="line60"></a>...60 %%      undefined will be returned for keys that are not present.
+</span><span class="marked"><a name="line61"></a>...61 get_value(K, T) ->
+</span><span class="covered"><a name="line62"></a>...62     case lookup(K, T) of
+</span><span class="marked"><a name="line63"></a>...63         {value, {_, V}} ->
+</span><span class="covered"><a name="line64"></a>...64             expand(V);
+</span><span class="marked"><a name="line65"></a>...65         none ->
+</span><span class="covered"><a name="line66"></a>...66             undefined
+</span><span class="marked"><a name="line67"></a>...67     end.
+</span><span class="marked"><a name="line68"></a>...68 
+</span><span class="marked"><a name="line69"></a>...69 %% @spec get_primary_value(key(), headers()) -> string() | undefined
+</span><span class="marked"><a name="line70"></a>...70 %% @doc Return the value of the given header up to the first semicolon using
+</span><span class="marked"><a name="line71"></a>...71 %%      a case insensitive search. undefined will be returned for keys
+</span><span class="marked"><a name="line72"></a>...72 %%      that are not present.
+</span><span class="marked"><a name="line73"></a>...73 get_primary_value(K, T) ->
+</span><span class="covered"><a name="line74"></a>...74     case get_value(K, T) of
+</span><span class="marked"><a name="line75"></a>...75         undefined ->
+</span><span class="uncovered"><a name="line76"></a>...76             undefined;
+</span><span class="marked"><a name="line77"></a>...77         V ->
+</span><span class="covered"><a name="line78"></a>...78             lists:takewhile(fun (C) -> C =/= $; end, V)
+</span><span class="marked"><a name="line79"></a>...79     end.
+</span><span class="marked"><a name="line80"></a>...80 
+</span><span class="marked"><a name="line81"></a>...81 %% @spec lookup(key(), headers()) -> {value, {key(), string()}} | none
+</span><span class="marked"><a name="line82"></a>...82 %% @doc Return the case preserved key and value for the given header using
+</span><span class="marked"><a name="line83"></a>...83 %%      a case insensitive search. none will be returned for keys that are
+</span><span class="marked"><a name="line84"></a>...84 %%      not present.
+</span><span class="marked"><a name="line85"></a>...85 lookup(K, T) ->
+</span><span class="covered"><a name="line86"></a>...86     case gb_trees:lookup(normalize(K), T) of
+</span><span class="marked"><a name="line87"></a>...87         {value, {K0, V}} ->
+</span><span class="covered"><a name="line88"></a>...88             {value, {K0, expand(V)}};
+</span><span class="marked"><a name="line89"></a>...89         none ->
+</span><span class="covered"><a name="line90"></a>...90             none
+</span><span class="marked"><a name="line91"></a>...91     end.
+</span><span class="marked"><a name="line92"></a>...92 
+</span><span class="marked"><a name="line93"></a>...93 %% @spec default(key(), value(), headers()) -> headers()
+</span><span class="marked"><a name="line94"></a>...94 %% @doc Insert the pair into the headers if it does not already exist.
+</span><span class="marked"><a name="line95"></a>...95 default(K, V, T) ->
+</span><span class="uncovered"><a name="line96"></a>...96     K1 = normalize(K),
+</span><span class="uncovered"><a name="line97"></a>...97     V1 = any_to_list(V),
+</span><span class="uncovered"><a name="line98"></a>...98     try gb_trees:insert(K1, {K, V1}, T)
+</span><span class="marked"><a name="line99"></a>...99     catch
+</span><span class="marked"><a name="line100"></a>..100         error:{key_exists, _} ->
+</span><span class="uncovered"><a name="line101"></a>..101             T
+</span><span class="marked"><a name="line102"></a>..102     end.
+</span><span class="marked"><a name="line103"></a>..103 
+</span><span class="marked"><a name="line104"></a>..104 %% @spec enter(key(), value(), headers()) -> headers()
+</span><span class="marked"><a name="line105"></a>..105 %% @doc Insert the pair into the headers, replacing any pre-existing key.
+</span><span class="marked"><a name="line106"></a>..106 enter(K, V, T) ->
+</span><span class="uncovered"><a name="line107"></a>..107     K1 = normalize(K),
+</span><span class="uncovered"><a name="line108"></a>..108     V1 = any_to_list(V),
+</span><span class="uncovered"><a name="line109"></a>..109     gb_trees:enter(K1, {K, V1}, T).
+</span><span class="marked"><a name="line110"></a>..110 
+</span><span class="marked"><a name="line111"></a>..111 %% @spec insert(key(), value(), headers()) -> headers()
+</span><span class="marked"><a name="line112"></a>..112 %% @doc Insert the pair into the headers, merging with any pre-existing key.
+</span><span class="marked"><a name="line113"></a>..113 %%      A merge is done with Value = V0 ++ ", " ++ V1.
+</span><span class="marked"><a name="line114"></a>..114 insert(K, V, T) ->
+</span><span class="covered"><a name="line115"></a>..115     K1 = normalize(K),
+</span><span class="covered"><a name="line116"></a>..116     V1 = any_to_list(V),
+</span><span class="covered"><a name="line117"></a>..117     try gb_trees:insert(K1, {K, V1}, T)
+</span><span class="marked"><a name="line118"></a>..118     catch
+</span><span class="marked"><a name="line119"></a>..119         error:{key_exists, _} ->
+</span><span class="covered"><a name="line120"></a>..120             {K0, V0} = gb_trees:get(K1, T),
+</span><span class="covered"><a name="line121"></a>..121             V2 = merge(K1, V1, V0),
+</span><span class="covered"><a name="line122"></a>..122             gb_trees:update(K1, {K0, V2}, T)
+</span><span class="marked"><a name="line123"></a>..123     end.
+</span><span class="marked"><a name="line124"></a>..124 
+</span><span class="marked"><a name="line125"></a>..125 %% @spec delete_any(key(), headers()) -> headers()
+</span><span class="marked"><a name="line126"></a>..126 %% @doc Delete the header corresponding to key if it is present.
+</span><span class="marked"><a name="line127"></a>..127 delete_any(K, T) ->
+</span><span class="covered"><a name="line128"></a>..128     K1 = normalize(K),
+</span><span class="covered"><a name="line129"></a>..129     gb_trees:delete_any(K1, T).
+</span><span class="marked"><a name="line130"></a>..130 
+</span><span class="marked"><a name="line131"></a>..131 %% Internal API
+</span><span class="marked"><a name="line132"></a>..132 
+</span><span class="marked"><a name="line133"></a>..133 expand({array, L}) ->
+</span><span class="covered"><a name="line134"></a>..134     mochiweb_util:join(lists:reverse(L), ", ");
+</span><span class="marked"><a name="line135"></a>..135 expand(V) ->
+</span><span class="covered"><a name="line136"></a>..136     V.
+</span><span class="marked"><a name="line137"></a>..137 
+</span><span class="marked"><a name="line138"></a>..138 merge("set-cookie", V1, {array, L}) ->
+</span><span class="uncovered"><a name="line139"></a>..139     {array, [V1 | L]};
+</span><span class="marked"><a name="line140"></a>..140 merge("set-cookie", V1, V0) ->
+</span><span class="covered"><a name="line141"></a>..141     {array, [V1, V0]};
+</span><span class="marked"><a name="line142"></a>..142 merge(_, V1, V0) ->
+</span><span class="covered"><a name="line143"></a>..143     V0 ++ ", " ++ V1.
+</span><span class="marked"><a name="line144"></a>..144 
+</span><span class="marked"><a name="line145"></a>..145 normalize(K) when is_list(K) ->
+</span><span class="covered"><a name="line146"></a>..146     string:to_lower(K);
+</span><span class="marked"><a name="line147"></a>..147 normalize(K) when is_atom(K) ->
+</span><span class="covered"><a name="line148"></a>..148     normalize(atom_to_list(K));
+</span><span class="marked"><a name="line149"></a>..149 normalize(K) when is_binary(K) ->
+</span><span class="uncovered"><a name="line150"></a>..150     normalize(binary_to_list(K)).
+</span><span class="marked"><a name="line151"></a>..151 
+</span><span class="marked"><a name="line152"></a>..152 any_to_list(V) when is_list(V) ->
+</span><span class="covered"><a name="line153"></a>..153     V;
+</span><span class="marked"><a name="line154"></a>..154 any_to_list(V) when is_atom(V) ->
+</span><span class="covered"><a name="line155"></a>..155     atom_to_list(V);
+</span><span class="marked"><a name="line156"></a>..156 any_to_list(V) when is_binary(V) ->
+</span><span class="uncovered"><a name="line157"></a>..157     binary_to_list(V);
+</span><span class="marked"><a name="line158"></a>..158 any_to_list(V) when is_integer(V) ->
+</span><span class="covered"><a name="line159"></a>..159     integer_to_list(V).
+</span><span class="marked"><a name="line160"></a>..160 
+</span><span class="marked"><a name="line161"></a>..161 
+</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

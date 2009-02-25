@@ -1,0 +1,253 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>reloader - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='reloader_report.html'>reloader</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>0%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @copyright 2007 Mochi Media, Inc.
+</span><span class="marked"><a name="line2"></a>....2 %% @author Matthew Dempsky <matthew@mochimedia.com>
+</span><span class="marked"><a name="line3"></a>....3 %%
+</span><span class="marked"><a name="line4"></a>....4 %% @doc Erlang module for automatically reloading modified modules
+</span><span class="marked"><a name="line5"></a>....5 %% during development.
+</span><span class="marked"><a name="line6"></a>....6 
+</span><span class="marked"><a name="line7"></a>....7 -module(reloader).
+</span><span class="marked"><a name="line8"></a>....8 -author("Matthew Dempsky <matthew@mochimedia.com>").
+</span><span class="marked"><a name="line9"></a>....9 
+</span><span class="marked"><a name="line10"></a>...10 -include_lib("kernel/include/file.hrl").
+</span><span class="marked"><a name="line11"></a>...11 
+</span><span class="marked"><a name="line12"></a>...12 -behaviour(gen_server).
+</span><span class="marked"><a name="line13"></a>...13 -export([start/0, start_link/0]).
+</span><span class="marked"><a name="line14"></a>...14 -export([stop/0]).
+</span><span class="marked"><a name="line15"></a>...15 -export([init/1, handle_call/3, handle_cast/2, handle_info/2, terminate/2, code_change/3]).
+</span><span class="marked"><a name="line16"></a>...16 
+</span><span class="marked"><a name="line17"></a>...17 -record(state, {last, tref}).
+</span><span class="marked"><a name="line18"></a>...18 
+</span><span class="marked"><a name="line19"></a>...19 %% External API
+</span><span class="marked"><a name="line20"></a>...20 
+</span><span class="marked"><a name="line21"></a>...21 %% @spec start() -> ServerRet
+</span><span class="marked"><a name="line22"></a>...22 %% @doc Start the reloader.
+</span><span class="marked"><a name="line23"></a>...23 start() ->
+</span><span class="uncovered"><a name="line24"></a>...24     gen_server:start({local, ?MODULE}, ?MODULE, [], []).
+</span><span class="marked"><a name="line25"></a>...25 
+</span><span class="marked"><a name="line26"></a>...26 %% @spec start_link() -> ServerRet
+</span><span class="marked"><a name="line27"></a>...27 %% @doc Start the reloader.
+</span><span class="marked"><a name="line28"></a>...28 start_link() ->
+</span><span class="uncovered"><a name="line29"></a>...29     gen_server:start_link({local, ?MODULE}, ?MODULE, [], []).
+</span><span class="marked"><a name="line30"></a>...30 
+</span><span class="marked"><a name="line31"></a>...31 %% @spec stop() -> ok
+</span><span class="marked"><a name="line32"></a>...32 %% @doc Stop the reloader.
+</span><span class="marked"><a name="line33"></a>...33 stop() ->
+</span><span class="uncovered"><a name="line34"></a>...34     gen_server:call(?MODULE, stop).
+</span><span class="marked"><a name="line35"></a>...35 
+</span><span class="marked"><a name="line36"></a>...36 %% gen_server callbacks
+</span><span class="marked"><a name="line37"></a>...37 
+</span><span class="marked"><a name="line38"></a>...38 %% @spec init([]) -> {ok, State}
+</span><span class="marked"><a name="line39"></a>...39 %% @doc gen_server init, opens the server in an initial state.
+</span><span class="marked"><a name="line40"></a>...40 init([]) ->
+</span><span class="uncovered"><a name="line41"></a>...41     {ok, TRef} = timer:send_interval(timer:seconds(1), doit),
+</span><span class="uncovered"><a name="line42"></a>...42     {ok, #state{last = stamp(), tref = TRef}}.
+</span><span class="marked"><a name="line43"></a>...43 
+</span><span class="marked"><a name="line44"></a>...44 %% @spec handle_call(Args, From, State) -> tuple()
+</span><span class="marked"><a name="line45"></a>...45 %% @doc gen_server callback.
+</span><span class="marked"><a name="line46"></a>...46 handle_call(stop, _From, State) ->
+</span><span class="uncovered"><a name="line47"></a>...47     {stop, shutdown, stopped, State};
+</span><span class="marked"><a name="line48"></a>...48 handle_call(_Req, _From, State) ->
+</span><span class="uncovered"><a name="line49"></a>...49     {reply, {error, badrequest}, State}.
+</span><span class="marked"><a name="line50"></a>...50 
+</span><span class="marked"><a name="line51"></a>...51 %% @spec handle_cast(Cast, State) -> tuple()
+</span><span class="marked"><a name="line52"></a>...52 %% @doc gen_server callback.
+</span><span class="marked"><a name="line53"></a>...53 handle_cast(_Req, State) ->
+</span><span class="uncovered"><a name="line54"></a>...54     {noreply, State}.
+</span><span class="marked"><a name="line55"></a>...55 
+</span><span class="marked"><a name="line56"></a>...56 %% @spec handle_info(Info, State) -> tuple()
+</span><span class="marked"><a name="line57"></a>...57 %% @doc gen_server callback.
+</span><span class="marked"><a name="line58"></a>...58 handle_info(doit, State) ->
+</span><span class="uncovered"><a name="line59"></a>...59     Now = stamp(),
+</span><span class="uncovered"><a name="line60"></a>...60     doit(State#state.last, Now),
+</span><span class="uncovered"><a name="line61"></a>...61     {noreply, State#state{last = Now}};
+</span><span class="marked"><a name="line62"></a>...62 handle_info(_Info, State) ->
+</span><span class="uncovered"><a name="line63"></a>...63     {noreply, State}.
+</span><span class="marked"><a name="line64"></a>...64 
+</span><span class="marked"><a name="line65"></a>...65 %% @spec terminate(Reason, State) -> ok
+</span><span class="marked"><a name="line66"></a>...66 %% @doc gen_server termination callback.
+</span><span class="marked"><a name="line67"></a>...67 terminate(_Reason, State) ->
+</span><span class="uncovered"><a name="line68"></a>...68     {ok, cancel} = timer:cancel(State#state.tref),
+</span><span class="uncovered"><a name="line69"></a>...69     ok.
+</span><span class="marked"><a name="line70"></a>...70 
+</span><span class="marked"><a name="line71"></a>...71 
+</span><span class="marked"><a name="line72"></a>...72 %% @spec code_change(_OldVsn, State, _Extra) -> State
+</span><span class="marked"><a name="line73"></a>...73 %% @doc gen_server code_change callback (trivial).
+</span><span class="marked"><a name="line74"></a>...74 code_change(_Vsn, State, _Extra) ->
+</span><span class="uncovered"><a name="line75"></a>...75     {ok, State}.
+</span><span class="marked"><a name="line76"></a>...76 
+</span><span class="marked"><a name="line77"></a>...77 %% Internal API
+</span><span class="marked"><a name="line78"></a>...78 
+</span><span class="marked"><a name="line79"></a>...79 doit(From, To) ->
+</span><span class="uncovered"><a name="line80"></a>...80     [case file:read_file_info(Filename) of
+</span><span class="marked"><a name="line81"></a>...81          {ok, FileInfo} when FileInfo#file_info.mtime >= From,
+</span><span class="marked"><a name="line82"></a>...82                              FileInfo#file_info.mtime < To ->
+</span><span class="uncovered"><a name="line83"></a>...83              reload(Module);
+</span><span class="marked"><a name="line84"></a>...84          {ok, _} ->
+</span><span class="uncovered"><a name="line85"></a>...85              unmodified;
+</span><span class="marked"><a name="line86"></a>...86          {error, enoent} ->
+</span><span class="marked"><a name="line87"></a>...87              %% The Erlang compiler deletes existing .beam files if
+</span><span class="marked"><a name="line88"></a>...88              %% recompiling fails.  Maybe it's worth spitting out a
+</span><span class="marked"><a name="line89"></a>...89              %% warning here, but I'd want to limit it to just once.
+</span><span class="uncovered"><a name="line90"></a>...90              gone;
+</span><span class="marked"><a name="line91"></a>...91          {error, Reason} ->
+</span><span class="uncovered"><a name="line92"></a>...92              io:format("Error reading ~s's file info: ~p~n",
+</span><span class="marked"><a name="line93"></a>...93                        [Filename, Reason]),
+</span><span class="uncovered"><a name="line94"></a>...94              error
+</span><span class="marked"><a name="line95"></a>...95      end || {Module, Filename} <- code:all_loaded(), is_list(Filename)].
+</span><span class="marked"><a name="line96"></a>...96 
+</span><span class="marked"><a name="line97"></a>...97 reload(Module) ->
+</span><span class="uncovered"><a name="line98"></a>...98     io:format("Reloading ~p ...", [Module]),
+</span><span class="uncovered"><a name="line99"></a>...99     code:purge(Module),
+</span><span class="uncovered"><a name="line100"></a>..100     case code:load_file(Module) of
+</span><span class="marked"><a name="line101"></a>..101         {module, Module} ->
+</span><span class="uncovered"><a name="line102"></a>..102             io:format(" ok.~n"),
+</span><span class="uncovered"><a name="line103"></a>..103             case erlang:function_exported(Module, test, 0) of
+</span><span class="marked"><a name="line104"></a>..104                 true ->
+</span><span class="uncovered"><a name="line105"></a>..105                     io:format(" - Calling ~p:test() ...", [Module]),
+</span><span class="uncovered"><a name="line106"></a>..106                     case catch Module:test() of
+</span><span class="marked"><a name="line107"></a>..107                         ok ->
+</span><span class="uncovered"><a name="line108"></a>..108                             io:format(" ok.~n"),
+</span><span class="uncovered"><a name="line109"></a>..109                             reload;
+</span><span class="marked"><a name="line110"></a>..110                         Reason ->
+</span><span class="uncovered"><a name="line111"></a>..111                             io:format(" fail: ~p.~n", [Reason]),
+</span><span class="uncovered"><a name="line112"></a>..112                             reload_but_test_failed
+</span><span class="marked"><a name="line113"></a>..113                     end;
+</span><span class="marked"><a name="line114"></a>..114                 false ->
+</span><span class="uncovered"><a name="line115"></a>..115                     reload
+</span><span class="marked"><a name="line116"></a>..116             end;
+</span><span class="marked"><a name="line117"></a>..117         {error, Reason} ->
+</span><span class="uncovered"><a name="line118"></a>..118             io:format(" fail: ~p.~n", [Reason]),
+</span><span class="uncovered"><a name="line119"></a>..119             error
+</span><span class="marked"><a name="line120"></a>..120     end.
+</span><span class="marked"><a name="line121"></a>..121 
+</span><span class="marked"><a name="line122"></a>..122 
+</span><span class="marked"><a name="line123"></a>..123 stamp() ->
+</span><span class="uncovered"><a name="line124"></a>..124     erlang:localtime().
+</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

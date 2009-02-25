@@ -1,0 +1,242 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochiweb_rpc - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochiweb_rpc_report.html'>mochiweb_rpc</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>0%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Abhay Kumar <abhay@opensynapse.net>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2008 Abhay Kumar
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc Generic RPC Implementation. Only supports JSON-RPC for now and does not support sessions.
+</span><span class="marked"><a name="line5"></a>....5 
+</span><span class="marked"><a name="line6"></a>....6 -module(mochiweb_rpc).
+</span><span class="marked"><a name="line7"></a>....7 -author("Abhay Kumar <abhay@opensynapse.net>").
+</span><span class="marked"><a name="line8"></a>....8 
+</span><span class="marked"><a name="line9"></a>....9 -export([handler/2]).
+</span><span class="marked"><a name="line10"></a>...10 -export([test/0]).
+</span><span class="marked"><a name="line11"></a>...11 
+</span><span class="marked"><a name="line12"></a>...12 %% @spec handler(Request, {Module, Function}) -> MochiWebResponse
+</span><span class="marked"><a name="line13"></a>...13 %% @doc Use this function in order to process RPC calls from the outside.
+</span><span class="marked"><a name="line14"></a>...14 %% Write your own function to process the Erlang representation of the 
+</span><span class="marked"><a name="line15"></a>...15 %% RPC objects and pass it into this function as a {Module, Function}
+</span><span class="marked"><a name="line16"></a>...16 %% tuple.
+</span><span class="marked"><a name="line17"></a>...17 handler(Req, ModFun) ->
+</span><span class="uncovered"><a name="line18"></a>...18   case acceptable_request(Req) of
+</span><span class="marked"><a name="line19"></a>...19     ok ->
+</span><span class="uncovered"><a name="line20"></a>...20       handle_request(Req, ModFun);
+</span><span class="marked"><a name="line21"></a>...21     {status, StatusCode, Reason} ->
+</span><span class="uncovered"><a name="line22"></a>...22       send(Req, StatusCode, encode_error(Reason, null))
+</span><span class="marked"><a name="line23"></a>...23     end.
+</span><span class="marked"><a name="line24"></a>...24 
+</span><span class="marked"><a name="line25"></a>...25 %% @doc run all the tests for this module
+</span><span class="marked"><a name="line26"></a>...26 test() ->
+</span><span class="uncovered"><a name="line27"></a>...27   test_acceptable_request(),
+</span><span class="uncovered"><a name="line28"></a>...28   test_decode_request_body(),
+</span><span class="uncovered"><a name="line29"></a>...29   ok.
+</span><span class="marked"><a name="line30"></a>...30 
+</span><span class="marked"><a name="line31"></a>...31 acceptable_request(Req) ->
+</span><span class="uncovered"><a name="line32"></a>...32   case {Req:get(method), Req:get(version)} of
+</span><span class="uncovered"><a name="line33"></a>...33     {'POST', {1, 0}} -> ok;
+</span><span class="uncovered"><a name="line34"></a>...34     {'POST', {1, 1}} -> ok;
+</span><span class="uncovered"><a name="line35"></a>...35     {'POST', HTTPVersion} -> {status, 505, lists:flatten(io_lib:format("HTTP Version ~p is not supported.", [HTTPVersion]))};
+</span><span class="uncovered"><a name="line36"></a>...36     {Method, {1, 1}} -> {status, 501, lists:flatten(io_lib:format("The ~p method has not been implemented.", [Method]))};
+</span><span class="uncovered"><a name="line37"></a>...37     _ -> {status, 400, "Bad Request."}
+</span><span class="marked"><a name="line38"></a>...38   end.
+</span><span class="marked"><a name="line39"></a>...39 
+</span><span class="marked"><a name="line40"></a>...40 handle_request(Req, {Mod, Fun}) ->
+</span><span class="uncovered"><a name="line41"></a>...41     Body = binary_to_list(Req:recv_body()),
+</span><span class="uncovered"><a name="line42"></a>...42     case decode_request_body(Body) of
+</span><span class="marked"><a name="line43"></a>...43       {ok, Decoded, ID} ->
+</span><span class="uncovered"><a name="line44"></a>...44         case Mod:Fun(Req, Decoded) of
+</span><span class="marked"><a name="line45"></a>...45           {'EXIT', Reason} ->
+</span><span class="uncovered"><a name="line46"></a>...46             send(Req, 500, encode_error(Reason, ID));
+</span><span class="marked"><a name="line47"></a>...47           {error, Reason} ->
+</span><span class="uncovered"><a name="line48"></a>...48             send(Req, 500, encode_error(Reason, ID));
+</span><span class="marked"><a name="line49"></a>...49           {result, Result} ->
+</span><span class="uncovered"><a name="line50"></a>...50             send(Req, 200, encode_result(Result, ID))
+</span><span class="marked"><a name="line51"></a>...51           end;
+</span><span class="marked"><a name="line52"></a>...52       {error, Reason} ->
+</span><span class="uncovered"><a name="line53"></a>...53         send(Req, 500, encode_error(Reason, null))
+</span><span class="marked"><a name="line54"></a>...54     end.
+</span><span class="marked"><a name="line55"></a>...55 
+</span><span class="marked"><a name="line56"></a>...56 decode_request_body(Body) ->
+</span><span class="uncovered"><a name="line57"></a>...57   try
+</span><span class="marked"><a name="line58"></a>...58     JsonObj = mochijson:decode(Body),
+</span><span class="marked"><a name="line59"></a>...59     {ok, {call, list_to_atom(fetch(JsonObj, method)), fetch(JsonObj, params)}, fetch(JsonObj, id)}
+</span><span class="marked"><a name="line60"></a>...60   catch
+</span><span class="uncovered"><a name="line61"></a>...61      _:_ -> {error, "Error decoding request."}
+</span><span class="marked"><a name="line62"></a>...62   end.
+</span><span class="marked"><a name="line63"></a>...63 
+</span><span class="uncovered"><a name="line64"></a>...64 encode_error(Reason, ID) -> lists:flatten(mochijson:encode({struct, [{id, ID}, {error, Reason}, {result, null}]})).
+</span><span class="marked"><a name="line65"></a>...65 
+</span><span class="marked"><a name="line66"></a>...66 encode_result(Result, ID) ->
+</span><span class="uncovered"><a name="line67"></a>...67   try
+</span><span class="marked"><a name="line68"></a>...68     lists:flatten(mochijson:encode({struct, [{id, ID}, {error, null}, {result, Result}]}))
+</span><span class="marked"><a name="line69"></a>...69   catch
+</span><span class="uncovered"><a name="line70"></a>...70     _:_ -> encode_error("Error encoding response.", ID)
+</span><span class="marked"><a name="line71"></a>...71   end.
+</span><span class="marked"><a name="line72"></a>...72 
+</span><span class="marked"><a name="line73"></a>...73 send(Req, StatusCode, JsonStr) ->
+</span><span class="uncovered"><a name="line74"></a>...74   Req:respond({StatusCode, [{'Content-Type', "application/json"}], JsonStr}).
+</span><span class="marked"><a name="line75"></a>...75 
+</span><span class="marked"><a name="line76"></a>...76 fetch(JsonObj, Key) when is_atom(Key) ->
+</span><span class="uncovered"><a name="line77"></a>...77   fetch(JsonObj, atom_to_list(Key));
+</span><span class="marked"><a name="line78"></a>...78 fetch({struct, List}, Key) when is_list(List) ->
+</span><span class="uncovered"><a name="line79"></a>...79   case lists:keysearch(Key, 1, List) of
+</span><span class="uncovered"><a name="line80"></a>...80     {value, {Key, Value}} -> Value;
+</span><span class="uncovered"><a name="line81"></a>...81     _ -> []
+</span><span class="marked"><a name="line82"></a>...82   end.
+</span><span class="marked"><a name="line83"></a>...83 
+</span><span class="marked"><a name="line84"></a>...84 test_acceptable_request() ->
+</span><span class="uncovered"><a name="line85"></a>...85     test_each_acceptable_request(tuples_for_test_acceptable_request()).
+</span><span class="marked"><a name="line86"></a>...86 
+</span><span class="uncovered"><a name="line87"></a>...87 test_each_acceptable_request([]) -> ok;
+</span><span class="marked"><a name="line88"></a>...88 test_each_acceptable_request([{ShouldReceive, WillAsk}|Rest]) ->
+</span><span class="uncovered"><a name="line89"></a>...89   true = ShouldReceive == acceptable_request(mochiweb_http:new_request(WillAsk)),
+</span><span class="uncovered"><a name="line90"></a>...90   test_each_acceptable_request(Rest).
+</span><span class="marked"><a name="line91"></a>...91 
+</span><span class="marked"><a name="line92"></a>...92 tuples_for_test_acceptable_request() ->
+</span><span class="uncovered"><a name="line93"></a>...93   [
+</span><span class="marked"><a name="line94"></a>...94     {ok, {foo, {'POST', {abs_path, "/"}, {1,0}}, [{'Content-Type', "application/json"}]}},
+</span><span class="marked"><a name="line95"></a>...95     {ok, {foo, {'POST', {abs_path, "/"}, {1,1}}, [{'Content-Type', "application/json"}]}},
+</span><span class="marked"><a name="line96"></a>...96     {{status, 505, "HTTP Version {5,0} is not supported."}, {foo, {'POST', {abs_path, "/"}, {5,0}}, [{'Content-Type', "application/json"}]}},
+</span><span class="marked"><a name="line97"></a>...97     {{status, 501, "The 'PUT' method has not been implemented."}, {foo, {'PUT', {abs_path, "/"}, {1, 1}}, [{'Content-Type', "application/json"}]}},
+</span><span class="marked"><a name="line98"></a>...98     {{status, 400, "Bad Request."}, {foo, {'PUT', {abs_path, "/"}, {5,0}}, [{'Content-Type', "application/json"}]}}
+</span><span class="marked"><a name="line99"></a>...99   ].
+</span><span class="marked"><a name="line100"></a>..100 
+</span><span class="marked"><a name="line101"></a>..101 test_decode_request_body() ->
+</span><span class="uncovered"><a name="line102"></a>..102   test_decode_request_good(),
+</span><span class="uncovered"><a name="line103"></a>..103   test_decode_request_bad(),
+</span><span class="uncovered"><a name="line104"></a>..104   ok.
+</span><span class="marked"><a name="line105"></a>..105 
+</span><span class="marked"><a name="line106"></a>..106 test_decode_request_good() ->
+</span><span class="uncovered"><a name="line107"></a>..107   GoodJsonStr = "{\"id\":\"foobarbaz\",\"method\":\"foo\",\"params\":{\"bar\":{\"baz\":[1,2,3]}}}",
+</span><span class="uncovered"><a name="line108"></a>..108   {ok, {call, foo, {struct, [{"bar", {struct, [{"baz", {array, [1, 2, 3]}}]}}]}}, "foobarbaz"} = decode_request_body(GoodJsonStr),
+</span><span class="uncovered"><a name="line109"></a>..109   ok.
+</span><span class="marked"><a name="line110"></a>..110 
+</span><span class="marked"><a name="line111"></a>..111 test_decode_request_bad() ->
+</span><span class="uncovered"><a name="line112"></a>..112   BadJsonStr = "{\"id\":\"foobarbaz\"params\":{\"bar\":\"baz\"}}",
+</span><span class="uncovered"><a name="line113"></a>..113   {error, "Error decoding request."} = decode_request_body(BadJsonStr),
+</span><span class="uncovered"><a name="line114"></a>..114   ok.</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

@@ -1,0 +1,357 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochinum - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochinum_report.html'>mochinum</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>91%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='91' /><td class='uncovered' width='9' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @copyright 2007 Mochi Media, Inc.
+</span><span class="marked"><a name="line2"></a>....2 %% @author Bob Ippolito <bob@mochimedia.com>
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc Useful numeric algorithms for floats that cover some deficiencies
+</span><span class="marked"><a name="line5"></a>....5 %% in the math module. More interesting is digits/1, which implements
+</span><span class="marked"><a name="line6"></a>....6 %% the algorithm from:
+</span><span class="marked"><a name="line7"></a>....7 %% http://www.cs.indiana.edu/~burger/fp/index.html
+</span><span class="marked"><a name="line8"></a>....8 %% See also "Printing Floating-Point Numbers Quickly and Accurately"
+</span><span class="marked"><a name="line9"></a>....9 %% in Proceedings of the SIGPLAN '96 Conference on Programming Language
+</span><span class="marked"><a name="line10"></a>...10 %% Design and Implementation.
+</span><span class="marked"><a name="line11"></a>...11 
+</span><span class="marked"><a name="line12"></a>...12 -module(mochinum).
+</span><span class="marked"><a name="line13"></a>...13 -author("Bob Ippolito <bob@mochimedia.com>").
+</span><span class="marked"><a name="line14"></a>...14 -export([digits/1, frexp/1, int_pow/2, int_ceil/1]).
+</span><span class="marked"><a name="line15"></a>...15 
+</span><span class="marked"><a name="line16"></a>...16 %% IEEE 754 Float exponent bias
+</span><span class="marked"><a name="line17"></a>...17 -define(FLOAT_BIAS, 1022).
+</span><span class="marked"><a name="line18"></a>...18 -define(MIN_EXP, -1074).
+</span><span class="marked"><a name="line19"></a>...19 -define(BIG_POW, 4503599627370496).
+</span><span class="marked"><a name="line20"></a>...20 
+</span><span class="marked"><a name="line21"></a>...21 %% External API
+</span><span class="marked"><a name="line22"></a>...22 
+</span><span class="marked"><a name="line23"></a>...23 %% @spec digits(number()) -> string()
+</span><span class="marked"><a name="line24"></a>...24 %% @doc  Returns a string that accurately represents the given integer or float
+</span><span class="marked"><a name="line25"></a>...25 %%       using a conservative amount of digits. Great for generating
+</span><span class="marked"><a name="line26"></a>...26 %%       human-readable output, or compact ASCII serializations for floats.
+</span><span class="marked"><a name="line27"></a>...27 digits(N) when is_integer(N) ->
+</span><span class="covered"><a name="line28"></a>...28     integer_to_list(N);
+</span><span class="marked"><a name="line29"></a>...29 digits(0.0) ->
+</span><span class="covered"><a name="line30"></a>...30     "0.0";
+</span><span class="marked"><a name="line31"></a>...31 digits(Float) ->
+</span><span class="covered"><a name="line32"></a>...32     {Frac, Exp} = frexp(Float),
+</span><span class="covered"><a name="line33"></a>...33     Exp1 = Exp - 53,
+</span><span class="covered"><a name="line34"></a>...34     Frac1 = trunc(abs(Frac) * (1 bsl 53)),
+</span><span class="covered"><a name="line35"></a>...35     [Place | Digits] = digits1(Float, Exp1, Frac1),
+</span><span class="covered"><a name="line36"></a>...36     R = insert_decimal(Place, [$0 + D || D <- Digits]),
+</span><span class="covered"><a name="line37"></a>...37     case Float < 0 of
+</span><span class="marked"><a name="line38"></a>...38         true ->
+</span><span class="covered"><a name="line39"></a>...39             [$- | R];
+</span><span class="marked"><a name="line40"></a>...40         _ ->
+</span><span class="covered"><a name="line41"></a>...41             R
+</span><span class="marked"><a name="line42"></a>...42     end.
+</span><span class="marked"><a name="line43"></a>...43     
+</span><span class="marked"><a name="line44"></a>...44 %% @spec frexp(F::float()) -> {Frac::float(), Exp::float()}
+</span><span class="marked"><a name="line45"></a>...45 %% @doc  Return the fractional and exponent part of an IEEE 754 double,
+</span><span class="marked"><a name="line46"></a>...46 %%       equivalent to the libc function of the same name.
+</span><span class="marked"><a name="line47"></a>...47 %%       F = Frac * pow(2, Exp).
+</span><span class="marked"><a name="line48"></a>...48 frexp(F) ->
+</span><span class="covered"><a name="line49"></a>...49     frexp1(unpack(F)).
+</span><span class="marked"><a name="line50"></a>...50 
+</span><span class="marked"><a name="line51"></a>...51 %% @spec int_pow(X::integer(), N::integer()) -> Y::integer()
+</span><span class="marked"><a name="line52"></a>...52 %% @doc  Moderately efficient way to exponentiate integers.
+</span><span class="marked"><a name="line53"></a>...53 %%       int_pow(10, 2) = 100.
+</span><span class="marked"><a name="line54"></a>...54 int_pow(_X, 0) ->
+</span><span class="covered"><a name="line55"></a>...55     1;
+</span><span class="marked"><a name="line56"></a>...56 int_pow(X, N) when N > 0 ->
+</span><span class="covered"><a name="line57"></a>...57     int_pow(X, N, 1).
+</span><span class="marked"><a name="line58"></a>...58 
+</span><span class="marked"><a name="line59"></a>...59 %% @spec int_ceil(F::float()) -> integer()
+</span><span class="marked"><a name="line60"></a>...60 %% @doc  Return the ceiling of F as an integer. The ceiling is defined as
+</span><span class="marked"><a name="line61"></a>...61 %%       F when F == trunc(F);
+</span><span class="marked"><a name="line62"></a>...62 %%       trunc(F) when F &lt; 0;
+</span><span class="marked"><a name="line63"></a>...63 %%       trunc(F) + 1 when F &gt; 0.
+</span><span class="marked"><a name="line64"></a>...64 int_ceil(X) ->
+</span><span class="covered"><a name="line65"></a>...65     T = trunc(X),
+</span><span class="covered"><a name="line66"></a>...66     case (X - T) of
+</span><span class="covered"><a name="line67"></a>...67         Neg when Neg < 0 -> T;
+</span><span class="covered"><a name="line68"></a>...68         Pos when Pos > 0 -> T + 1;
+</span><span class="covered"><a name="line69"></a>...69         _ -> T
+</span><span class="marked"><a name="line70"></a>...70     end.
+</span><span class="marked"><a name="line71"></a>...71 
+</span><span class="marked"><a name="line72"></a>...72 
+</span><span class="marked"><a name="line73"></a>...73 %% Internal API
+</span><span class="marked"><a name="line74"></a>...74 
+</span><span class="marked"><a name="line75"></a>...75 int_pow(X, N, R) when N < 2 ->
+</span><span class="covered"><a name="line76"></a>...76     R * X;
+</span><span class="marked"><a name="line77"></a>...77 int_pow(X, N, R) ->
+</span><span class="covered"><a name="line78"></a>...78     int_pow(X * X, N bsr 1, case N band 1 of 1 -> R * X; 0 -> R end).
+</span><span class="marked"><a name="line79"></a>...79 
+</span><span class="marked"><a name="line80"></a>...80 insert_decimal(0, S) ->
+</span><span class="covered"><a name="line81"></a>...81     "0." ++ S;
+</span><span class="marked"><a name="line82"></a>...82 insert_decimal(Place, S) when Place > 0 ->
+</span><span class="covered"><a name="line83"></a>...83     L = length(S),
+</span><span class="covered"><a name="line84"></a>...84     case Place - L of
+</span><span class="marked"><a name="line85"></a>...85          0 ->
+</span><span class="covered"><a name="line86"></a>...86             S ++ ".0";
+</span><span class="marked"><a name="line87"></a>...87         N when N < 0 ->
+</span><span class="covered"><a name="line88"></a>...88             {S0, S1} = lists:split(L + N, S),
+</span><span class="covered"><a name="line89"></a>...89             S0 ++ "." ++ S1;
+</span><span class="marked"><a name="line90"></a>...90         N when N < 6 ->
+</span><span class="marked"><a name="line91"></a>...91             %% More places than digits
+</span><span class="covered"><a name="line92"></a>...92             S ++ lists:duplicate(N, $0) ++ ".0";
+</span><span class="marked"><a name="line93"></a>...93         _ ->
+</span><span class="covered"><a name="line94"></a>...94             insert_decimal_exp(Place, S)
+</span><span class="marked"><a name="line95"></a>...95     end;
+</span><span class="marked"><a name="line96"></a>...96 insert_decimal(Place, S) when Place > -6 ->
+</span><span class="covered"><a name="line97"></a>...97     "0." ++ lists:duplicate(abs(Place), $0) ++ S;
+</span><span class="marked"><a name="line98"></a>...98 insert_decimal(Place, S) ->
+</span><span class="covered"><a name="line99"></a>...99     insert_decimal_exp(Place, S).
+</span><span class="marked"><a name="line100"></a>..100 
+</span><span class="marked"><a name="line101"></a>..101 insert_decimal_exp(Place, S) ->
+</span><span class="covered"><a name="line102"></a>..102     [C | S0] = S,
+</span><span class="covered"><a name="line103"></a>..103     S1 = case S0 of
+</span><span class="marked"><a name="line104"></a>..104              [] ->
+</span><span class="uncovered"><a name="line105"></a>..105                  "0";
+</span><span class="marked"><a name="line106"></a>..106              _ ->
+</span><span class="covered"><a name="line107"></a>..107                  S0
+</span><span class="marked"><a name="line108"></a>..108          end,
+</span><span class="covered"><a name="line109"></a>..109     Exp = case Place < 0 of
+</span><span class="marked"><a name="line110"></a>..110               true ->
+</span><span class="covered"><a name="line111"></a>..111                   "e-";
+</span><span class="marked"><a name="line112"></a>..112               false ->
+</span><span class="covered"><a name="line113"></a>..113                   "e+"
+</span><span class="marked"><a name="line114"></a>..114           end,
+</span><span class="covered"><a name="line115"></a>..115     [C] ++ "." ++ S1 ++ Exp ++ integer_to_list(abs(Place - 1)).
+</span><span class="marked"><a name="line116"></a>..116 
+</span><span class="marked"><a name="line117"></a>..117 
+</span><span class="marked"><a name="line118"></a>..118 digits1(Float, Exp, Frac) ->
+</span><span class="covered"><a name="line119"></a>..119     Round = ((Frac band 1) =:= 0),
+</span><span class="covered"><a name="line120"></a>..120     case Exp >= 0 of
+</span><span class="marked"><a name="line121"></a>..121         true ->
+</span><span class="uncovered"><a name="line122"></a>..122             BExp = 1 bsl Exp,
+</span><span class="uncovered"><a name="line123"></a>..123             case (Frac /= ?BIG_POW) of
+</span><span class="marked"><a name="line124"></a>..124                 true ->
+</span><span class="uncovered"><a name="line125"></a>..125                     scale((Frac * BExp * 2), 2, BExp, BExp,
+</span><span class="marked"><a name="line126"></a>..126                           Round, Round, Float);
+</span><span class="marked"><a name="line127"></a>..127                 false ->
+</span><span class="uncovered"><a name="line128"></a>..128                     scale((Frac * BExp * 4), 4, (BExp * 2), BExp,
+</span><span class="marked"><a name="line129"></a>..129                           Round, Round, Float)
+</span><span class="marked"><a name="line130"></a>..130             end;
+</span><span class="marked"><a name="line131"></a>..131         false ->
+</span><span class="covered"><a name="line132"></a>..132             case (Exp == ?MIN_EXP) orelse (Frac /= ?BIG_POW) of
+</span><span class="marked"><a name="line133"></a>..133                 true ->
+</span><span class="covered"><a name="line134"></a>..134                     scale((Frac * 2), 1 bsl (1 - Exp), 1, 1,
+</span><span class="marked"><a name="line135"></a>..135                           Round, Round, Float);
+</span><span class="marked"><a name="line136"></a>..136                 false ->
+</span><span class="covered"><a name="line137"></a>..137                     scale((Frac * 4), 1 bsl (2 - Exp), 2, 1,
+</span><span class="marked"><a name="line138"></a>..138                           Round, Round, Float)
+</span><span class="marked"><a name="line139"></a>..139             end
+</span><span class="marked"><a name="line140"></a>..140     end.
+</span><span class="marked"><a name="line141"></a>..141 
+</span><span class="marked"><a name="line142"></a>..142 scale(R, S, MPlus, MMinus, LowOk, HighOk, Float) ->
+</span><span class="covered"><a name="line143"></a>..143     Est = int_ceil(math:log10(abs(Float)) - 1.0e-10),
+</span><span class="marked"><a name="line144"></a>..144     %% Note that the scheme implementation uses a 326 element look-up table
+</span><span class="marked"><a name="line145"></a>..145     %% for int_pow(10, N) where we do not.
+</span><span class="covered"><a name="line146"></a>..146     case Est >= 0 of
+</span><span class="marked"><a name="line147"></a>..147         true ->
+</span><span class="covered"><a name="line148"></a>..148             fixup(R, S * int_pow(10, Est), MPlus, MMinus, Est,
+</span><span class="marked"><a name="line149"></a>..149                   LowOk, HighOk);
+</span><span class="marked"><a name="line150"></a>..150         false ->
+</span><span class="covered"><a name="line151"></a>..151             Scale = int_pow(10, -Est),
+</span><span class="covered"><a name="line152"></a>..152             fixup(R * Scale, S, MPlus * Scale, MMinus * Scale, Est,
+</span><span class="marked"><a name="line153"></a>..153                   LowOk, HighOk)
+</span><span class="marked"><a name="line154"></a>..154     end.
+</span><span class="marked"><a name="line155"></a>..155 
+</span><span class="marked"><a name="line156"></a>..156 fixup(R, S, MPlus, MMinus, K, LowOk, HighOk) ->
+</span><span class="covered"><a name="line157"></a>..157     TooLow = case HighOk of
+</span><span class="marked"><a name="line158"></a>..158                  true ->
+</span><span class="covered"><a name="line159"></a>..159                      (R + MPlus) >= S;
+</span><span class="marked"><a name="line160"></a>..160                  false ->
+</span><span class="covered"><a name="line161"></a>..161                      (R + MPlus) > S
+</span><span class="marked"><a name="line162"></a>..162              end,
+</span><span class="covered"><a name="line163"></a>..163     case TooLow of
+</span><span class="marked"><a name="line164"></a>..164         true ->
+</span><span class="covered"><a name="line165"></a>..165             [(K + 1) | generate(R, S, MPlus, MMinus, LowOk, HighOk)];
+</span><span class="marked"><a name="line166"></a>..166         false ->
+</span><span class="covered"><a name="line167"></a>..167             [K | generate(R * 10, S, MPlus * 10, MMinus * 10, LowOk, HighOk)]
+</span><span class="marked"><a name="line168"></a>..168     end.
+</span><span class="marked"><a name="line169"></a>..169 
+</span><span class="marked"><a name="line170"></a>..170 generate(R0, S, MPlus, MMinus, LowOk, HighOk) ->
+</span><span class="covered"><a name="line171"></a>..171     D = R0 div S,
+</span><span class="covered"><a name="line172"></a>..172     R = R0 rem S,
+</span><span class="covered"><a name="line173"></a>..173     TC1 = case LowOk of
+</span><span class="marked"><a name="line174"></a>..174               true ->
+</span><span class="covered"><a name="line175"></a>..175                   R =< MMinus;
+</span><span class="marked"><a name="line176"></a>..176               false ->
+</span><span class="covered"><a name="line177"></a>..177                   R < MMinus
+</span><span class="marked"><a name="line178"></a>..178           end,
+</span><span class="covered"><a name="line179"></a>..179     TC2 = case HighOk of
+</span><span class="marked"><a name="line180"></a>..180               true ->
+</span><span class="covered"><a name="line181"></a>..181                   (R + MPlus) >= S;
+</span><span class="marked"><a name="line182"></a>..182               false ->
+</span><span class="covered"><a name="line183"></a>..183                   (R + MPlus) > S
+</span><span class="marked"><a name="line184"></a>..184           end,
+</span><span class="covered"><a name="line185"></a>..185     case TC1 of
+</span><span class="marked"><a name="line186"></a>..186         false ->
+</span><span class="covered"><a name="line187"></a>..187             case TC2 of
+</span><span class="marked"><a name="line188"></a>..188                 false ->
+</span><span class="covered"><a name="line189"></a>..189                     [D | generate(R * 10, S, MPlus * 10, MMinus * 10,
+</span><span class="marked"><a name="line190"></a>..190                                   LowOk, HighOk)];
+</span><span class="marked"><a name="line191"></a>..191                 true ->
+</span><span class="covered"><a name="line192"></a>..192                     [D + 1]
+</span><span class="marked"><a name="line193"></a>..193             end;
+</span><span class="marked"><a name="line194"></a>..194         true ->
+</span><span class="covered"><a name="line195"></a>..195             case TC2 of
+</span><span class="marked"><a name="line196"></a>..196                 false ->
+</span><span class="covered"><a name="line197"></a>..197                     [D];
+</span><span class="marked"><a name="line198"></a>..198                 true ->
+</span><span class="uncovered"><a name="line199"></a>..199                     case R * 2 < S of
+</span><span class="marked"><a name="line200"></a>..200                         true ->
+</span><span class="uncovered"><a name="line201"></a>..201                             [D];
+</span><span class="marked"><a name="line202"></a>..202                         false ->
+</span><span class="uncovered"><a name="line203"></a>..203                             [D + 1]
+</span><span class="marked"><a name="line204"></a>..204                     end
+</span><span class="marked"><a name="line205"></a>..205             end
+</span><span class="marked"><a name="line206"></a>..206     end.
+</span><span class="marked"><a name="line207"></a>..207 
+</span><span class="marked"><a name="line208"></a>..208 unpack(Float) ->    
+</span><span class="covered"><a name="line209"></a>..209     <<Sign:1, Exp:11, Frac:52>> = <<Float:64/float>>,
+</span><span class="covered"><a name="line210"></a>..210     {Sign, Exp, Frac}.
+</span><span class="marked"><a name="line211"></a>..211 
+</span><span class="marked"><a name="line212"></a>..212 frexp1({_Sign, 0, 0}) ->
+</span><span class="covered"><a name="line213"></a>..213     {0.0, 0};
+</span><span class="marked"><a name="line214"></a>..214 frexp1({Sign, 0, Frac}) ->
+</span><span class="covered"><a name="line215"></a>..215     Exp = log2floor(Frac),
+</span><span class="covered"><a name="line216"></a>..216     <<Frac1:64/float>> = <<Sign:1, ?FLOAT_BIAS:11, (Frac-1):52>>,
+</span><span class="covered"><a name="line217"></a>..217     {Frac1, -(?FLOAT_BIAS) - 52 + Exp};
+</span><span class="marked"><a name="line218"></a>..218 frexp1({Sign, Exp, Frac}) ->
+</span><span class="covered"><a name="line219"></a>..219     <<Frac1:64/float>> = <<Sign:1, ?FLOAT_BIAS:11, Frac:52>>,
+</span><span class="covered"><a name="line220"></a>..220     {Frac1, Exp - ?FLOAT_BIAS}.
+</span><span class="marked"><a name="line221"></a>..221 
+</span><span class="marked"><a name="line222"></a>..222 log2floor(Int) ->
+</span><span class="covered"><a name="line223"></a>..223     log2floor(Int, 0).
+</span><span class="marked"><a name="line224"></a>..224 
+</span><span class="marked"><a name="line225"></a>..225 log2floor(0, N) ->
+</span><span class="covered"><a name="line226"></a>..226     N;
+</span><span class="marked"><a name="line227"></a>..227 log2floor(Int, N) ->
+</span><span class="covered"><a name="line228"></a>..228     log2floor(Int bsr 1, 1 + N).
+</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

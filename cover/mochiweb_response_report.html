@@ -1,0 +1,185 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochiweb_response - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochiweb_response_report.html'>mochiweb_response</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>0%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Bob Ippolito <bob@mochimedia.com>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2007 Mochi Media, Inc.
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc Response abstraction.
+</span><span class="marked"><a name="line5"></a>....5 
+</span><span class="marked"><a name="line6"></a>....6 -module(mochiweb_response, [Request, Code, Headers]).
+</span><span class="marked"><a name="line7"></a>....7 -author('bob@mochimedia.com').
+</span><span class="marked"><a name="line8"></a>....8 
+</span><span class="marked"><a name="line9"></a>....9 -define(QUIP, "Any of you quaids got a smint?").
+</span><span class="marked"><a name="line10"></a>...10 
+</span><span class="marked"><a name="line11"></a>...11 -export([get_header_value/1, get/1, dump/0]).
+</span><span class="marked"><a name="line12"></a>...12 -export([send/1, write_chunk/1]).
+</span><span class="marked"><a name="line13"></a>...13 
+</span><span class="marked"><a name="line14"></a>...14 %% @spec get_header_value(string() | atom() | binary()) -> string() | undefined
+</span><span class="marked"><a name="line15"></a>...15 %% @doc Get the value of the given response header.
+</span><span class="marked"><a name="line16"></a>...16 get_header_value(K) ->
+</span><span class="uncovered"><a name="line17"></a>...17     mochiweb_headers:get_value(K, Headers).
+</span><span class="marked"><a name="line18"></a>...18 
+</span><span class="marked"><a name="line19"></a>...19 %% @spec get(request | code | headers) -> term()
+</span><span class="marked"><a name="line20"></a>...20 %% @doc Return the internal representation of the given field.
+</span><span class="marked"><a name="line21"></a>...21 get(request) ->
+</span><span class="uncovered"><a name="line22"></a>...22     Request;
+</span><span class="marked"><a name="line23"></a>...23 get(code) ->
+</span><span class="uncovered"><a name="line24"></a>...24     Code;
+</span><span class="marked"><a name="line25"></a>...25 get(headers) ->
+</span><span class="uncovered"><a name="line26"></a>...26     Headers.
+</span><span class="marked"><a name="line27"></a>...27 
+</span><span class="marked"><a name="line28"></a>...28 %% @spec dump() -> {mochiweb_request, [{atom(), term()}]}
+</span><span class="marked"><a name="line29"></a>...29 %% @doc Dump the internal representation to a "human readable" set of terms
+</span><span class="marked"><a name="line30"></a>...30 %%      for debugging/inspection purposes.
+</span><span class="marked"><a name="line31"></a>...31 dump() ->
+</span><span class="uncovered"><a name="line32"></a>...32     [{request, Request:dump()},
+</span><span class="marked"><a name="line33"></a>...33      {code, Code},
+</span><span class="marked"><a name="line34"></a>...34      {headers, mochiweb_headers:to_list(Headers)}].
+</span><span class="marked"><a name="line35"></a>...35 
+</span><span class="marked"><a name="line36"></a>...36 %% @spec send(iodata()) -> ok
+</span><span class="marked"><a name="line37"></a>...37 %% @doc Send data over the socket if the method is not HEAD.
+</span><span class="marked"><a name="line38"></a>...38 send(Data) ->
+</span><span class="uncovered"><a name="line39"></a>...39     case Request:get(method) of
+</span><span class="marked"><a name="line40"></a>...40         'HEAD' ->
+</span><span class="uncovered"><a name="line41"></a>...41             ok;
+</span><span class="marked"><a name="line42"></a>...42         _ ->
+</span><span class="uncovered"><a name="line43"></a>...43             Request:send(Data)
+</span><span class="marked"><a name="line44"></a>...44     end.
+</span><span class="marked"><a name="line45"></a>...45 
+</span><span class="marked"><a name="line46"></a>...46 %% @spec write_chunk(iodata()) -> ok
+</span><span class="marked"><a name="line47"></a>...47 %% @doc Write a chunk of a HTTP chunked response. If Data is zero length,
+</span><span class="marked"><a name="line48"></a>...48 %%      then the chunked response will be finished.
+</span><span class="marked"><a name="line49"></a>...49 write_chunk(Data) ->
+</span><span class="uncovered"><a name="line50"></a>...50     case Request:get(version) of
+</span><span class="marked"><a name="line51"></a>...51         Version when Version >= {1, 1} ->
+</span><span class="uncovered"><a name="line52"></a>...52             Length = iolist_size(Data),
+</span><span class="uncovered"><a name="line53"></a>...53             send([io_lib:format("~.16b\r\n", [Length]), Data, <<"\r\n">>]);
+</span><span class="marked"><a name="line54"></a>...54         _ ->
+</span><span class="uncovered"><a name="line55"></a>...55             send(Data)
+</span><span class="marked"><a name="line56"></a>...56     end.
+</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

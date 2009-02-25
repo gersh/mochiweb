@@ -1,0 +1,605 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochijson2 - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochijson2_report.html'>mochijson2</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>73%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='73' /><td class='uncovered' width='27' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Bob Ippolito <bob@mochimedia.com>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2007 Mochi Media, Inc.
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc Yet another JSON (RFC 4627) library for Erlang. mochijson2 works
+</span><span class="marked"><a name="line5"></a>....5 %%      with binaries as strings, arrays as lists (without an {array, _})
+</span><span class="marked"><a name="line6"></a>....6 %%      wrapper and it only knows how to decode UTF-8 (and ASCII).
+</span><span class="marked"><a name="line7"></a>....7 
+</span><span class="marked"><a name="line8"></a>....8 -module(mochijson2).
+</span><span class="marked"><a name="line9"></a>....9 -author('bob@mochimedia.com').
+</span><span class="marked"><a name="line10"></a>...10 -export([encoder/1, encode/1]).
+</span><span class="marked"><a name="line11"></a>...11 -export([decoder/1, decode/1]).
+</span><span class="marked"><a name="line12"></a>...12 
+</span><span class="marked"><a name="line13"></a>...13 % This is a macro to placate syntax highlighters..
+</span><span class="marked"><a name="line14"></a>...14 -define(Q, $\").
+</span><span class="marked"><a name="line15"></a>...15 -define(ADV_COL(S, N), S#decoder{offset=N+S#decoder.offset,
+</span><span class="marked"><a name="line16"></a>...16                                  column=N+S#decoder.column}).
+</span><span class="marked"><a name="line17"></a>...17 -define(INC_COL(S), S#decoder{offset=1+S#decoder.offset,
+</span><span class="marked"><a name="line18"></a>...18                               column=1+S#decoder.column}).
+</span><span class="marked"><a name="line19"></a>...19 -define(INC_LINE(S), S#decoder{offset=1+S#decoder.offset,
+</span><span class="marked"><a name="line20"></a>...20                                column=1,
+</span><span class="marked"><a name="line21"></a>...21                                line=1+S#decoder.line}).
+</span><span class="marked"><a name="line22"></a>...22 -define(INC_CHAR(S, C),
+</span><span class="marked"><a name="line23"></a>...23         case C of
+</span><span class="marked"><a name="line24"></a>...24             $\n ->
+</span><span class="marked"><a name="line25"></a>...25                 S#decoder{column=1,
+</span><span class="marked"><a name="line26"></a>...26                           line=1+S#decoder.line,
+</span><span class="marked"><a name="line27"></a>...27                           offset=1+S#decoder.offset};
+</span><span class="marked"><a name="line28"></a>...28             _ ->
+</span><span class="marked"><a name="line29"></a>...29                 S#decoder{column=1+S#decoder.column,
+</span><span class="marked"><a name="line30"></a>...30                           offset=1+S#decoder.offset}
+</span><span class="marked"><a name="line31"></a>...31         end).
+</span><span class="marked"><a name="line32"></a>...32 -define(IS_WHITESPACE(C),
+</span><span class="marked"><a name="line33"></a>...33         (C =:= $\s orelse C =:= $\t orelse C =:= $\r orelse C =:= $\n)).
+</span><span class="marked"><a name="line34"></a>...34 
+</span><span class="marked"><a name="line35"></a>...35 %% @type iolist() = [char() | binary() | iolist()]
+</span><span class="marked"><a name="line36"></a>...36 %% @type iodata() = iolist() | binary()
+</span><span class="marked"><a name="line37"></a>...37 %% @type json_string() = atom | binary()
+</span><span class="marked"><a name="line38"></a>...38 %% @type json_number() = integer() | float()
+</span><span class="marked"><a name="line39"></a>...39 %% @type json_array() = [json_term()]
+</span><span class="marked"><a name="line40"></a>...40 %% @type json_object() = {struct, [{json_string(), json_term()}]}
+</span><span class="marked"><a name="line41"></a>...41 %% @type json_term() = json_string() | json_number() | json_array() |
+</span><span class="marked"><a name="line42"></a>...42 %%                     json_object()
+</span><span class="marked"><a name="line43"></a>...43 
+</span><span class="marked"><a name="line44"></a>...44 -record(encoder, {handler=null}).
+</span><span class="marked"><a name="line45"></a>...45 
+</span><span class="marked"><a name="line46"></a>...46 -record(decoder, {object_hook=null,
+</span><span class="marked"><a name="line47"></a>...47                   offset=0,
+</span><span class="marked"><a name="line48"></a>...48                   line=1,
+</span><span class="marked"><a name="line49"></a>...49                   column=1,
+</span><span class="marked"><a name="line50"></a>...50                   state=null}).
+</span><span class="marked"><a name="line51"></a>...51 
+</span><span class="marked"><a name="line52"></a>...52 %% @spec encoder([encoder_option()]) -> function()
+</span><span class="marked"><a name="line53"></a>...53 %% @doc Create an encoder/1 with the given options.
+</span><span class="marked"><a name="line54"></a>...54 encoder(Options) ->
+</span><span class="uncovered"><a name="line55"></a>...55     State = parse_encoder_options(Options, #encoder{}),
+</span><span class="uncovered"><a name="line56"></a>...56     fun (O) -> json_encode(O, State) end.
+</span><span class="marked"><a name="line57"></a>...57 
+</span><span class="marked"><a name="line58"></a>...58 %% @spec encode(json_term()) -> iolist()
+</span><span class="marked"><a name="line59"></a>...59 %% @doc Encode the given as JSON to an iolist.
+</span><span class="marked"><a name="line60"></a>...60 encode(Any) ->
+</span><span class="covered"><a name="line61"></a>...61     json_encode(Any, #encoder{}).
+</span><span class="marked"><a name="line62"></a>...62 
+</span><span class="marked"><a name="line63"></a>...63 %% @spec decoder([decoder_option()]) -> function()
+</span><span class="marked"><a name="line64"></a>...64 %% @doc Create a decoder/1 with the given options.
+</span><span class="marked"><a name="line65"></a>...65 decoder(Options) ->
+</span><span class="uncovered"><a name="line66"></a>...66     State = parse_decoder_options(Options, #decoder{}),
+</span><span class="uncovered"><a name="line67"></a>...67     fun (O) -> json_decode(O, State) end.
+</span><span class="marked"><a name="line68"></a>...68 
+</span><span class="marked"><a name="line69"></a>...69 %% @spec decode(iolist()) -> json_term()
+</span><span class="marked"><a name="line70"></a>...70 %% @doc Decode the given iolist to Erlang terms.
+</span><span class="marked"><a name="line71"></a>...71 decode(S) ->
+</span><span class="covered"><a name="line72"></a>...72     json_decode(S, #decoder{}).
+</span><span class="marked"><a name="line73"></a>...73 
+</span><span class="marked"><a name="line74"></a>...74 %% Internal API
+</span><span class="marked"><a name="line75"></a>...75 
+</span><span class="marked"><a name="line76"></a>...76 parse_encoder_options([], State) ->
+</span><span class="uncovered"><a name="line77"></a>...77     State;
+</span><span class="marked"><a name="line78"></a>...78 parse_encoder_options([{handler, Handler} | Rest], State) ->
+</span><span class="uncovered"><a name="line79"></a>...79     parse_encoder_options(Rest, State#encoder{handler=Handler}).
+</span><span class="marked"><a name="line80"></a>...80 
+</span><span class="marked"><a name="line81"></a>...81 parse_decoder_options([], State) ->
+</span><span class="uncovered"><a name="line82"></a>...82     State;
+</span><span class="marked"><a name="line83"></a>...83 parse_decoder_options([{object_hook, Hook} | Rest], State) ->
+</span><span class="uncovered"><a name="line84"></a>...84     parse_decoder_options(Rest, State#decoder{object_hook=Hook}).
+</span><span class="marked"><a name="line85"></a>...85 
+</span><span class="marked"><a name="line86"></a>...86 json_encode(true, _State) ->
+</span><span class="covered"><a name="line87"></a>...87     <<"true">>;
+</span><span class="marked"><a name="line88"></a>...88 json_encode(false, _State) ->
+</span><span class="uncovered"><a name="line89"></a>...89     <<"false">>;
+</span><span class="marked"><a name="line90"></a>...90 json_encode(null, _State) ->
+</span><span class="covered"><a name="line91"></a>...91     <<"null">>;
+</span><span class="marked"><a name="line92"></a>...92 json_encode(I, _State) when is_integer(I) andalso I >= -2147483648 andalso I =< 2147483647 ->
+</span><span class="marked"><a name="line93"></a>...93     %% Anything outside of 32-bit integers should be encoded as a float
+</span><span class="covered"><a name="line94"></a>...94     integer_to_list(I);
+</span><span class="marked"><a name="line95"></a>...95 json_encode(I, _State) when is_integer(I) ->
+</span><span class="uncovered"><a name="line96"></a>...96     mochinum:digits(float(I));
+</span><span class="marked"><a name="line97"></a>...97 json_encode(F, _State) when is_float(F) ->
+</span><span class="covered"><a name="line98"></a>...98     mochinum:digits(F);
+</span><span class="marked"><a name="line99"></a>...99 json_encode(S, State) when is_binary(S); is_atom(S) ->
+</span><span class="covered"><a name="line100"></a>..100     json_encode_string(S, State);
+</span><span class="marked"><a name="line101"></a>..101 json_encode(Array, State) when is_list(Array) ->
+</span><span class="covered"><a name="line102"></a>..102     json_encode_array(Array, State);
+</span><span class="marked"><a name="line103"></a>..103 json_encode({struct, Props}, State) when is_list(Props) ->
+</span><span class="covered"><a name="line104"></a>..104     json_encode_proplist(Props, State);
+</span><span class="marked"><a name="line105"></a>..105 json_encode(Bad, #encoder{handler=null}) ->
+</span><span class="uncovered"><a name="line106"></a>..106     exit({json_encode, {bad_term, Bad}});
+</span><span class="marked"><a name="line107"></a>..107 json_encode(Bad, State=#encoder{handler=Handler}) ->
+</span><span class="uncovered"><a name="line108"></a>..108     json_encode(Handler(Bad), State).
+</span><span class="marked"><a name="line109"></a>..109 
+</span><span class="marked"><a name="line110"></a>..110 json_encode_array([], _State) ->
+</span><span class="covered"><a name="line111"></a>..111     <<"[]">>;
+</span><span class="marked"><a name="line112"></a>..112 json_encode_array(L, State) ->
+</span><span class="covered"><a name="line113"></a>..113     F = fun (O, Acc) ->
+</span><span class="covered"><a name="line114"></a>..114                 [$,, json_encode(O, State) | Acc]
+</span><span class="marked"><a name="line115"></a>..115         end,
+</span><span class="covered"><a name="line116"></a>..116     [$, | Acc1] = lists:foldl(F, "[", L),
+</span><span class="covered"><a name="line117"></a>..117     lists:reverse([$\] | Acc1]).
+</span><span class="marked"><a name="line118"></a>..118 
+</span><span class="marked"><a name="line119"></a>..119 json_encode_proplist([], _State) ->
+</span><span class="covered"><a name="line120"></a>..120     <<"{}">>;
+</span><span class="marked"><a name="line121"></a>..121 json_encode_proplist(Props, State) ->
+</span><span class="covered"><a name="line122"></a>..122     F = fun ({K, V}, Acc) ->
+</span><span class="covered"><a name="line123"></a>..123                 KS = json_encode_string(K, State),
+</span><span class="covered"><a name="line124"></a>..124                 VS = json_encode(V, State),
+</span><span class="covered"><a name="line125"></a>..125                 [$,, VS, $:, KS | Acc]
+</span><span class="marked"><a name="line126"></a>..126         end,
+</span><span class="covered"><a name="line127"></a>..127     [$, | Acc1] = lists:foldl(F, "{", Props),
+</span><span class="covered"><a name="line128"></a>..128     lists:reverse([$\} | Acc1]).
+</span><span class="marked"><a name="line129"></a>..129 
+</span><span class="marked"><a name="line130"></a>..130 json_encode_string(A, _State) when is_atom(A) ->
+</span><span class="uncovered"><a name="line131"></a>..131     L = atom_to_list(A),
+</span><span class="uncovered"><a name="line132"></a>..132     case json_string_is_safe(L) of
+</span><span class="marked"><a name="line133"></a>..133         true ->
+</span><span class="uncovered"><a name="line134"></a>..134             [?Q, L, ?Q];
+</span><span class="marked"><a name="line135"></a>..135         false ->
+</span><span class="uncovered"><a name="line136"></a>..136             json_encode_string_unicode(xmerl_ucs:from_utf8(L), [?Q])
+</span><span class="marked"><a name="line137"></a>..137     end;
+</span><span class="marked"><a name="line138"></a>..138 json_encode_string(B, _State) when is_binary(B) ->
+</span><span class="covered"><a name="line139"></a>..139     case json_bin_is_safe(B) of
+</span><span class="marked"><a name="line140"></a>..140         true ->
+</span><span class="covered"><a name="line141"></a>..141             [?Q, B, ?Q];
+</span><span class="marked"><a name="line142"></a>..142         false ->
+</span><span class="covered"><a name="line143"></a>..143             json_encode_string_unicode(xmerl_ucs:from_utf8(B), [?Q])
+</span><span class="marked"><a name="line144"></a>..144     end;
+</span><span class="marked"><a name="line145"></a>..145 json_encode_string(I, _State) when is_integer(I) ->
+</span><span class="uncovered"><a name="line146"></a>..146     [?Q, integer_to_list(I), ?Q];
+</span><span class="marked"><a name="line147"></a>..147 json_encode_string(L, _State) when is_list(L) ->
+</span><span class="uncovered"><a name="line148"></a>..148     case json_string_is_safe(L) of
+</span><span class="marked"><a name="line149"></a>..149         true ->
+</span><span class="uncovered"><a name="line150"></a>..150             [?Q, L, ?Q];
+</span><span class="marked"><a name="line151"></a>..151         false ->
+</span><span class="uncovered"><a name="line152"></a>..152             json_encode_string_unicode(L, [?Q])
+</span><span class="marked"><a name="line153"></a>..153     end.
+</span><span class="marked"><a name="line154"></a>..154 
+</span><span class="marked"><a name="line155"></a>..155 json_string_is_safe([]) ->
+</span><span class="uncovered"><a name="line156"></a>..156     true;
+</span><span class="marked"><a name="line157"></a>..157 json_string_is_safe([C | Rest]) ->
+</span><span class="uncovered"><a name="line158"></a>..158     case C of
+</span><span class="marked"><a name="line159"></a>..159         ?Q ->
+</span><span class="uncovered"><a name="line160"></a>..160             false;
+</span><span class="marked"><a name="line161"></a>..161         $\\ ->
+</span><span class="uncovered"><a name="line162"></a>..162             false;
+</span><span class="marked"><a name="line163"></a>..163         $\b ->
+</span><span class="uncovered"><a name="line164"></a>..164             false;
+</span><span class="marked"><a name="line165"></a>..165         $\f ->
+</span><span class="uncovered"><a name="line166"></a>..166             false;
+</span><span class="marked"><a name="line167"></a>..167         $\n ->
+</span><span class="uncovered"><a name="line168"></a>..168             false;
+</span><span class="marked"><a name="line169"></a>..169         $\r ->
+</span><span class="uncovered"><a name="line170"></a>..170             false;
+</span><span class="marked"><a name="line171"></a>..171         $\t ->
+</span><span class="uncovered"><a name="line172"></a>..172             false;
+</span><span class="marked"><a name="line173"></a>..173         C when C >= 0, C < $\s; C >= 16#7f, C =< 16#10FFFF ->
+</span><span class="uncovered"><a name="line174"></a>..174             false;
+</span><span class="marked"><a name="line175"></a>..175         C when C < 16#7f ->
+</span><span class="uncovered"><a name="line176"></a>..176             json_string_is_safe(Rest);
+</span><span class="marked"><a name="line177"></a>..177         _ ->
+</span><span class="uncovered"><a name="line178"></a>..178             false
+</span><span class="marked"><a name="line179"></a>..179     end.
+</span><span class="marked"><a name="line180"></a>..180 
+</span><span class="marked"><a name="line181"></a>..181 json_bin_is_safe(<<>>) ->
+</span><span class="covered"><a name="line182"></a>..182     true;
+</span><span class="marked"><a name="line183"></a>..183 json_bin_is_safe(<<C, Rest/binary>>) ->
+</span><span class="covered"><a name="line184"></a>..184     case C of
+</span><span class="marked"><a name="line185"></a>..185         ?Q ->
+</span><span class="covered"><a name="line186"></a>..186             false;
+</span><span class="marked"><a name="line187"></a>..187         $\\ ->
+</span><span class="uncovered"><a name="line188"></a>..188             false;
+</span><span class="marked"><a name="line189"></a>..189         $\b ->
+</span><span class="uncovered"><a name="line190"></a>..190             false;
+</span><span class="marked"><a name="line191"></a>..191         $\f ->
+</span><span class="uncovered"><a name="line192"></a>..192             false;
+</span><span class="marked"><a name="line193"></a>..193         $\n ->
+</span><span class="covered"><a name="line194"></a>..194             false;
+</span><span class="marked"><a name="line195"></a>..195         $\r ->
+</span><span class="uncovered"><a name="line196"></a>..196             false;
+</span><span class="marked"><a name="line197"></a>..197         $\t ->
+</span><span class="uncovered"><a name="line198"></a>..198             false;
+</span><span class="marked"><a name="line199"></a>..199         C when C >= 0, C < $\s; C >= 16#7f, C =< 16#10FFFF ->
+</span><span class="covered"><a name="line200"></a>..200             false;
+</span><span class="marked"><a name="line201"></a>..201         C when C < 16#7f ->
+</span><span class="covered"><a name="line202"></a>..202             json_bin_is_safe(Rest);
+</span><span class="marked"><a name="line203"></a>..203         _ ->
+</span><span class="uncovered"><a name="line204"></a>..204             false
+</span><span class="marked"><a name="line205"></a>..205     end.
+</span><span class="marked"><a name="line206"></a>..206 
+</span><span class="marked"><a name="line207"></a>..207 json_encode_string_unicode([], Acc) ->
+</span><span class="covered"><a name="line208"></a>..208     lists:reverse([$\" | Acc]);
+</span><span class="marked"><a name="line209"></a>..209 json_encode_string_unicode([C | Cs], Acc) ->
+</span><span class="covered"><a name="line210"></a>..210     Acc1 = case C of
+</span><span class="marked"><a name="line211"></a>..211                ?Q ->
+</span><span class="covered"><a name="line212"></a>..212                    [?Q, $\\ | Acc];
+</span><span class="marked"><a name="line213"></a>..213                %% Escaping solidus is only useful when trying to protect
+</span><span class="marked"><a name="line214"></a>..214                %% against "</script>" injection attacks which are only
+</span><span class="marked"><a name="line215"></a>..215                %% possible when JSON is inserted into a HTML document
+</span><span class="marked"><a name="line216"></a>..216                %% in-line. mochijson2 does not protect you from this, so
+</span><span class="marked"><a name="line217"></a>..217                %% if you do insert directly into HTML then you need to
+</span><span class="marked"><a name="line218"></a>..218                %% uncomment the following case or escape the output of encode.
+</span><span class="marked"><a name="line219"></a>..219                %%
+</span><span class="marked"><a name="line220"></a>..220                %% $/ ->
+</span><span class="marked"><a name="line221"></a>..221                %%    [$/, $\\ | Acc];
+</span><span class="marked"><a name="line222"></a>..222                %%
+</span><span class="marked"><a name="line223"></a>..223                $\\ ->
+</span><span class="uncovered"><a name="line224"></a>..224                    [$\\, $\\ | Acc];
+</span><span class="marked"><a name="line225"></a>..225                $\b ->
+</span><span class="covered"><a name="line226"></a>..226                    [$b, $\\ | Acc];
+</span><span class="marked"><a name="line227"></a>..227                $\f ->
+</span><span class="covered"><a name="line228"></a>..228                    [$f, $\\ | Acc];
+</span><span class="marked"><a name="line229"></a>..229                $\n ->
+</span><span class="covered"><a name="line230"></a>..230                    [$n, $\\ | Acc];
+</span><span class="marked"><a name="line231"></a>..231                $\r ->
+</span><span class="covered"><a name="line232"></a>..232                    [$r, $\\ | Acc];
+</span><span class="marked"><a name="line233"></a>..233                $\t ->
+</span><span class="covered"><a name="line234"></a>..234                    [$t, $\\ | Acc];
+</span><span class="marked"><a name="line235"></a>..235                C when C >= 0, C < $\s; C >= 16#7f, C =< 16#10FFFF ->
+</span><span class="covered"><a name="line236"></a>..236                    [unihex(C) | Acc];
+</span><span class="marked"><a name="line237"></a>..237                C when C < 16#7f ->
+</span><span class="covered"><a name="line238"></a>..238                    [C | Acc];
+</span><span class="marked"><a name="line239"></a>..239                _ ->
+</span><span class="uncovered"><a name="line240"></a>..240                    exit({json_encode, {bad_char, C}})
+</span><span class="marked"><a name="line241"></a>..241            end,
+</span><span class="covered"><a name="line242"></a>..242     json_encode_string_unicode(Cs, Acc1).
+</span><span class="marked"><a name="line243"></a>..243 
+</span><span class="marked"><a name="line244"></a>..244 hexdigit(C) when C >= 0, C =< 9 ->
+</span><span class="covered"><a name="line245"></a>..245     C + $0;
+</span><span class="marked"><a name="line246"></a>..246 hexdigit(C) when C =< 15 ->
+</span><span class="uncovered"><a name="line247"></a>..247     C + $a - 10.
+</span><span class="marked"><a name="line248"></a>..248 
+</span><span class="marked"><a name="line249"></a>..249 unihex(C) when C < 16#10000 ->
+</span><span class="covered"><a name="line250"></a>..250     <<D3:4, D2:4, D1:4, D0:4>> = <<C:16>>,
+</span><span class="covered"><a name="line251"></a>..251     Digits = [hexdigit(D) || D <- [D3, D2, D1, D0]],
+</span><span class="covered"><a name="line252"></a>..252     [$\\, $u | Digits];
+</span><span class="marked"><a name="line253"></a>..253 unihex(C) when C =< 16#10FFFF ->
+</span><span class="uncovered"><a name="line254"></a>..254     N = C - 16#10000,
+</span><span class="uncovered"><a name="line255"></a>..255     S1 = 16#d800 bor ((N bsr 10) band 16#3ff),
+</span><span class="uncovered"><a name="line256"></a>..256     S2 = 16#dc00 bor (N band 16#3ff),
+</span><span class="uncovered"><a name="line257"></a>..257     [unihex(S1), unihex(S2)].
+</span><span class="marked"><a name="line258"></a>..258 
+</span><span class="marked"><a name="line259"></a>..259 json_decode(L, S) when is_list(L) ->
+</span><span class="covered"><a name="line260"></a>..260     json_decode(iolist_to_binary(L), S);
+</span><span class="marked"><a name="line261"></a>..261 json_decode(B, S) ->
+</span><span class="covered"><a name="line262"></a>..262     {Res, S1} = decode1(B, S),
+</span><span class="covered"><a name="line263"></a>..263     {eof, _} = tokenize(B, S1#decoder{state=trim}),
+</span><span class="covered"><a name="line264"></a>..264     Res.
+</span><span class="marked"><a name="line265"></a>..265 
+</span><span class="marked"><a name="line266"></a>..266 decode1(B, S=#decoder{state=null}) ->
+</span><span class="covered"><a name="line267"></a>..267     case tokenize(B, S#decoder{state=any}) of
+</span><span class="marked"><a name="line268"></a>..268         {{const, C}, S1} ->
+</span><span class="covered"><a name="line269"></a>..269             {C, S1};
+</span><span class="marked"><a name="line270"></a>..270         {start_array, S1} ->
+</span><span class="covered"><a name="line271"></a>..271             decode_array(B, S1);
+</span><span class="marked"><a name="line272"></a>..272         {start_object, S1} ->
+</span><span class="covered"><a name="line273"></a>..273             decode_object(B, S1)
+</span><span class="marked"><a name="line274"></a>..274     end.
+</span><span class="marked"><a name="line275"></a>..275 
+</span><span class="marked"><a name="line276"></a>..276 make_object(V, #decoder{object_hook=null}) ->
+</span><span class="covered"><a name="line277"></a>..277     V;
+</span><span class="marked"><a name="line278"></a>..278 make_object(V, #decoder{object_hook=Hook}) ->
+</span><span class="uncovered"><a name="line279"></a>..279     Hook(V).
+</span><span class="marked"><a name="line280"></a>..280 
+</span><span class="marked"><a name="line281"></a>..281 decode_object(B, S) ->
+</span><span class="covered"><a name="line282"></a>..282     decode_object(B, S#decoder{state=key}, []).
+</span><span class="marked"><a name="line283"></a>..283 
+</span><span class="marked"><a name="line284"></a>..284 decode_object(B, S=#decoder{state=key}, Acc) ->
+</span><span class="covered"><a name="line285"></a>..285     case tokenize(B, S) of
+</span><span class="marked"><a name="line286"></a>..286         {end_object, S1} ->
+</span><span class="covered"><a name="line287"></a>..287             V = make_object({struct, lists:reverse(Acc)}, S1),
+</span><span class="covered"><a name="line288"></a>..288             {V, S1#decoder{state=null}};
+</span><span class="marked"><a name="line289"></a>..289         {{const, K}, S1} ->
+</span><span class="covered"><a name="line290"></a>..290             {colon, S2} = tokenize(B, S1),
+</span><span class="covered"><a name="line291"></a>..291             {V, S3} = decode1(B, S2#decoder{state=null}),
+</span><span class="covered"><a name="line292"></a>..292             decode_object(B, S3#decoder{state=comma}, [{K, V} | Acc])
+</span><span class="marked"><a name="line293"></a>..293     end;
+</span><span class="marked"><a name="line294"></a>..294 decode_object(B, S=#decoder{state=comma}, Acc) ->
+</span><span class="covered"><a name="line295"></a>..295     case tokenize(B, S) of
+</span><span class="marked"><a name="line296"></a>..296         {end_object, S1} ->
+</span><span class="covered"><a name="line297"></a>..297             V = make_object({struct, lists:reverse(Acc)}, S1),
+</span><span class="covered"><a name="line298"></a>..298             {V, S1#decoder{state=null}};
+</span><span class="marked"><a name="line299"></a>..299         {comma, S1} ->
+</span><span class="covered"><a name="line300"></a>..300             decode_object(B, S1#decoder{state=key}, Acc)
+</span><span class="marked"><a name="line301"></a>..301     end.
+</span><span class="marked"><a name="line302"></a>..302 
+</span><span class="marked"><a name="line303"></a>..303 decode_array(B, S) ->
+</span><span class="covered"><a name="line304"></a>..304     decode_array(B, S#decoder{state=any}, []).
+</span><span class="marked"><a name="line305"></a>..305 
+</span><span class="marked"><a name="line306"></a>..306 decode_array(B, S=#decoder{state=any}, Acc) ->
+</span><span class="covered"><a name="line307"></a>..307     case tokenize(B, S) of
+</span><span class="marked"><a name="line308"></a>..308         {end_array, S1} ->
+</span><span class="covered"><a name="line309"></a>..309             {lists:reverse(Acc), S1#decoder{state=null}};
+</span><span class="marked"><a name="line310"></a>..310         {start_array, S1} ->
+</span><span class="covered"><a name="line311"></a>..311             {Array, S2} = decode_array(B, S1),
+</span><span class="covered"><a name="line312"></a>..312             decode_array(B, S2#decoder{state=comma}, [Array | Acc]);
+</span><span class="marked"><a name="line313"></a>..313         {start_object, S1} ->
+</span><span class="covered"><a name="line314"></a>..314             {Array, S2} = decode_object(B, S1),
+</span><span class="covered"><a name="line315"></a>..315             decode_array(B, S2#decoder{state=comma}, [Array | Acc]);
+</span><span class="marked"><a name="line316"></a>..316         {{const, Const}, S1} ->
+</span><span class="covered"><a name="line317"></a>..317             decode_array(B, S1#decoder{state=comma}, [Const | Acc])
+</span><span class="marked"><a name="line318"></a>..318     end;
+</span><span class="marked"><a name="line319"></a>..319 decode_array(B, S=#decoder{state=comma}, Acc) ->
+</span><span class="covered"><a name="line320"></a>..320     case tokenize(B, S) of
+</span><span class="marked"><a name="line321"></a>..321         {end_array, S1} ->
+</span><span class="covered"><a name="line322"></a>..322             {lists:reverse(Acc), S1#decoder{state=null}};
+</span><span class="marked"><a name="line323"></a>..323         {comma, S1} ->
+</span><span class="covered"><a name="line324"></a>..324             decode_array(B, S1#decoder{state=any}, Acc)
+</span><span class="marked"><a name="line325"></a>..325     end.
+</span><span class="marked"><a name="line326"></a>..326 
+</span><span class="marked"><a name="line327"></a>..327 tokenize_string(B, S=#decoder{offset=O}) ->
+</span><span class="covered"><a name="line328"></a>..328     case tokenize_string_fast(B, O) of
+</span><span class="marked"><a name="line329"></a>..329         {escape, O1} ->
+</span><span class="covered"><a name="line330"></a>..330             Length = O1 - O,
+</span><span class="covered"><a name="line331"></a>..331             S1 = ?ADV_COL(S, Length),
+</span><span class="covered"><a name="line332"></a>..332             <<_:O/binary, Head:Length/binary, _/binary>> = B,
+</span><span class="covered"><a name="line333"></a>..333             tokenize_string(B, S1, lists:reverse(binary_to_list(Head)));
+</span><span class="marked"><a name="line334"></a>..334         O1 ->
+</span><span class="covered"><a name="line335"></a>..335             Length = O1 - O,
+</span><span class="covered"><a name="line336"></a>..336             <<_:O/binary, String:Length/binary, ?Q, _/binary>> = B,
+</span><span class="covered"><a name="line337"></a>..337             {{const, String}, ?ADV_COL(S, Length + 1)}
+</span><span class="marked"><a name="line338"></a>..338     end.
+</span><span class="marked"><a name="line339"></a>..339 
+</span><span class="marked"><a name="line340"></a>..340 tokenize_string_fast(B, O) ->
+</span><span class="covered"><a name="line341"></a>..341     case B of
+</span><span class="marked"><a name="line342"></a>..342         <<_:O/binary, ?Q, _/binary>> ->
+</span><span class="covered"><a name="line343"></a>..343             O;
+</span><span class="marked"><a name="line344"></a>..344         <<_:O/binary, C, _/binary>> when C =/= $\\ ->
+</span><span class="covered"><a name="line345"></a>..345             tokenize_string_fast(B, 1 + O);
+</span><span class="marked"><a name="line346"></a>..346         _ ->
+</span><span class="covered"><a name="line347"></a>..347             {escape, O}
+</span><span class="marked"><a name="line348"></a>..348     end.
+</span><span class="marked"><a name="line349"></a>..349 
+</span><span class="marked"><a name="line350"></a>..350 tokenize_string(B, S=#decoder{offset=O}, Acc) ->
+</span><span class="covered"><a name="line351"></a>..351     case B of
+</span><span class="marked"><a name="line352"></a>..352         <<_:O/binary, ?Q, _/binary>> ->
+</span><span class="covered"><a name="line353"></a>..353             {{const, iolist_to_binary(lists:reverse(Acc))}, ?INC_COL(S)};
+</span><span class="marked"><a name="line354"></a>..354         <<_:O/binary, "\\\"", _/binary>> ->
+</span><span class="covered"><a name="line355"></a>..355             tokenize_string(B, ?ADV_COL(S, 2), [$\" | Acc]);
+</span><span class="marked"><a name="line356"></a>..356         <<_:O/binary, "\\\\", _/binary>> ->
+</span><span class="uncovered"><a name="line357"></a>..357             tokenize_string(B, ?ADV_COL(S, 2), [$\\ | Acc]);
+</span><span class="marked"><a name="line358"></a>..358         <<_:O/binary, "\\/", _/binary>> ->
+</span><span class="uncovered"><a name="line359"></a>..359             tokenize_string(B, ?ADV_COL(S, 2), [$/ | Acc]);
+</span><span class="marked"><a name="line360"></a>..360         <<_:O/binary, "\\b", _/binary>> ->
+</span><span class="covered"><a name="line361"></a>..361             tokenize_string(B, ?ADV_COL(S, 2), [$\b | Acc]);
+</span><span class="marked"><a name="line362"></a>..362         <<_:O/binary, "\\f", _/binary>> ->
+</span><span class="covered"><a name="line363"></a>..363             tokenize_string(B, ?ADV_COL(S, 2), [$\f | Acc]);
+</span><span class="marked"><a name="line364"></a>..364         <<_:O/binary, "\\n", _/binary>> ->
+</span><span class="covered"><a name="line365"></a>..365             tokenize_string(B, ?ADV_COL(S, 2), [$\n | Acc]);
+</span><span class="marked"><a name="line366"></a>..366         <<_:O/binary, "\\r", _/binary>> ->
+</span><span class="covered"><a name="line367"></a>..367             tokenize_string(B, ?ADV_COL(S, 2), [$\r | Acc]);
+</span><span class="marked"><a name="line368"></a>..368         <<_:O/binary, "\\t", _/binary>> ->
+</span><span class="covered"><a name="line369"></a>..369             tokenize_string(B, ?ADV_COL(S, 2), [$\t | Acc]);
+</span><span class="marked"><a name="line370"></a>..370         <<_:O/binary, "\\u", C3, C2, C1, C0, _/binary>> ->
+</span><span class="marked"><a name="line371"></a>..371             %% coalesce UTF-16 surrogate pair?
+</span><span class="covered"><a name="line372"></a>..372             C = erlang:list_to_integer([C3, C2, C1, C0], 16),
+</span><span class="covered"><a name="line373"></a>..373             Acc1 = lists:reverse(xmerl_ucs:to_utf8(C), Acc),
+</span><span class="covered"><a name="line374"></a>..374             tokenize_string(B, ?ADV_COL(S, 6), Acc1);
+</span><span class="marked"><a name="line375"></a>..375         <<_:O/binary, C, _/binary>> ->
+</span><span class="covered"><a name="line376"></a>..376             tokenize_string(B, ?INC_CHAR(S, C), [C | Acc])
+</span><span class="marked"><a name="line377"></a>..377     end.
+</span><span class="marked"><a name="line378"></a>..378 
+</span><span class="marked"><a name="line379"></a>..379 tokenize_number(B, S) ->
+</span><span class="covered"><a name="line380"></a>..380     case tokenize_number(B, sign, S, []) of
+</span><span class="marked"><a name="line381"></a>..381         {{int, Int}, S1} ->
+</span><span class="covered"><a name="line382"></a>..382             {{const, list_to_integer(Int)}, S1};
+</span><span class="marked"><a name="line383"></a>..383         {{float, Float}, S1} ->
+</span><span class="covered"><a name="line384"></a>..384             {{const, list_to_float(Float)}, S1}
+</span><span class="marked"><a name="line385"></a>..385     end.
+</span><span class="marked"><a name="line386"></a>..386 
+</span><span class="marked"><a name="line387"></a>..387 tokenize_number(B, sign, S=#decoder{offset=O}, []) ->
+</span><span class="covered"><a name="line388"></a>..388     case B of
+</span><span class="marked"><a name="line389"></a>..389         <<_:O/binary, $-, _/binary>> ->
+</span><span class="covered"><a name="line390"></a>..390             tokenize_number(B, int, ?INC_COL(S), [$-]);
+</span><span class="marked"><a name="line391"></a>..391         _ ->
+</span><span class="covered"><a name="line392"></a>..392             tokenize_number(B, int, S, [])
+</span><span class="marked"><a name="line393"></a>..393     end;
+</span><span class="marked"><a name="line394"></a>..394 tokenize_number(B, int, S=#decoder{offset=O}, Acc) ->
+</span><span class="covered"><a name="line395"></a>..395     case B of
+</span><span class="marked"><a name="line396"></a>..396         <<_:O/binary, $0, _/binary>> ->
+</span><span class="uncovered"><a name="line397"></a>..397             tokenize_number(B, frac, ?INC_COL(S), [$0 | Acc]);
+</span><span class="marked"><a name="line398"></a>..398         <<_:O/binary, C, _/binary>> when C >= $1 andalso C =< $9 ->
+</span><span class="covered"><a name="line399"></a>..399             tokenize_number(B, int1, ?INC_COL(S), [C | Acc])
+</span><span class="marked"><a name="line400"></a>..400     end;
+</span><span class="marked"><a name="line401"></a>..401 tokenize_number(B, int1, S=#decoder{offset=O}, Acc) ->
+</span><span class="covered"><a name="line402"></a>..402     case B of
+</span><span class="marked"><a name="line403"></a>..403         <<_:O/binary, C, _/binary>> when C >= $0 andalso C =< $9 ->
+</span><span class="covered"><a name="line404"></a>..404             tokenize_number(B, int1, ?INC_COL(S), [C | Acc]);
+</span><span class="marked"><a name="line405"></a>..405         _ ->
+</span><span class="covered"><a name="line406"></a>..406             tokenize_number(B, frac, S, Acc)
+</span><span class="marked"><a name="line407"></a>..407     end;
+</span><span class="marked"><a name="line408"></a>..408 tokenize_number(B, frac, S=#decoder{offset=O}, Acc) ->
+</span><span class="covered"><a name="line409"></a>..409     case B of
+</span><span class="marked"><a name="line410"></a>..410         <<_:O/binary, $., C, _/binary>> when C >= $0, C =< $9 ->
+</span><span class="covered"><a name="line411"></a>..411             tokenize_number(B, frac1, ?ADV_COL(S, 2), [C, $. | Acc]);
+</span><span class="marked"><a name="line412"></a>..412         <<_:O/binary, E, _/binary>> when E =:= $e orelse E =:= $E ->
+</span><span class="covered"><a name="line413"></a>..413             tokenize_number(B, esign, ?INC_COL(S), [$e, $0, $. | Acc]);
+</span><span class="marked"><a name="line414"></a>..414         _ ->
+</span><span class="covered"><a name="line415"></a>..415             {{int, lists:reverse(Acc)}, S}
+</span><span class="marked"><a name="line416"></a>..416     end;
+</span><span class="marked"><a name="line417"></a>..417 tokenize_number(B, frac1, S=#decoder{offset=O}, Acc) ->
+</span><span class="covered"><a name="line418"></a>..418     case B of
+</span><span class="marked"><a name="line419"></a>..419         <<_:O/binary, C, _/binary>> when C >= $0 andalso C =< $9 ->
+</span><span class="covered"><a name="line420"></a>..420             tokenize_number(B, frac1, ?INC_COL(S), [C | Acc]);
+</span><span class="marked"><a name="line421"></a>..421         <<_:O/binary, E, _/binary>> when E =:= $e orelse E =:= $E ->
+</span><span class="covered"><a name="line422"></a>..422             tokenize_number(B, esign, ?INC_COL(S), [$e | Acc]);
+</span><span class="marked"><a name="line423"></a>..423         _ ->
+</span><span class="covered"><a name="line424"></a>..424             {{float, lists:reverse(Acc)}, S}
+</span><span class="marked"><a name="line425"></a>..425     end;
+</span><span class="marked"><a name="line426"></a>..426 tokenize_number(B, esign, S=#decoder{offset=O}, Acc) ->
+</span><span class="covered"><a name="line427"></a>..427     case B of
+</span><span class="marked"><a name="line428"></a>..428         <<_:O/binary, C, _/binary>> when C =:= $- orelse C=:= $+ ->
+</span><span class="covered"><a name="line429"></a>..429             tokenize_number(B, eint, ?INC_COL(S), [C | Acc]);
+</span><span class="marked"><a name="line430"></a>..430         _ ->
+</span><span class="covered"><a name="line431"></a>..431             tokenize_number(B, eint, S, Acc)
+</span><span class="marked"><a name="line432"></a>..432     end;
+</span><span class="marked"><a name="line433"></a>..433 tokenize_number(B, eint, S=#decoder{offset=O}, Acc) ->
+</span><span class="covered"><a name="line434"></a>..434     case B of
+</span><span class="marked"><a name="line435"></a>..435         <<_:O/binary, C, _/binary>> when C >= $0 andalso C =< $9 ->
+</span><span class="covered"><a name="line436"></a>..436             tokenize_number(B, eint1, ?INC_COL(S), [C | Acc])
+</span><span class="marked"><a name="line437"></a>..437     end;
+</span><span class="marked"><a name="line438"></a>..438 tokenize_number(B, eint1, S=#decoder{offset=O}, Acc) ->
+</span><span class="covered"><a name="line439"></a>..439     case B of
+</span><span class="marked"><a name="line440"></a>..440         <<_:O/binary, C, _/binary>> when C >= $0 andalso C =< $9 ->
+</span><span class="covered"><a name="line441"></a>..441             tokenize_number(B, eint1, ?INC_COL(S), [C | Acc]);
+</span><span class="marked"><a name="line442"></a>..442         _ ->
+</span><span class="covered"><a name="line443"></a>..443             {{float, lists:reverse(Acc)}, S}
+</span><span class="marked"><a name="line444"></a>..444     end.
+</span><span class="marked"><a name="line445"></a>..445 
+</span><span class="marked"><a name="line446"></a>..446 tokenize(B, S=#decoder{offset=O}) ->
+</span><span class="covered"><a name="line447"></a>..447     case B of
+</span><span class="marked"><a name="line448"></a>..448         <<_:O/binary, C, _/binary>> when ?IS_WHITESPACE(C) ->
+</span><span class="uncovered"><a name="line449"></a>..449             tokenize(B, ?INC_CHAR(S, C));
+</span><span class="marked"><a name="line450"></a>..450         <<_:O/binary, "{", _/binary>> ->
+</span><span class="covered"><a name="line451"></a>..451             {start_object, ?INC_COL(S)};
+</span><span class="marked"><a name="line452"></a>..452         <<_:O/binary, "}", _/binary>> ->
+</span><span class="covered"><a name="line453"></a>..453             {end_object, ?INC_COL(S)};
+</span><span class="marked"><a name="line454"></a>..454         <<_:O/binary, "[", _/binary>> ->
+</span><span class="covered"><a name="line455"></a>..455             {start_array, ?INC_COL(S)};
+</span><span class="marked"><a name="line456"></a>..456         <<_:O/binary, "]", _/binary>> ->
+</span><span class="covered"><a name="line457"></a>..457             {end_array, ?INC_COL(S)};
+</span><span class="marked"><a name="line458"></a>..458         <<_:O/binary, ",", _/binary>> ->
+</span><span class="covered"><a name="line459"></a>..459             {comma, ?INC_COL(S)};
+</span><span class="marked"><a name="line460"></a>..460         <<_:O/binary, ":", _/binary>> ->
+</span><span class="covered"><a name="line461"></a>..461             {colon, ?INC_COL(S)};
+</span><span class="marked"><a name="line462"></a>..462         <<_:O/binary, "null", _/binary>> ->
+</span><span class="covered"><a name="line463"></a>..463             {{const, null}, ?ADV_COL(S, 4)};
+</span><span class="marked"><a name="line464"></a>..464         <<_:O/binary, "true", _/binary>> ->
+</span><span class="covered"><a name="line465"></a>..465             {{const, true}, ?ADV_COL(S, 4)};
+</span><span class="marked"><a name="line466"></a>..466         <<_:O/binary, "false", _/binary>> ->
+</span><span class="uncovered"><a name="line467"></a>..467             {{const, false}, ?ADV_COL(S, 5)};
+</span><span class="marked"><a name="line468"></a>..468         <<_:O/binary, "\"", _/binary>> ->
+</span><span class="covered"><a name="line469"></a>..469             tokenize_string(B, ?INC_COL(S));
+</span><span class="marked"><a name="line470"></a>..470         <<_:O/binary, C, _/binary>> when (C >= $0 andalso C =< $9)
+</span><span class="marked"><a name="line471"></a>..471                                          orelse C =:= $- ->
+</span><span class="covered"><a name="line472"></a>..472             tokenize_number(B, S);
+</span><span class="marked"><a name="line473"></a>..473         <<_:O/binary>> ->
+</span><span class="covered"><a name="line474"></a>..474             trim = S#decoder.state,
+</span><span class="covered"><a name="line475"></a>..475             {eof, S}
+</span><span class="marked"><a name="line476"></a>..476     end.
+</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

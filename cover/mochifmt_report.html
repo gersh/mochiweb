@@ -1,0 +1,555 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochifmt - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochifmt_report.html'>mochifmt</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>0%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='0' /><td class='uncovered' width='100' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Bob Ippolito <bob@mochimedia.com>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2008 Mochi Media, Inc.
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc String Formatting for Erlang, inspired by Python 2.6
+</span><span class="marked"><a name="line5"></a>....5 %%      (<a href="http://www.python.org/dev/peps/pep-3101/">PEP 3101</a>).
+</span><span class="marked"><a name="line6"></a>....6 %%
+</span><span class="marked"><a name="line7"></a>....7 -module(mochifmt).
+</span><span class="marked"><a name="line8"></a>....8 -author('bob@mochimedia.com').
+</span><span class="marked"><a name="line9"></a>....9 -export([format/2, format_field/2, convert_field/2, get_value/2, get_field/2]).
+</span><span class="marked"><a name="line10"></a>...10 -export([tokenize/1, format/3, get_field/3, format_field/3]).
+</span><span class="marked"><a name="line11"></a>...11 -export([bformat/2, bformat/3]).
+</span><span class="marked"><a name="line12"></a>...12 -export([f/2, f/3]).
+</span><span class="marked"><a name="line13"></a>...13 -export([test/0]).
+</span><span class="marked"><a name="line14"></a>...14 
+</span><span class="marked"><a name="line15"></a>...15 -record(conversion, {length, precision, ctype, align, fill_char, sign}).
+</span><span class="marked"><a name="line16"></a>...16 
+</span><span class="marked"><a name="line17"></a>...17 %% @spec tokenize(S::string()) -> tokens()
+</span><span class="marked"><a name="line18"></a>...18 %% @doc Tokenize a format string into mochifmt's internal format.
+</span><span class="marked"><a name="line19"></a>...19 tokenize(S) ->
+</span><span class="uncovered"><a name="line20"></a>...20     {?MODULE, tokenize(S, "", [])}.
+</span><span class="marked"><a name="line21"></a>...21 
+</span><span class="marked"><a name="line22"></a>...22 %% @spec convert_field(Arg, Conversion::conversion()) -> term()
+</span><span class="marked"><a name="line23"></a>...23 %% @doc Process Arg according to the given explicit conversion specifier.
+</span><span class="marked"><a name="line24"></a>...24 convert_field(Arg, "") ->
+</span><span class="uncovered"><a name="line25"></a>...25     Arg;
+</span><span class="marked"><a name="line26"></a>...26 convert_field(Arg, "r") ->
+</span><span class="uncovered"><a name="line27"></a>...27     repr(Arg);
+</span><span class="marked"><a name="line28"></a>...28 convert_field(Arg, "s") ->
+</span><span class="uncovered"><a name="line29"></a>...29     str(Arg).
+</span><span class="marked"><a name="line30"></a>...30 
+</span><span class="marked"><a name="line31"></a>...31 %% @spec get_value(Key::string(), Args::args()) -> term()
+</span><span class="marked"><a name="line32"></a>...32 %% @doc Get the Key from Args. If Args is a tuple then convert Key to
+</span><span class="marked"><a name="line33"></a>...33 %%      an integer and get element(1 + Key, Args). If Args is a list and Key
+</span><span class="marked"><a name="line34"></a>...34 %%      can be parsed as an integer then use lists:nth(1 + Key, Args),
+</span><span class="marked"><a name="line35"></a>...35 %%      otherwise try and look for Key in Args as a proplist, converting
+</span><span class="marked"><a name="line36"></a>...36 %%      Key to an atom or binary if necessary.
+</span><span class="marked"><a name="line37"></a>...37 get_value(Key, Args) when is_tuple(Args) ->
+</span><span class="uncovered"><a name="line38"></a>...38     element(1 + list_to_integer(Key), Args);
+</span><span class="marked"><a name="line39"></a>...39 get_value(Key, Args) when is_list(Args) ->
+</span><span class="uncovered"><a name="line40"></a>...40     try lists:nth(1 + list_to_integer(Key), Args)
+</span><span class="marked"><a name="line41"></a>...41     catch error:_ ->
+</span><span class="uncovered"><a name="line42"></a>...42             {_K, V} = proplist_lookup(Key, Args),
+</span><span class="uncovered"><a name="line43"></a>...43             V
+</span><span class="marked"><a name="line44"></a>...44     end.
+</span><span class="marked"><a name="line45"></a>...45 
+</span><span class="marked"><a name="line46"></a>...46 %% @spec get_field(Key::string(), Args) -> term()
+</span><span class="marked"><a name="line47"></a>...47 %% @doc Consecutively call get_value/2 on parts of Key delimited by ".",
+</span><span class="marked"><a name="line48"></a>...48 %%      replacing Args with the result of the previous get_value. This
+</span><span class="marked"><a name="line49"></a>...49 %%      is used to implement formats such as {0.0}.
+</span><span class="marked"><a name="line50"></a>...50 get_field(Key, Args) ->
+</span><span class="uncovered"><a name="line51"></a>...51     get_field(Key, Args, ?MODULE).
+</span><span class="marked"><a name="line52"></a>...52 
+</span><span class="marked"><a name="line53"></a>...53 %% @spec get_field(Key::string(), Args, Module) -> term()
+</span><span class="marked"><a name="line54"></a>...54 %% @doc Consecutively call Module:get_value/2 on parts of Key delimited by ".",
+</span><span class="marked"><a name="line55"></a>...55 %%      replacing Args with the result of the previous get_value. This
+</span><span class="marked"><a name="line56"></a>...56 %%      is used to implement formats such as {0.0}.
+</span><span class="marked"><a name="line57"></a>...57 get_field(Key, Args, Module) ->
+</span><span class="uncovered"><a name="line58"></a>...58     {Name, Next} = lists:splitwith(fun (C) -> C =/= $. end, Key),
+</span><span class="uncovered"><a name="line59"></a>...59     Res = try Module:get_value(Name, Args)
+</span><span class="uncovered"><a name="line60"></a>...60           catch error:undef -> get_value(Name, Args) end,
+</span><span class="uncovered"><a name="line61"></a>...61     case Next of
+</span><span class="marked"><a name="line62"></a>...62         "" ->
+</span><span class="uncovered"><a name="line63"></a>...63             Res;
+</span><span class="marked"><a name="line64"></a>...64         "." ++ S1 ->
+</span><span class="uncovered"><a name="line65"></a>...65             get_field(S1, Res, Module)
+</span><span class="marked"><a name="line66"></a>...66     end.
+</span><span class="marked"><a name="line67"></a>...67 
+</span><span class="marked"><a name="line68"></a>...68 %% @spec format(Format::string(), Args) -> iolist()
+</span><span class="marked"><a name="line69"></a>...69 %% @doc Format Args with Format.
+</span><span class="marked"><a name="line70"></a>...70 format(Format, Args) ->
+</span><span class="uncovered"><a name="line71"></a>...71     format(Format, Args, ?MODULE).
+</span><span class="marked"><a name="line72"></a>...72 
+</span><span class="marked"><a name="line73"></a>...73 %% @spec format(Format::string(), Args, Module) -> iolist()
+</span><span class="marked"><a name="line74"></a>...74 %% @doc Format Args with Format using Module.
+</span><span class="marked"><a name="line75"></a>...75 format({?MODULE, Parts}, Args, Module) ->
+</span><span class="uncovered"><a name="line76"></a>...76     format2(Parts, Args, Module, []);
+</span><span class="marked"><a name="line77"></a>...77 format(S, Args, Module) ->
+</span><span class="uncovered"><a name="line78"></a>...78     format(tokenize(S), Args, Module).
+</span><span class="marked"><a name="line79"></a>...79 
+</span><span class="marked"><a name="line80"></a>...80 %% @spec format_field(Arg, Format) -> iolist()
+</span><span class="marked"><a name="line81"></a>...81 %% @doc Format Arg with Format.
+</span><span class="marked"><a name="line82"></a>...82 format_field(Arg, Format) ->
+</span><span class="uncovered"><a name="line83"></a>...83     format_field(Arg, Format, ?MODULE).
+</span><span class="marked"><a name="line84"></a>...84 
+</span><span class="marked"><a name="line85"></a>...85 %% @spec format_field(Arg, Format, _Module) -> iolist()
+</span><span class="marked"><a name="line86"></a>...86 %% @doc Format Arg with Format.
+</span><span class="marked"><a name="line87"></a>...87 format_field(Arg, Format, _Module) ->
+</span><span class="uncovered"><a name="line88"></a>...88     F = default_ctype(Arg, parse_std_conversion(Format)),
+</span><span class="uncovered"><a name="line89"></a>...89     fix_padding(fix_sign(convert2(Arg, F), F), F).
+</span><span class="marked"><a name="line90"></a>...90 
+</span><span class="marked"><a name="line91"></a>...91 %% @spec f(Format::string(), Args) -> string()
+</span><span class="marked"><a name="line92"></a>...92 %% @doc Format Args with Format and return a string().
+</span><span class="marked"><a name="line93"></a>...93 f(Format, Args) ->
+</span><span class="uncovered"><a name="line94"></a>...94     f(Format, Args, ?MODULE).
+</span><span class="marked"><a name="line95"></a>...95 
+</span><span class="marked"><a name="line96"></a>...96 %% @spec f(Format::string(), Args, Module) -> string()
+</span><span class="marked"><a name="line97"></a>...97 %% @doc Format Args with Format using Module and return a string().
+</span><span class="marked"><a name="line98"></a>...98 f(Format, Args, Module) ->
+</span><span class="uncovered"><a name="line99"></a>...99     case lists:member(${, Format) of
+</span><span class="marked"><a name="line100"></a>..100         true ->
+</span><span class="uncovered"><a name="line101"></a>..101             binary_to_list(bformat(Format, Args, Module));
+</span><span class="marked"><a name="line102"></a>..102         false ->
+</span><span class="uncovered"><a name="line103"></a>..103             Format
+</span><span class="marked"><a name="line104"></a>..104     end.
+</span><span class="marked"><a name="line105"></a>..105 
+</span><span class="marked"><a name="line106"></a>..106 %% @spec bformat(Format::string(), Args) -> binary()
+</span><span class="marked"><a name="line107"></a>..107 %% @doc Format Args with Format and return a binary().
+</span><span class="marked"><a name="line108"></a>..108 bformat(Format, Args) ->
+</span><span class="uncovered"><a name="line109"></a>..109     iolist_to_binary(format(Format, Args)).
+</span><span class="marked"><a name="line110"></a>..110 
+</span><span class="marked"><a name="line111"></a>..111 %% @spec bformat(Format::string(), Args, Module) -> binary()
+</span><span class="marked"><a name="line112"></a>..112 %% @doc Format Args with Format using Module and return a binary().
+</span><span class="marked"><a name="line113"></a>..113 bformat(Format, Args, Module) ->
+</span><span class="uncovered"><a name="line114"></a>..114     iolist_to_binary(format(Format, Args, Module)).
+</span><span class="marked"><a name="line115"></a>..115 
+</span><span class="marked"><a name="line116"></a>..116 %% @spec test() -> ok
+</span><span class="marked"><a name="line117"></a>..117 %% @doc Run tests.
+</span><span class="marked"><a name="line118"></a>..118 test() ->
+</span><span class="uncovered"><a name="line119"></a>..119     ok = test_tokenize(),
+</span><span class="uncovered"><a name="line120"></a>..120     ok = test_format(),
+</span><span class="uncovered"><a name="line121"></a>..121     ok = test_std(),
+</span><span class="uncovered"><a name="line122"></a>..122     ok = test_records(),
+</span><span class="uncovered"><a name="line123"></a>..123     ok.
+</span><span class="marked"><a name="line124"></a>..124 
+</span><span class="marked"><a name="line125"></a>..125 %% Internal API
+</span><span class="marked"><a name="line126"></a>..126 
+</span><span class="marked"><a name="line127"></a>..127 add_raw("", Acc) ->
+</span><span class="uncovered"><a name="line128"></a>..128     Acc;
+</span><span class="marked"><a name="line129"></a>..129 add_raw(S, Acc) ->
+</span><span class="uncovered"><a name="line130"></a>..130     [{raw, lists:reverse(S)} | Acc].
+</span><span class="marked"><a name="line131"></a>..131 
+</span><span class="marked"><a name="line132"></a>..132 tokenize([], S, Acc) ->
+</span><span class="uncovered"><a name="line133"></a>..133     lists:reverse(add_raw(S, Acc));
+</span><span class="marked"><a name="line134"></a>..134 tokenize("{{" ++ Rest, S, Acc) ->
+</span><span class="uncovered"><a name="line135"></a>..135     tokenize(Rest, "{" ++ S, Acc);
+</span><span class="marked"><a name="line136"></a>..136 tokenize("{" ++ Rest, S, Acc) ->
+</span><span class="uncovered"><a name="line137"></a>..137     {Format, Rest1} = tokenize_format(Rest),
+</span><span class="uncovered"><a name="line138"></a>..138     tokenize(Rest1, "", [{format, make_format(Format)} | add_raw(S, Acc)]);
+</span><span class="marked"><a name="line139"></a>..139 tokenize("}}" ++ Rest, S, Acc) ->
+</span><span class="uncovered"><a name="line140"></a>..140     tokenize(Rest, "}" ++ S, Acc);
+</span><span class="marked"><a name="line141"></a>..141 tokenize([C | Rest], S, Acc) ->
+</span><span class="uncovered"><a name="line142"></a>..142     tokenize(Rest, [C | S], Acc).
+</span><span class="marked"><a name="line143"></a>..143 
+</span><span class="marked"><a name="line144"></a>..144 tokenize_format(S) ->
+</span><span class="uncovered"><a name="line145"></a>..145     tokenize_format(S, 1, []).
+</span><span class="marked"><a name="line146"></a>..146 
+</span><span class="marked"><a name="line147"></a>..147 tokenize_format("}" ++ Rest, 1, Acc) ->
+</span><span class="uncovered"><a name="line148"></a>..148     {lists:reverse(Acc), Rest};
+</span><span class="marked"><a name="line149"></a>..149 tokenize_format("}" ++ Rest, N, Acc) ->
+</span><span class="uncovered"><a name="line150"></a>..150     tokenize_format(Rest, N - 1, "}" ++ Acc);
+</span><span class="marked"><a name="line151"></a>..151 tokenize_format("{" ++ Rest, N, Acc) ->
+</span><span class="uncovered"><a name="line152"></a>..152     tokenize_format(Rest, 1 + N, "{" ++ Acc);
+</span><span class="marked"><a name="line153"></a>..153 tokenize_format([C | Rest], N, Acc) ->
+</span><span class="uncovered"><a name="line154"></a>..154     tokenize_format(Rest, N, [C | Acc]).
+</span><span class="marked"><a name="line155"></a>..155 
+</span><span class="marked"><a name="line156"></a>..156 make_format(S) ->
+</span><span class="uncovered"><a name="line157"></a>..157     {Name0, Spec} = case lists:splitwith(fun (C) -> C =/= $: end, S) of
+</span><span class="marked"><a name="line158"></a>..158                         {_, ""} ->
+</span><span class="uncovered"><a name="line159"></a>..159                             {S, ""};
+</span><span class="marked"><a name="line160"></a>..160                         {SN, ":" ++ SS} ->
+</span><span class="uncovered"><a name="line161"></a>..161                             {SN, SS}
+</span><span class="marked"><a name="line162"></a>..162                     end,
+</span><span class="uncovered"><a name="line163"></a>..163     {Name, Transform} = case lists:splitwith(fun (C) -> C =/= $! end, Name0) of
+</span><span class="marked"><a name="line164"></a>..164                             {_, ""} ->
+</span><span class="uncovered"><a name="line165"></a>..165                                 {Name0, ""};
+</span><span class="marked"><a name="line166"></a>..166                             {TN, "!" ++ TT} ->
+</span><span class="uncovered"><a name="line167"></a>..167                                 {TN, TT}
+</span><span class="marked"><a name="line168"></a>..168                         end,
+</span><span class="uncovered"><a name="line169"></a>..169     {Name, Transform, Spec}.
+</span><span class="marked"><a name="line170"></a>..170 
+</span><span class="marked"><a name="line171"></a>..171 proplist_lookup(S, P) ->
+</span><span class="uncovered"><a name="line172"></a>..172     A = try list_to_existing_atom(S)
+</span><span class="uncovered"><a name="line173"></a>..173         catch error:_ -> make_ref() end,
+</span><span class="uncovered"><a name="line174"></a>..174     B = try list_to_binary(S)
+</span><span class="uncovered"><a name="line175"></a>..175         catch error:_ -> make_ref() end,
+</span><span class="uncovered"><a name="line176"></a>..176     proplist_lookup2({S, A, B}, P).
+</span><span class="marked"><a name="line177"></a>..177 
+</span><span class="marked"><a name="line178"></a>..178 proplist_lookup2({KS, KA, KB}, [{K, V} | _])
+</span><span class="marked"><a name="line179"></a>..179   when KS =:= K orelse KA =:= K orelse KB =:= K ->
+</span><span class="uncovered"><a name="line180"></a>..180     {K, V};
+</span><span class="marked"><a name="line181"></a>..181 proplist_lookup2(Keys, [_ | Rest]) ->
+</span><span class="uncovered"><a name="line182"></a>..182     proplist_lookup2(Keys, Rest).
+</span><span class="marked"><a name="line183"></a>..183 
+</span><span class="marked"><a name="line184"></a>..184 format2([], _Args, _Module, Acc) ->
+</span><span class="uncovered"><a name="line185"></a>..185     lists:reverse(Acc);
+</span><span class="marked"><a name="line186"></a>..186 format2([{raw, S} | Rest], Args, Module, Acc) ->
+</span><span class="uncovered"><a name="line187"></a>..187     format2(Rest, Args, Module, [S | Acc]);
+</span><span class="marked"><a name="line188"></a>..188 format2([{format, {Key, Convert, Format0}} | Rest], Args, Module, Acc) ->
+</span><span class="uncovered"><a name="line189"></a>..189     Format = f(Format0, Args, Module),
+</span><span class="uncovered"><a name="line190"></a>..190     V = case Module of
+</span><span class="marked"><a name="line191"></a>..191             ?MODULE ->
+</span><span class="uncovered"><a name="line192"></a>..192                 V0 = get_field(Key, Args),
+</span><span class="uncovered"><a name="line193"></a>..193                 V1 = convert_field(V0, Convert),
+</span><span class="uncovered"><a name="line194"></a>..194                 format_field(V1, Format);
+</span><span class="marked"><a name="line195"></a>..195             _ ->
+</span><span class="uncovered"><a name="line196"></a>..196                 V0 = try Module:get_field(Key, Args)
+</span><span class="uncovered"><a name="line197"></a>..197                      catch error:undef -> get_field(Key, Args, Module) end,
+</span><span class="uncovered"><a name="line198"></a>..198                 V1 = try Module:convert_field(V0, Convert)
+</span><span class="uncovered"><a name="line199"></a>..199                      catch error:undef -> convert_field(V0, Convert) end,
+</span><span class="uncovered"><a name="line200"></a>..200                 try Module:format_field(V1, Format)
+</span><span class="uncovered"><a name="line201"></a>..201                 catch error:undef -> format_field(V1, Format, Module) end
+</span><span class="marked"><a name="line202"></a>..202         end,
+</span><span class="uncovered"><a name="line203"></a>..203     format2(Rest, Args, Module, [V | Acc]).
+</span><span class="marked"><a name="line204"></a>..204 
+</span><span class="marked"><a name="line205"></a>..205 default_ctype(_Arg, C=#conversion{ctype=N}) when N =/= undefined ->
+</span><span class="uncovered"><a name="line206"></a>..206     C;
+</span><span class="marked"><a name="line207"></a>..207 default_ctype(Arg, C) when is_integer(Arg) ->
+</span><span class="uncovered"><a name="line208"></a>..208     C#conversion{ctype=decimal};
+</span><span class="marked"><a name="line209"></a>..209 default_ctype(Arg, C) when is_float(Arg) ->
+</span><span class="uncovered"><a name="line210"></a>..210     C#conversion{ctype=general};
+</span><span class="marked"><a name="line211"></a>..211 default_ctype(_Arg, C) ->
+</span><span class="uncovered"><a name="line212"></a>..212     C#conversion{ctype=string}.
+</span><span class="marked"><a name="line213"></a>..213 
+</span><span class="marked"><a name="line214"></a>..214 fix_padding(Arg, #conversion{length=undefined}) ->
+</span><span class="uncovered"><a name="line215"></a>..215     Arg;
+</span><span class="marked"><a name="line216"></a>..216 fix_padding(Arg, F=#conversion{length=Length, fill_char=Fill0, align=Align0,
+</span><span class="marked"><a name="line217"></a>..217                                ctype=Type}) ->
+</span><span class="uncovered"><a name="line218"></a>..218     Padding = Length - iolist_size(Arg),
+</span><span class="uncovered"><a name="line219"></a>..219     Fill = case Fill0 of
+</span><span class="marked"><a name="line220"></a>..220                undefined ->
+</span><span class="uncovered"><a name="line221"></a>..221                    $\s;
+</span><span class="marked"><a name="line222"></a>..222                _ ->
+</span><span class="uncovered"><a name="line223"></a>..223                    Fill0
+</span><span class="marked"><a name="line224"></a>..224            end,
+</span><span class="uncovered"><a name="line225"></a>..225     Align = case Align0 of
+</span><span class="marked"><a name="line226"></a>..226                 undefined ->
+</span><span class="uncovered"><a name="line227"></a>..227                     case Type of
+</span><span class="marked"><a name="line228"></a>..228                         string ->
+</span><span class="uncovered"><a name="line229"></a>..229                             left;
+</span><span class="marked"><a name="line230"></a>..230                         _ ->
+</span><span class="uncovered"><a name="line231"></a>..231                             right
+</span><span class="marked"><a name="line232"></a>..232                     end;
+</span><span class="marked"><a name="line233"></a>..233                 _ ->
+</span><span class="uncovered"><a name="line234"></a>..234                     Align0
+</span><span class="marked"><a name="line235"></a>..235             end,
+</span><span class="uncovered"><a name="line236"></a>..236     case Padding > 0 of
+</span><span class="marked"><a name="line237"></a>..237         true ->
+</span><span class="uncovered"><a name="line238"></a>..238             do_padding(Arg, Padding, Fill, Align, F);
+</span><span class="marked"><a name="line239"></a>..239         false ->
+</span><span class="uncovered"><a name="line240"></a>..240             Arg
+</span><span class="marked"><a name="line241"></a>..241     end.
+</span><span class="marked"><a name="line242"></a>..242 
+</span><span class="marked"><a name="line243"></a>..243 do_padding(Arg, Padding, Fill, right, _F) ->
+</span><span class="uncovered"><a name="line244"></a>..244     [lists:duplicate(Padding, Fill), Arg];
+</span><span class="marked"><a name="line245"></a>..245 do_padding(Arg, Padding, Fill, center, _F) ->
+</span><span class="uncovered"><a name="line246"></a>..246     LPadding = lists:duplicate(Padding div 2, Fill),
+</span><span class="uncovered"><a name="line247"></a>..247     RPadding = case Padding band 1 of
+</span><span class="marked"><a name="line248"></a>..248                    1 ->
+</span><span class="uncovered"><a name="line249"></a>..249                        [Fill | LPadding];
+</span><span class="marked"><a name="line250"></a>..250                    _ ->
+</span><span class="uncovered"><a name="line251"></a>..251                        LPadding
+</span><span class="marked"><a name="line252"></a>..252                end,
+</span><span class="uncovered"><a name="line253"></a>..253     [LPadding, Arg, RPadding];
+</span><span class="marked"><a name="line254"></a>..254 do_padding([$- | Arg], Padding, Fill, sign_right, _F) ->
+</span><span class="uncovered"><a name="line255"></a>..255     [[$- | lists:duplicate(Padding, Fill)], Arg];
+</span><span class="marked"><a name="line256"></a>..256 do_padding(Arg, Padding, Fill, sign_right, #conversion{sign=$-}) ->
+</span><span class="uncovered"><a name="line257"></a>..257     [lists:duplicate(Padding, Fill), Arg];
+</span><span class="marked"><a name="line258"></a>..258 do_padding([S | Arg], Padding, Fill, sign_right, #conversion{sign=S}) ->
+</span><span class="uncovered"><a name="line259"></a>..259     [[S | lists:duplicate(Padding, Fill)], Arg];
+</span><span class="marked"><a name="line260"></a>..260 do_padding(Arg, Padding, Fill, sign_right, #conversion{sign=undefined}) ->
+</span><span class="uncovered"><a name="line261"></a>..261     [lists:duplicate(Padding, Fill), Arg];
+</span><span class="marked"><a name="line262"></a>..262 do_padding(Arg, Padding, Fill, left, _F) ->
+</span><span class="uncovered"><a name="line263"></a>..263     [Arg | lists:duplicate(Padding, Fill)].
+</span><span class="marked"><a name="line264"></a>..264 
+</span><span class="marked"><a name="line265"></a>..265 fix_sign(Arg, #conversion{sign=$+}) when Arg >= 0 ->
+</span><span class="uncovered"><a name="line266"></a>..266     [$+, Arg];
+</span><span class="marked"><a name="line267"></a>..267 fix_sign(Arg, #conversion{sign=$\s}) when Arg >= 0 ->
+</span><span class="uncovered"><a name="line268"></a>..268     [$\s, Arg];
+</span><span class="marked"><a name="line269"></a>..269 fix_sign(Arg, _F) ->
+</span><span class="uncovered"><a name="line270"></a>..270     Arg.
+</span><span class="marked"><a name="line271"></a>..271 
+</span><span class="uncovered"><a name="line272"></a>..272 ctype($\%) -> percent;
+</span><span class="uncovered"><a name="line273"></a>..273 ctype($s) -> string;
+</span><span class="uncovered"><a name="line274"></a>..274 ctype($b) -> bin;
+</span><span class="uncovered"><a name="line275"></a>..275 ctype($o) -> oct;
+</span><span class="uncovered"><a name="line276"></a>..276 ctype($X) -> upper_hex;
+</span><span class="uncovered"><a name="line277"></a>..277 ctype($x) -> hex;
+</span><span class="uncovered"><a name="line278"></a>..278 ctype($c) -> char;
+</span><span class="uncovered"><a name="line279"></a>..279 ctype($d) -> decimal;
+</span><span class="uncovered"><a name="line280"></a>..280 ctype($g) -> general;
+</span><span class="uncovered"><a name="line281"></a>..281 ctype($f) -> fixed;
+</span><span class="uncovered"><a name="line282"></a>..282 ctype($e) -> exp.
+</span><span class="marked"><a name="line283"></a>..283 
+</span><span class="uncovered"><a name="line284"></a>..284 align($<) -> left;
+</span><span class="uncovered"><a name="line285"></a>..285 align($>) -> right;
+</span><span class="uncovered"><a name="line286"></a>..286 align($^) -> center;
+</span><span class="uncovered"><a name="line287"></a>..287 align($=) -> sign_right.
+</span><span class="marked"><a name="line288"></a>..288 
+</span><span class="marked"><a name="line289"></a>..289 convert2(Arg, F=#conversion{ctype=percent}) ->
+</span><span class="uncovered"><a name="line290"></a>..290     [convert2(100.0 * Arg, F#conversion{ctype=fixed}), $\%];
+</span><span class="marked"><a name="line291"></a>..291 convert2(Arg, #conversion{ctype=string}) ->
+</span><span class="uncovered"><a name="line292"></a>..292     str(Arg);
+</span><span class="marked"><a name="line293"></a>..293 convert2(Arg, #conversion{ctype=bin}) ->
+</span><span class="uncovered"><a name="line294"></a>..294     erlang:integer_to_list(Arg, 2);
+</span><span class="marked"><a name="line295"></a>..295 convert2(Arg, #conversion{ctype=oct}) ->
+</span><span class="uncovered"><a name="line296"></a>..296     erlang:integer_to_list(Arg, 8);
+</span><span class="marked"><a name="line297"></a>..297 convert2(Arg, #conversion{ctype=upper_hex}) ->
+</span><span class="uncovered"><a name="line298"></a>..298     erlang:integer_to_list(Arg, 16);
+</span><span class="marked"><a name="line299"></a>..299 convert2(Arg, #conversion{ctype=hex}) ->
+</span><span class="uncovered"><a name="line300"></a>..300     string:to_lower(erlang:integer_to_list(Arg, 16));
+</span><span class="marked"><a name="line301"></a>..301 convert2(Arg, #conversion{ctype=char}) when Arg < 16#80 ->
+</span><span class="uncovered"><a name="line302"></a>..302     [Arg];
+</span><span class="marked"><a name="line303"></a>..303 convert2(Arg, #conversion{ctype=char}) ->
+</span><span class="uncovered"><a name="line304"></a>..304     xmerl_ucs:to_utf8(Arg);
+</span><span class="marked"><a name="line305"></a>..305 convert2(Arg, #conversion{ctype=decimal}) ->
+</span><span class="uncovered"><a name="line306"></a>..306     integer_to_list(Arg);
+</span><span class="marked"><a name="line307"></a>..307 convert2(Arg, #conversion{ctype=general, precision=undefined}) ->
+</span><span class="uncovered"><a name="line308"></a>..308     try mochinum:digits(Arg)
+</span><span class="uncovered"><a name="line309"></a>..309     catch error:undef -> io_lib:format("~g", [Arg]) end;
+</span><span class="marked"><a name="line310"></a>..310 convert2(Arg, #conversion{ctype=fixed, precision=undefined}) ->
+</span><span class="uncovered"><a name="line311"></a>..311     io_lib:format("~f", [Arg]);
+</span><span class="marked"><a name="line312"></a>..312 convert2(Arg, #conversion{ctype=exp, precision=undefined}) ->
+</span><span class="uncovered"><a name="line313"></a>..313     io_lib:format("~e", [Arg]);
+</span><span class="marked"><a name="line314"></a>..314 convert2(Arg, #conversion{ctype=general, precision=P}) ->
+</span><span class="uncovered"><a name="line315"></a>..315     io_lib:format("~." ++ integer_to_list(P) ++ "g", [Arg]);
+</span><span class="marked"><a name="line316"></a>..316 convert2(Arg, #conversion{ctype=fixed, precision=P}) ->
+</span><span class="uncovered"><a name="line317"></a>..317     io_lib:format("~." ++ integer_to_list(P) ++ "f", [Arg]);
+</span><span class="marked"><a name="line318"></a>..318 convert2(Arg, #conversion{ctype=exp, precision=P}) ->
+</span><span class="uncovered"><a name="line319"></a>..319     io_lib:format("~." ++ integer_to_list(P) ++ "e", [Arg]).
+</span><span class="marked"><a name="line320"></a>..320 
+</span><span class="marked"><a name="line321"></a>..321 str(A) when is_atom(A) ->
+</span><span class="uncovered"><a name="line322"></a>..322     atom_to_list(A);
+</span><span class="marked"><a name="line323"></a>..323 str(I) when is_integer(I) ->
+</span><span class="uncovered"><a name="line324"></a>..324     integer_to_list(I);
+</span><span class="marked"><a name="line325"></a>..325 str(F) when is_float(F) ->
+</span><span class="uncovered"><a name="line326"></a>..326     try mochinum:digits(F)
+</span><span class="uncovered"><a name="line327"></a>..327     catch error:undef -> io_lib:format("~g", [F]) end;
+</span><span class="marked"><a name="line328"></a>..328 str(L) when is_list(L) ->
+</span><span class="uncovered"><a name="line329"></a>..329     L;
+</span><span class="marked"><a name="line330"></a>..330 str(B) when is_binary(B) ->
+</span><span class="uncovered"><a name="line331"></a>..331     B;
+</span><span class="marked"><a name="line332"></a>..332 str(P) ->
+</span><span class="uncovered"><a name="line333"></a>..333     repr(P).
+</span><span class="marked"><a name="line334"></a>..334 
+</span><span class="marked"><a name="line335"></a>..335 repr(P) when is_float(P) ->
+</span><span class="uncovered"><a name="line336"></a>..336     try mochinum:digits(P)
+</span><span class="uncovered"><a name="line337"></a>..337     catch error:undef -> float_to_list(P) end;
+</span><span class="marked"><a name="line338"></a>..338 repr(P) ->
+</span><span class="uncovered"><a name="line339"></a>..339     io_lib:format("~p", [P]).
+</span><span class="marked"><a name="line340"></a>..340 
+</span><span class="marked"><a name="line341"></a>..341 parse_std_conversion(S) ->
+</span><span class="uncovered"><a name="line342"></a>..342     parse_std_conversion(S, #conversion{}).
+</span><span class="marked"><a name="line343"></a>..343 
+</span><span class="marked"><a name="line344"></a>..344 parse_std_conversion("", Acc) ->
+</span><span class="uncovered"><a name="line345"></a>..345     Acc;
+</span><span class="marked"><a name="line346"></a>..346 parse_std_conversion([Fill, Align | Spec], Acc)
+</span><span class="marked"><a name="line347"></a>..347   when Align =:= $< orelse Align =:= $> orelse Align =:= $= orelse Align =:= $^ ->
+</span><span class="uncovered"><a name="line348"></a>..348     parse_std_conversion(Spec, Acc#conversion{fill_char=Fill,
+</span><span class="marked"><a name="line349"></a>..349                                               align=align(Align)});
+</span><span class="marked"><a name="line350"></a>..350 parse_std_conversion([Align | Spec], Acc)
+</span><span class="marked"><a name="line351"></a>..351   when Align =:= $< orelse Align =:= $> orelse Align =:= $= orelse Align =:= $^ ->
+</span><span class="uncovered"><a name="line352"></a>..352     parse_std_conversion(Spec, Acc#conversion{align=align(Align)});
+</span><span class="marked"><a name="line353"></a>..353 parse_std_conversion([Sign | Spec], Acc)
+</span><span class="marked"><a name="line354"></a>..354   when Sign =:= $+ orelse Sign =:= $- orelse Sign =:= $\s ->
+</span><span class="uncovered"><a name="line355"></a>..355     parse_std_conversion(Spec, Acc#conversion{sign=Sign});
+</span><span class="marked"><a name="line356"></a>..356 parse_std_conversion("0" ++ Spec, Acc) ->
+</span><span class="uncovered"><a name="line357"></a>..357     Align = case Acc#conversion.align of
+</span><span class="marked"><a name="line358"></a>..358                 undefined ->
+</span><span class="uncovered"><a name="line359"></a>..359                     sign_right;
+</span><span class="marked"><a name="line360"></a>..360                 A ->
+</span><span class="uncovered"><a name="line361"></a>..361                     A
+</span><span class="marked"><a name="line362"></a>..362             end,
+</span><span class="uncovered"><a name="line363"></a>..363     parse_std_conversion(Spec, Acc#conversion{fill_char=$0, align=Align});
+</span><span class="marked"><a name="line364"></a>..364 parse_std_conversion(Spec=[D|_], Acc) when D >= $0 andalso D =< $9 ->
+</span><span class="uncovered"><a name="line365"></a>..365     {W, Spec1} = lists:splitwith(fun (C) -> C >= $0 andalso C =< $9 end, Spec),
+</span><span class="uncovered"><a name="line366"></a>..366     parse_std_conversion(Spec1, Acc#conversion{length=list_to_integer(W)});
+</span><span class="marked"><a name="line367"></a>..367 parse_std_conversion([$. | Spec], Acc) ->
+</span><span class="uncovered"><a name="line368"></a>..368     case lists:splitwith(fun (C) -> C >= $0 andalso C =< $9 end, Spec) of
+</span><span class="marked"><a name="line369"></a>..369         {"", Spec1} ->
+</span><span class="uncovered"><a name="line370"></a>..370             parse_std_conversion(Spec1, Acc);
+</span><span class="marked"><a name="line371"></a>..371         {P, Spec1} ->
+</span><span class="uncovered"><a name="line372"></a>..372             parse_std_conversion(Spec1,
+</span><span class="marked"><a name="line373"></a>..373                                  Acc#conversion{precision=list_to_integer(P)})
+</span><span class="marked"><a name="line374"></a>..374     end;
+</span><span class="marked"><a name="line375"></a>..375 parse_std_conversion([Type], Acc) ->
+</span><span class="uncovered"><a name="line376"></a>..376     parse_std_conversion("", Acc#conversion{ctype=ctype(Type)}).
+</span><span class="marked"><a name="line377"></a>..377 
+</span><span class="marked"><a name="line378"></a>..378 test_tokenize() ->
+</span><span class="uncovered"><a name="line379"></a>..379     {?MODULE, [{raw, "ABC"}]} = tokenize("ABC"),
+</span><span class="uncovered"><a name="line380"></a>..380     {?MODULE, [{format, {"0", "", ""}}]} = tokenize("{0}"),
+</span><span class="uncovered"><a name="line381"></a>..381     {?MODULE, [{raw, "ABC"}, {format, {"1", "", ""}}, {raw, "DEF"}]} =
+</span><span class="marked"><a name="line382"></a>..382         tokenize("ABC{1}DEF"),
+</span><span class="uncovered"><a name="line383"></a>..383     ok.
+</span><span class="marked"><a name="line384"></a>..384 
+</span><span class="marked"><a name="line385"></a>..385 test_format() ->
+</span><span class="uncovered"><a name="line386"></a>..386     <<"  -4">> = bformat("{0:4}", [-4]),
+</span><span class="uncovered"><a name="line387"></a>..387     <<"   4">> = bformat("{0:4}", [4]),
+</span><span class="uncovered"><a name="line388"></a>..388     <<"   4">> = bformat("{0:{0}}", [4]),
+</span><span class="uncovered"><a name="line389"></a>..389     <<"4   ">> = bformat("{0:4}", ["4"]),
+</span><span class="uncovered"><a name="line390"></a>..390     <<"4   ">> = bformat("{0:{0}}", ["4"]),
+</span><span class="uncovered"><a name="line391"></a>..391     <<"1.2yoDEF">> = bformat("{2}{0}{1}{3}", {yo, "DE", 1.2, <<"F">>}),
+</span><span class="uncovered"><a name="line392"></a>..392     <<"cafebabe">> = bformat("{0:x}", {16#cafebabe}),
+</span><span class="uncovered"><a name="line393"></a>..393     <<"CAFEBABE">> = bformat("{0:X}", {16#cafebabe}),
+</span><span class="uncovered"><a name="line394"></a>..394     <<"CAFEBABE">> = bformat("{0:X}", {16#cafebabe}),
+</span><span class="uncovered"><a name="line395"></a>..395     <<"755">> = bformat("{0:o}", {8#755}),
+</span><span class="uncovered"><a name="line396"></a>..396     <<"a">> = bformat("{0:c}", {97}),
+</span><span class="marked"><a name="line397"></a>..397     %% Horizontal ellipsis
+</span><span class="uncovered"><a name="line398"></a>..398     <<226, 128, 166>> = bformat("{0:c}", {16#2026}),
+</span><span class="uncovered"><a name="line399"></a>..399     <<"11">> = bformat("{0:b}", {3}),
+</span><span class="uncovered"><a name="line400"></a>..400     <<"11">> = bformat("{0:b}", [3]),
+</span><span class="uncovered"><a name="line401"></a>..401     <<"11">> = bformat("{three:b}", [{three, 3}]),
+</span><span class="uncovered"><a name="line402"></a>..402     <<"11">> = bformat("{three:b}", [{"three", 3}]),
+</span><span class="uncovered"><a name="line403"></a>..403     <<"11">> = bformat("{three:b}", [{<<"three">>, 3}]),
+</span><span class="uncovered"><a name="line404"></a>..404     <<"\"foo\"">> = bformat("{0!r}", {"foo"}),
+</span><span class="uncovered"><a name="line405"></a>..405     <<"2008-5-4">> = bformat("{0.0}-{0.1}-{0.2}", {{2008,5,4}}),
+</span><span class="uncovered"><a name="line406"></a>..406     <<"2008-05-04">> = bformat("{0.0:04}-{0.1:02}-{0.2:02}", {{2008,5,4}}),
+</span><span class="uncovered"><a name="line407"></a>..407     <<"foo6bar-6">> = bformat("foo{1}{0}-{1}", {bar, 6}),
+</span><span class="uncovered"><a name="line408"></a>..408     <<"-'atom test'-">> = bformat("-{arg!r}-", [{arg, 'atom test'}]),
+</span><span class="uncovered"><a name="line409"></a>..409     <<"2008-05-04">> = bformat("{0.0:0{1.0}}-{0.1:0{1.1}}-{0.2:0{1.2}}",
+</span><span class="marked"><a name="line410"></a>..410                                {{2008,5,4}, {4, 2, 2}}),
+</span><span class="uncovered"><a name="line411"></a>..411     ok.
+</span><span class="marked"><a name="line412"></a>..412 
+</span><span class="marked"><a name="line413"></a>..413 test_std() ->
+</span><span class="uncovered"><a name="line414"></a>..414     M = mochifmt_std:new(),
+</span><span class="uncovered"><a name="line415"></a>..415     <<"01">> = bformat("{0}{1}", [0, 1], M),
+</span><span class="uncovered"><a name="line416"></a>..416     ok.
+</span><span class="marked"><a name="line417"></a>..417 
+</span><span class="marked"><a name="line418"></a>..418 test_records() ->
+</span><span class="uncovered"><a name="line419"></a>..419     M = mochifmt_records:new([{conversion, record_info(fields, conversion)}]),
+</span><span class="uncovered"><a name="line420"></a>..420     R = #conversion{length=long, precision=hard, sign=peace},
+</span><span class="uncovered"><a name="line421"></a>..421     long = M:get_value("length", R),
+</span><span class="uncovered"><a name="line422"></a>..422     hard = M:get_value("precision", R),
+</span><span class="uncovered"><a name="line423"></a>..423     peace = M:get_value("sign", R),
+</span><span class="uncovered"><a name="line424"></a>..424     <<"long hard">> = bformat("{length} {precision}", R, M),
+</span><span class="uncovered"><a name="line425"></a>..425     <<"long hard">> = bformat("{0.length} {0.precision}", [R], M),
+</span><span class="uncovered"><a name="line426"></a>..426     ok.
+</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    

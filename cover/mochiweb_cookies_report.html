@@ -1,0 +1,323 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+        <html lang='en' xml:lang='en' xmlns='http://www.w3.org/1999/xhtml'>
+          <head>
+            <title>mochiweb_cookies - C0 code coverage information</title>
+            <style type='text/css'>body { background-color: rgb(240, 240, 245); }</style>
+            <style type='text/css'>span.marked0 {
+     background-color: rgb(185, 210, 200);
+     display: block;
+    }
+    span.marked { display: block; background-color: #ffffff; }
+    span.highlight { display: block; background-color: #fff9d7; }
+    span.covered { display: block; background-color: #f7f7f7 ; }
+    span.uncovered { display: block; background-color: #ffebe8 ; }
+    span.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    div.overview {
+     border-bottom: 1px solid #E2E6EF; 
+    }
+    body {
+     font-family: verdana, arial, helvetica;
+    }
+    div.footer {
+     font-size: 68%;
+     margin-top: 1.5em;
+    }
+    h1, h2, h3, h4, h5, h6 {
+     margin-bottom: 0.5em;
+    }
+    h5 {
+     margin-top: 0.5em;
+    }
+    .hidden {
+     display: none;
+    }
+    div.separator {
+     height: 10px;
+    }
+    table.percent_graph {
+     height: 12px;
+     border: 1px solid #E2E6EF; 
+     empty-cells: show;
+    }
+    table.percent_graph td.covered {
+     height: 10px;
+     background: #00f000;
+    }
+    table.percent_graph td.uncovered {
+     height: 10px;
+     background: #e00000;
+    }
+    table.percent_graph td.NA {
+     height: 10px;
+     background: #eaeaea;
+    }
+    table.report {
+     border-collapse: collapse;
+     width: 100%;
+    }
+    table.report td.heading {
+     background: #dcecff;
+     border: 1px solid #E2E6EF; 
+     font-weight: bold;
+     text-align: center;
+    }
+    table.report td.heading:hover {
+     background: #c0ffc0;
+    }
+    table.report td.text {
+     border: 1px solid #E2E6EF; 
+    }
+    table.report td.value {
+     text-align: right;
+     border: 1px solid #E2E6EF; 
+    }
+    table.report tr.light {
+     background-color: rgb(240, 240, 245);
+    }
+    table.report tr.dark {
+     background-color: rgb(230, 230, 235);
+    }
+    </style>
+          </head>
+          <body>
+            <h3>C0 code coverage information</h3>
+            <p>Generated on 2009-02-25 00:22:45 with <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.
+            </p>            
+        <table class='report'>
+          <thead>
+            <tr>
+              <td class='heading'>Name</td>
+              <td class='heading'>Total lines</td>
+              <td class='heading'>Lines of code</td>
+              <td class='heading'>Total coverage</td>
+              <td class='heading'>Code coverage</td>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class='light'>
+
+              <td>
+                <a href='mochiweb_cookies_report.html'>mochiweb_cookies</a>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td class='value'>
+                <tt>??</tt>
+              </td>
+              <td>
+                <table cellspacing='0' cellpadding='0' align='right'>
+                  <tr>
+                    <td><tt>87%</tt>&nbsp;</td><td>
+                      <table cellspacing='0' class='percent_graph' cellpadding='0' width='100'>
+                      <tr><td class='covered' width='87' /><td class='uncovered' width='13' /></tr>
+                      </table>
+                    </td>
+                  </tr>
+                </table>
+              </td>
+            </tr>
+          </tbody>
+        </table><pre><span class="marked"><a name="line1"></a>....1 %% @author Emad El-Haraty <emad@mochimedia.com>
+</span><span class="marked"><a name="line2"></a>....2 %% @copyright 2007 Mochi Media, Inc.
+</span><span class="marked"><a name="line3"></a>....3 
+</span><span class="marked"><a name="line4"></a>....4 %% @doc HTTP Cookie parsing and generating (RFC 2109, RFC 2965).
+</span><span class="marked"><a name="line5"></a>....5 
+</span><span class="marked"><a name="line6"></a>....6 -module(mochiweb_cookies).
+</span><span class="marked"><a name="line7"></a>....7 -export([parse_cookie/1, cookie/3, cookie/2]).
+</span><span class="marked"><a name="line8"></a>....8 
+</span><span class="marked"><a name="line9"></a>....9 -define(QUOTE, $\").
+</span><span class="marked"><a name="line10"></a>...10 
+</span><span class="marked"><a name="line11"></a>...11 -define(IS_WHITESPACE(C),
+</span><span class="marked"><a name="line12"></a>...12         (C =:= $\s orelse C =:= $\t orelse C =:= $\r orelse C =:= $\n)).
+</span><span class="marked"><a name="line13"></a>...13 
+</span><span class="marked"><a name="line14"></a>...14 %% RFC 2616 separators (called tspecials in RFC 2068)
+</span><span class="marked"><a name="line15"></a>...15 -define(IS_SEPARATOR(C),
+</span><span class="marked"><a name="line16"></a>...16         (C < 32 orelse
+</span><span class="marked"><a name="line17"></a>...17          C =:= $\s orelse C =:= $\t orelse
+</span><span class="marked"><a name="line18"></a>...18          C =:= $( orelse C =:= $) orelse C =:= $< orelse C =:= $> orelse
+</span><span class="marked"><a name="line19"></a>...19          C =:= $@ orelse C =:= $, orelse C =:= $; orelse C =:= $: orelse
+</span><span class="marked"><a name="line20"></a>...20          C =:= $\\ orelse C =:= $\" orelse C =:= $/ orelse
+</span><span class="marked"><a name="line21"></a>...21          C =:= $[ orelse C =:= $] orelse C =:= $? orelse C =:= $= orelse
+</span><span class="marked"><a name="line22"></a>...22          C =:= ${ orelse C =:= $})).
+</span><span class="marked"><a name="line23"></a>...23 
+</span><span class="marked"><a name="line24"></a>...24 %% @type proplist() = [{Key::string(), Value::string()}].
+</span><span class="marked"><a name="line25"></a>...25 %% @type header() = {Name::string(), Value::string()}.
+</span><span class="marked"><a name="line26"></a>...26 
+</span><span class="marked"><a name="line27"></a>...27 %% @spec cookie(Key::string(), Value::string()) -> header()
+</span><span class="marked"><a name="line28"></a>...28 %% @doc Short-hand for <code>cookie(Key, Value, [])</code>.
+</span><span class="marked"><a name="line29"></a>...29 cookie(Key, Value) ->
+</span><span class="uncovered"><a name="line30"></a>...30     cookie(Key, Value, []).
+</span><span class="marked"><a name="line31"></a>...31 
+</span><span class="marked"><a name="line32"></a>...32 %% @spec cookie(Key::string(), Value::string(), Options::[Option]) -> header() 
+</span><span class="marked"><a name="line33"></a>...33 %% where Option = {max_age, integer()} | {local_time, {date(), time()}} 
+</span><span class="marked"><a name="line34"></a>...34 %%                | {domain, string()} | {path, string()}
+</span><span class="marked"><a name="line35"></a>...35 %%                | {secure, true | false}
+</span><span class="marked"><a name="line36"></a>...36 %%
+</span><span class="marked"><a name="line37"></a>...37 %% @doc Generate a Set-Cookie header field tuple.
+</span><span class="marked"><a name="line38"></a>...38 cookie(Key, Value, Options) ->
+</span><span class="covered"><a name="line39"></a>...39     Cookie = [any_to_list(Key), "=", quote(Value), "; Version=1"],
+</span><span class="marked"><a name="line40"></a>...40     %% Set-Cookie:
+</span><span class="marked"><a name="line41"></a>...41     %%    Comment, Domain, Max-Age, Path, Secure, Version
+</span><span class="marked"><a name="line42"></a>...42     %% Set-Cookie2:
+</span><span class="marked"><a name="line43"></a>...43     %%    Comment, CommentURL, Discard, Domain, Max-Age, Path, Port, Secure,
+</span><span class="marked"><a name="line44"></a>...44     %%    Version
+</span><span class="covered"><a name="line45"></a>...45     ExpiresPart =
+</span><span class="marked"><a name="line46"></a>...46         case proplists:get_value(max_age, Options) of
+</span><span class="marked"><a name="line47"></a>...47             undefined ->
+</span><span class="covered"><a name="line48"></a>...48                 "";
+</span><span class="marked"><a name="line49"></a>...49             RawAge ->
+</span><span class="covered"><a name="line50"></a>...50                 When = case proplists:get_value(local_time, Options) of
+</span><span class="marked"><a name="line51"></a>...51                            undefined ->
+</span><span class="uncovered"><a name="line52"></a>...52                                calendar:local_time();
+</span><span class="marked"><a name="line53"></a>...53                            LocalTime ->
+</span><span class="covered"><a name="line54"></a>...54                                LocalTime
+</span><span class="marked"><a name="line55"></a>...55                        end,
+</span><span class="covered"><a name="line56"></a>...56                 Age = case RawAge < 0 of
+</span><span class="marked"><a name="line57"></a>...57                           true ->
+</span><span class="covered"><a name="line58"></a>...58                               0;
+</span><span class="marked"><a name="line59"></a>...59                           false ->
+</span><span class="covered"><a name="line60"></a>...60                               RawAge
+</span><span class="marked"><a name="line61"></a>...61                       end,
+</span><span class="covered"><a name="line62"></a>...62                 ["; Expires=", age_to_cookie_date(Age, When),
+</span><span class="marked"><a name="line63"></a>...63                  "; Max-Age=", quote(Age)]
+</span><span class="marked"><a name="line64"></a>...64         end,
+</span><span class="covered"><a name="line65"></a>...65     SecurePart =
+</span><span class="marked"><a name="line66"></a>...66         case proplists:get_value(secure, Options) of
+</span><span class="marked"><a name="line67"></a>...67             true ->
+</span><span class="uncovered"><a name="line68"></a>...68                 "; Secure";
+</span><span class="marked"><a name="line69"></a>...69             _ ->
+</span><span class="covered"><a name="line70"></a>...70                 ""
+</span><span class="marked"><a name="line71"></a>...71         end,
+</span><span class="covered"><a name="line72"></a>...72     DomainPart =
+</span><span class="marked"><a name="line73"></a>...73         case proplists:get_value(domain, Options) of
+</span><span class="marked"><a name="line74"></a>...74             undefined ->
+</span><span class="covered"><a name="line75"></a>...75                 "";
+</span><span class="marked"><a name="line76"></a>...76             Domain ->
+</span><span class="uncovered"><a name="line77"></a>...77                 ["; Domain=", quote(Domain)]
+</span><span class="marked"><a name="line78"></a>...78         end,
+</span><span class="covered"><a name="line79"></a>...79     PathPart =
+</span><span class="marked"><a name="line80"></a>...80         case proplists:get_value(path, Options) of
+</span><span class="marked"><a name="line81"></a>...81             undefined ->
+</span><span class="covered"><a name="line82"></a>...82                 "";
+</span><span class="marked"><a name="line83"></a>...83             Path ->
+</span><span class="covered"><a name="line84"></a>...84                 ["; Path=", quote(Path)]
+</span><span class="marked"><a name="line85"></a>...85         end,
+</span><span class="covered"><a name="line86"></a>...86     CookieParts = [Cookie, ExpiresPart, SecurePart, DomainPart, PathPart],
+</span><span class="covered"><a name="line87"></a>...87     {"Set-Cookie", lists:flatten(CookieParts)}.
+</span><span class="marked"><a name="line88"></a>...88 
+</span><span class="marked"><a name="line89"></a>...89 
+</span><span class="marked"><a name="line90"></a>...90 %% Every major browser incorrectly handles quoted strings in a
+</span><span class="marked"><a name="line91"></a>...91 %% different and (worse) incompatible manner.  Instead of wasting time
+</span><span class="marked"><a name="line92"></a>...92 %% writing redundant code for each browser, we restrict cookies to
+</span><span class="marked"><a name="line93"></a>...93 %% only contain characters that browsers handle compatibly.
+</span><span class="marked"><a name="line94"></a>...94 %%
+</span><span class="marked"><a name="line95"></a>...95 %% By replacing the definition of quote with this, we generate
+</span><span class="marked"><a name="line96"></a>...96 %% RFC-compliant cookies:
+</span><span class="marked"><a name="line97"></a>...97 %%
+</span><span class="marked"><a name="line98"></a>...98 %%     quote(V) ->
+</span><span class="marked"><a name="line99"></a>...99 %%         Fun = fun(?QUOTE, Acc) -> [$\\, ?QUOTE | Acc];
+</span><span class="marked"><a name="line100"></a>..100 %%                  (Ch, Acc) -> [Ch | Acc]
+</span><span class="marked"><a name="line101"></a>..101 %%               end,
+</span><span class="marked"><a name="line102"></a>..102 %%         [?QUOTE | lists:foldr(Fun, [?QUOTE], V)].
+</span><span class="marked"><a name="line103"></a>..103 
+</span><span class="marked"><a name="line104"></a>..104 %% Convert to a string and raise an error if quoting is required.
+</span><span class="marked"><a name="line105"></a>..105 quote(V0) ->
+</span><span class="covered"><a name="line106"></a>..106     V = any_to_list(V0),
+</span><span class="covered"><a name="line107"></a>..107     lists:all(fun(Ch) -> Ch =:= $/ orelse not ?IS_SEPARATOR(Ch) end, V)
+</span><span class="uncovered"><a name="line108"></a>..108         orelse erlang:error({cookie_quoting_required, V}),
+</span><span class="covered"><a name="line109"></a>..109     V.
+</span><span class="marked"><a name="line110"></a>..110 
+</span><span class="marked"><a name="line111"></a>..111 add_seconds(Secs, LocalTime) ->
+</span><span class="covered"><a name="line112"></a>..112     Greg = calendar:datetime_to_gregorian_seconds(LocalTime),
+</span><span class="covered"><a name="line113"></a>..113     calendar:gregorian_seconds_to_datetime(Greg + Secs).
+</span><span class="marked"><a name="line114"></a>..114 
+</span><span class="marked"><a name="line115"></a>..115 age_to_cookie_date(Age, LocalTime) ->
+</span><span class="covered"><a name="line116"></a>..116     httpd_util:rfc1123_date(add_seconds(Age, LocalTime)).
+</span><span class="marked"><a name="line117"></a>..117 
+</span><span class="marked"><a name="line118"></a>..118 %% @spec parse_cookie(string()) -> [{K::string(), V::string()}]
+</span><span class="marked"><a name="line119"></a>..119 %% @doc Parse the contents of a Cookie header field, ignoring cookie
+</span><span class="marked"><a name="line120"></a>..120 %% attributes, and return a simple property list.
+</span><span class="marked"><a name="line121"></a>..121 parse_cookie("") -> 
+</span><span class="uncovered"><a name="line122"></a>..122     [];
+</span><span class="marked"><a name="line123"></a>..123 parse_cookie(Cookie) -> 
+</span><span class="covered"><a name="line124"></a>..124     parse_cookie(Cookie, []).
+</span><span class="marked"><a name="line125"></a>..125 
+</span><span class="marked"><a name="line126"></a>..126 %% Internal API
+</span><span class="marked"><a name="line127"></a>..127 
+</span><span class="marked"><a name="line128"></a>..128 parse_cookie([], Acc) ->
+</span><span class="covered"><a name="line129"></a>..129     lists:reverse(Acc); 
+</span><span class="marked"><a name="line130"></a>..130 parse_cookie(String, Acc) -> 
+</span><span class="covered"><a name="line131"></a>..131     {{Token, Value}, Rest} = read_pair(String),
+</span><span class="covered"><a name="line132"></a>..132     Acc1 = case Token of
+</span><span class="marked"><a name="line133"></a>..133                "" ->
+</span><span class="covered"><a name="line134"></a>..134                    Acc;
+</span><span class="marked"><a name="line135"></a>..135                "$" ++ _ ->
+</span><span class="covered"><a name="line136"></a>..136                    Acc;
+</span><span class="marked"><a name="line137"></a>..137                _ ->
+</span><span class="covered"><a name="line138"></a>..138                    [{Token, Value} | Acc]
+</span><span class="marked"><a name="line139"></a>..139            end,
+</span><span class="covered"><a name="line140"></a>..140     parse_cookie(Rest, Acc1).
+</span><span class="marked"><a name="line141"></a>..141 
+</span><span class="marked"><a name="line142"></a>..142 read_pair(String) ->
+</span><span class="covered"><a name="line143"></a>..143     {Token, Rest} = read_token(skip_whitespace(String)),
+</span><span class="covered"><a name="line144"></a>..144     {Value, Rest1} = read_value(skip_whitespace(Rest)),
+</span><span class="covered"><a name="line145"></a>..145     {{Token, Value}, skip_past_separator(Rest1)}.
+</span><span class="marked"><a name="line146"></a>..146 
+</span><span class="marked"><a name="line147"></a>..147 read_value([$= | Value]) ->
+</span><span class="covered"><a name="line148"></a>..148     Value1 = skip_whitespace(Value),
+</span><span class="covered"><a name="line149"></a>..149     case Value1 of
+</span><span class="marked"><a name="line150"></a>..150         [?QUOTE | _] ->
+</span><span class="covered"><a name="line151"></a>..151             read_quoted(Value1);
+</span><span class="marked"><a name="line152"></a>..152         _ ->
+</span><span class="covered"><a name="line153"></a>..153             read_token(Value1)
+</span><span class="marked"><a name="line154"></a>..154     end;
+</span><span class="marked"><a name="line155"></a>..155 read_value(String) ->
+</span><span class="covered"><a name="line156"></a>..156     {"", String}.
+</span><span class="marked"><a name="line157"></a>..157 
+</span><span class="marked"><a name="line158"></a>..158 read_quoted([?QUOTE | String]) ->
+</span><span class="covered"><a name="line159"></a>..159     read_quoted(String, []).
+</span><span class="marked"><a name="line160"></a>..160 
+</span><span class="marked"><a name="line161"></a>..161 read_quoted([], Acc) ->
+</span><span class="covered"><a name="line162"></a>..162     {lists:reverse(Acc), []};
+</span><span class="marked"><a name="line163"></a>..163 read_quoted([?QUOTE | Rest], Acc) ->
+</span><span class="covered"><a name="line164"></a>..164     {lists:reverse(Acc), Rest};
+</span><span class="marked"><a name="line165"></a>..165 read_quoted([$\\, Any | Rest], Acc) ->
+</span><span class="covered"><a name="line166"></a>..166     read_quoted(Rest, [Any | Acc]);
+</span><span class="marked"><a name="line167"></a>..167 read_quoted([C | Rest], Acc) ->
+</span><span class="covered"><a name="line168"></a>..168     read_quoted(Rest, [C | Acc]).
+</span><span class="marked"><a name="line169"></a>..169     
+</span><span class="marked"><a name="line170"></a>..170 skip_whitespace(String) ->
+</span><span class="covered"><a name="line171"></a>..171     F = fun (C) -> ?IS_WHITESPACE(C) end,
+</span><span class="covered"><a name="line172"></a>..172     lists:dropwhile(F, String).
+</span><span class="marked"><a name="line173"></a>..173 
+</span><span class="marked"><a name="line174"></a>..174 read_token(String) ->
+</span><span class="covered"><a name="line175"></a>..175     F = fun (C) -> not ?IS_SEPARATOR(C) end,
+</span><span class="covered"><a name="line176"></a>..176     lists:splitwith(F, String).
+</span><span class="marked"><a name="line177"></a>..177 
+</span><span class="marked"><a name="line178"></a>..178 skip_past_separator([]) ->    
+</span><span class="covered"><a name="line179"></a>..179     [];
+</span><span class="marked"><a name="line180"></a>..180 skip_past_separator([$; | Rest]) ->
+</span><span class="covered"><a name="line181"></a>..181     Rest;
+</span><span class="marked"><a name="line182"></a>..182 skip_past_separator([$, | Rest]) ->
+</span><span class="uncovered"><a name="line183"></a>..183     Rest;
+</span><span class="marked"><a name="line184"></a>..184 skip_past_separator([_ | Rest]) ->
+</span><span class="uncovered"><a name="line185"></a>..185     skip_past_separator(Rest).
+</span><span class="marked"><a name="line186"></a>..186 
+</span><span class="marked"><a name="line187"></a>..187 
+</span><span class="marked"><a name="line188"></a>..188 any_to_list(V) when is_list(V) ->
+</span><span class="covered"><a name="line189"></a>..189     V;
+</span><span class="marked"><a name="line190"></a>..190 any_to_list(V) when is_atom(V) ->
+</span><span class="covered"><a name="line191"></a>..191     atom_to_list(V);
+</span><span class="marked"><a name="line192"></a>..192 any_to_list(V) when is_binary(V) ->
+</span><span class="covered"><a name="line193"></a>..193     binary_to_list(V);
+</span><span class="marked"><a name="line194"></a>..194 any_to_list(V) when is_integer(V) ->
+</span><span class="covered"><a name="line195"></a>..195     integer_to_list(V).</span></pre><hr /><p>Generated using <a href='http://github.com/ngerakines/etap'>etap 0.3.3</a>.</p>
+          </body>
+        </html>
+    
