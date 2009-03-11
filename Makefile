@@ -1,4 +1,5 @@
 LIBDIR=`erl -eval 'io:format("~s~n", [code:lib_dir()])' -s init stop -noshell`
+VERSION=0.2
 
 all:
 	mkdir -p ebin
@@ -14,9 +15,9 @@ clean:
 	(cd src;$(MAKE) clean)
 
 dist-src:
-	mkdir mochiweb-0.2/ && cp -rfv Makefile README priv scripts src support mochiweb-0.2/
-	tar zcf mochiweb-0.2.tgz mochiweb-0.2
+	mkdir mochiweb-$(VERSION)/ && cp -rfv Makefile README priv scripts src support mochiweb-$(VERSION)/
+	tar zcf mochiweb-$(VERSION).tgz mochiweb-$(VERSION)
 
 install: all
-	mkdir -p ${LIBDIR}/mochiweb-1/{ebin,include}
-	for i in ebin/*.beam; do install $$i $(LIBDIR)/mochiweb-0.2/$$i ; done
+	mkdir -p ${LIBDIR}/mochiweb-$(VERSION)/{ebin,include}
+	for i in ebin/*.beam; do install $$i $(LIBDIR)/mochiweb-$(VERSION)/$$i ; done
