@@ -1,0 +1,27 @@
+{application, 'mochiweb',[
+    {description, "Mochiweb web server"},
+[vsn,"0.2"},
+{modules, [mochifmt,
+	   mochifmt_records,
+	   mochifmt_std,
+	   mochihex,
+	   mochijson2,
+	   mochinum,
+	   mochiweb_charref,
+	   mochiweb_cookies,
+	   mochiweb,
+	   mochiweb_headers,
+	   mochiweb_html,
+	   mochiweb_http,
+	   mochiweb_multipart,
+	   mochiweb_request,
+	   mochiweb_response,
+	   mochiweb_rpc,
+	   mochiweb_skel,
+	   mochiweb_util,
+	   reloader]},
+{registered, [mochiweb,mochiweb_http]},
+{applications, [
+	        kernel,
+		stdlib]}
+	   
