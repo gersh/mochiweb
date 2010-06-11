@@ -1,7 +1,7 @@
 {application, 'mochiweb',[
-    {description, "Mochiweb web server"},
-[vsn,"0.2"},
-{modules, [mochifmt,
+  {description, "Mochiweb web server"},
+  {vsn,"0.2"},
+  {modules, [mochifmt,
 	   mochifmt_records,
 	   mochifmt_std,
 	   mochihex,
@@ -23,5 +23,5 @@
 {registered, [mochiweb,mochiweb_http]},
 {applications, [
 	        kernel,
-		stdlib]}
+		stdlib]}]}.
 	   
